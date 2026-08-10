@@ -371,6 +371,21 @@
             <!-- 保存結果 -->
 
             <p id="saveMessage"></p>
+            <hr>
+
+<h3>時間割設定</h3>
+
+<div id="timetableSettings"></div>
+
+<button
+    id="saveTimetable"
+    class="save-button">
+
+    時間割を保存
+
+</button>
+
+<p id="timetableMessage"></p>
 
         </div>
 
@@ -900,6 +915,311 @@
 
         }
 
+        /* =========================
+   時間割
+========================= */
+
+const subjects = [
+    "国語",
+    "数学",
+    "英語",
+    "理科",
+    "社会",
+    "体育",
+    "音楽",
+    "美術",
+    "技術・家庭",
+    "その他"
+];
+
+const weekdays = [
+    "月曜日",
+    "火曜日",
+    "水曜日",
+    "木曜日",
+    "金曜日"
+];
+
+const periods = 6;
+
+
+/* =========================
+   時間割入力欄を作成
+========================= */
+
+function createTimetableSettings() {
+
+    const container =
+        document.getElementById(
+            "timetableSettings"
+        );
+
+    container.innerHTML = "";
+
+
+    weekdays.forEach(function(day, dayIndex) {
+
+        const dayTitle =
+            document.createElement("h4");
+
+        dayTitle.textContent = day;
+
+        container.appendChild(dayTitle);
+
+
+        for (
+            let period = 1;
+            period <= periods;
+            period++
+        ) {
+
+            const label =
+                document.createElement("label");
+
+            label.textContent =
+                period + "時間目";
+
+
+            const select =
+                document.createElement("select");
+
+            select.id =
+                "timetable-" +
+                dayIndex +
+                "-" +
+                period;
+
+
+            /* 未選択 */
+
+            const emptyOption =
+                document.createElement("option");
+
+            emptyOption.value = "";
+
+            emptyOption.textContent =
+                "選択してください";
+
+            select.appendChild(
+                emptyOption
+            );
+
+
+            /* 教科 */
+
+            subjects.forEach(function(subject) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = subject;
+
+                option.textContent = subject;
+
+                select.appendChild(
+                    option
+                );
+
+            });
+
+
+            label.appendChild(select);
+
+            container.appendChild(label);
+
+        }
+
+    });
+
+}
+
+
+
+/* =========================
+   時間割保存
+========================= */
+
+document
+    .getElementById("saveTimetable")
+    .addEventListener(
+        "click",
+        saveTimetable
+    );
+
+
+function saveTimetable() {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。少し待ってください。"
+        );
+
+        return;
+
+    }
+
+
+    const timetable = {};
+
+
+    weekdays.forEach(function(day, dayIndex) {
+
+        timetable[day] = [];
+
+
+        for (
+            let period = 1;
+            period <= periods;
+            period++
+        ) {
+
+            const select =
+                document.getElementById(
+                    "timetable-" +
+                    dayIndex +
+                    "-" +
+                    period
+                );
+
+
+            timetable[day].push(
+                select.value
+            );
+
+        }
+
+    });
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    store.put({
+
+        id: "timetable",
+
+        timetable: timetable
+
+    });
+
+
+    transaction.oncomplete =
+        function() {
+
+            document
+                .getElementById(
+                    "timetableMessage"
+                )
+                .textContent =
+                "✓ 時間割を保存しました";
+
+            loadTimetable();
+
+        };
+
+}
+
+
+
+/* =========================
+   時間割読み込み
+========================= */
+
+function loadTimetable() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("timetable");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (!data) {
+                return;
+            }
+
+
+            weekdays.forEach(
+                function(day, dayIndex) {
+
+                    const dayData =
+                        data.timetable[day];
+
+
+                    if (!dayData) {
+                        return;
+                    }
+
+
+                    dayData.forEach(
+                        function(subject, index) {
+
+                            const select =
+                                document.getElementById(
+                                    "timetable-" +
+                                    dayIndex +
+                                    "-" +
+                                    (index + 1)
+                                );
+
+
+                            if (select) {
+
+                                select.value =
+                                    subject;
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        };
+
+}
+
+
+
+/* =========================
+   時間割設定を最初に作る
+========================= */
+
+createTimetableSettings();
 
     </script>
 
