@@ -677,77 +677,7 @@
     }
 
 
-    // ========================================
-    // 設定を読み込む
-    // ========================================
-
-    function loadSettings() {
-
-        const transaction =
-            db.transaction(
-                [STORE_NAME],
-                "readonly"
-            );
-
-
-        const store =
-            transaction.objectStore(STORE_NAME);
-
-
-        const request =
-            store.get("userSettings");
-
-
-        request.onsuccess = function() {
-
-            const data = request.result;
-
-
-            // 保存データがなければ終了
-            if (!data) {
-                return;
-            }
-
-
-            const nameInput =
-                document.querySelector(
-                    '#settings-page input[type="text"]'
-                );
-
-            const gradeInput =
-                document.querySelector(
-                    '#settings-page select'
-                );
-
-
-            // 保存された値を表示
-            nameInput.value =
-                data.name || "";
-
-            gradeInput.value =
-                data.grade || "";
-
-        };
-
-    }
-
-
-    // ========================================
-    // 設定ページの保存ボタン
-    // ========================================
-
-    const saveButton =
-        document.querySelector(
-            '#settings-page .save-button'
-        );
-
-
-    saveButton.addEventListener(
-        "click",
-        saveSettings
-    );
-
-</script>
+<skript>
 
 </body>
 </html>
