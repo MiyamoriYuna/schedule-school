@@ -1,195 +1,109 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時間割・予定管理</title>
 
-<title>時間割・予定管理</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            padding-bottom: 80px;
+        }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #f8fafc;
-    color: #333;
-    padding-bottom: 80px;
-}
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
 
-/* ヘッダー */
+        #today {
+            margin-top: 5px;
+            color: #777;
+        }
 
-header {
-    background: white;
-    padding: 15px 20px;
-    border-bottom: 1px solid #ddd;
-}
+        /* ページ */
 
-header h1 {
-    font-size: 20px;
-}
+        .page {
+            display: none;
+            padding: 20px;
+        }
 
-#today {
-    margin-top: 5px;
-    color: #777;
-    font-size: 14px;
-}
+        .page.active {
+            display: block;
+        }
 
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+        }
 
-/* ページ */
+        /* 下部ボタン */
 
-.page {
-    display: none;
-    padding: 20px;
-    max-width: 700px;
-    margin: auto;
-}
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
 
-.page.active {
-    display: block;
-}
+            height: 70px;
 
-.page-title {
-    font-size: 25px;
-    margin-bottom: 20px;
-}
+            background: white;
+            border-top: 1px solid #ddd;
 
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
 
-/* カード */
+        .nav-button {
+            border: none;
+            background: none;
 
-.card {
-    background: white;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+            padding: 8px;
 
-.card h3 {
-    margin-bottom: 15px;
-}
+            cursor: pointer;
 
+            color: #777;
 
-/* 入力 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-input,
-select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 7px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
-}
+            font-size: 12px;
+        }
 
-label {
-    display: block;
-    margin-bottom: 15px;
-}
+        .nav-icon {
+            font-size: 22px;
+        }
 
-
-/* ボタン */
-
-.save-button {
-    width: 100%;
-    padding: 13px;
-    border: none;
-    border-radius: 10px;
-    background: #e85d75;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.save-button:active {
-    transform: scale(0.98);
-}
-
-
-/* 時間割 */
-
-.timetable-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-}
-
-
-/* ToDo */
-
-.todo-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.todo-item label {
-    display: flex;
-    gap: 10px;
-    margin: 0;
-}
-
-.todo-item input {
-    width: auto;
-    margin: 0;
-}
-
-
-/* 下部メニュー */
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 70px;
-    background: white;
-    border-top: 1px solid #ddd;
-
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    z-index: 100;
-}
-
-.nav-button {
-    border: none;
-    background: none;
-    color: #777;
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    font-size: 11px;
-}
-
-.nav-icon {
-    font-size: 22px;
-    margin-bottom: 3px;
-}
-
-.nav-button.active {
-    color: #e85d75;
-    font-weight: bold;
-}
-
-</style>
+        .nav-button.active {
+            color: #e85d75;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 
 <body>
 
 
-<!-- =================================
-     共通ヘッダー
-================================= -->
+<!-- =========================
+     ヘッダー
+========================= -->
 
 <header>
 
@@ -201,269 +115,108 @@ label {
 
 
 
-<!-- =================================
+<!-- =========================
      月予定
-================================= -->
+========================= -->
 
-<main id="calendar-page" class="page">
+<section
+    id="calendar"
+    class="page">
 
-    <h2 class="page-title">
-        月予定
-    </h2>
+    <h2>月予定</h2>
 
     <div class="card">
-
-        <h3>カレンダー</h3>
-
-        <p>
-            ここに月予定を表示します。
-        </p>
-
+        月予定ページです。
     </div>
 
-</main>
+</section>
 
 
 
-<!-- =================================
+<!-- =========================
      やること
-================================= -->
+========================= -->
 
-<main id="todo-page" class="page">
+<section
+    id="todo"
+    class="page">
 
-    <h2 class="page-title">
-        やること
-    </h2>
+    <h2>やること</h2>
 
     <div class="card">
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                数学の宿題
-            </label>
-        </div>
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                英単語の勉強
-            </label>
-        </div>
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                プリントを提出
-            </label>
-        </div>
-
+        やることリストページです。
     </div>
 
-</main>
+</section>
 
 
 
-<!-- =================================
+<!-- =========================
      ホーム
-================================= -->
+========================= -->
 
-<main id="home-page" class="page active">
+<section
+    id="home"
+    class="page active">
 
-    <h2 class="page-title">
-        ホーム
-    </h2>
-
-    <div class="card">
-
-        <h3>今日の時間割</h3>
-
-        <div class="timetable-item">
-            <span>1時間目</span>
-            <strong>国語</strong>
-        </div>
-
-        <div class="timetable-item">
-            <span>2時間目</span>
-            <strong>数学</strong>
-        </div>
-
-        <div class="timetable-item">
-            <span>3時間目</span>
-            <strong>英語</strong>
-        </div>
-
-        <div class="timetable-item">
-            <span>4時間目</span>
-            <strong>理科</strong>
-        </div>
-
-        <div class="timetable-item">
-            <span>5時間目</span>
-            <strong>体育</strong>
-        </div>
-
-    </div>
-
+    <h2>ホーム</h2>
 
     <div class="card">
-
-        <h3>今日の予定</h3>
-
-        <p>16:00　部活動</p>
-        <p>19:00　塾</p>
-
+        ホームページです。
     </div>
 
-</main>
+</section>
 
 
 
-<!-- =================================
+<!-- =========================
      持ち物
-================================= -->
+========================= -->
 
-<main id="belongings-page" class="page">
+<section
+    id="belongings"
+    class="page">
 
-    <h2 class="page-title">
-        持ち物
-    </h2>
+    <h2>持ち物</h2>
 
     <div class="card">
-
-        <h3>今日の持ち物</h3>
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                教科書
-            </label>
-        </div>
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                ノート
-            </label>
-        </div>
-
-        <div class="todo-item">
-            <label>
-                <input type="checkbox">
-                筆箱
-            </label>
-        </div>
-
+        持ち物ページです。
     </div>
 
-</main>
+</section>
 
 
 
-<!-- =================================
+<!-- =========================
      設定
-================================= -->
+========================= -->
 
-<main id="settings-page" class="page">
+<section
+    id="settings"
+    class="page">
 
-    <h2 class="page-title">
-        設定
-    </h2>
-
+    <h2>設定</h2>
 
     <div class="card">
-
-        <h3>基本情報</h3>
-
-
-        <label>
-
-            名前
-
-            <input
-                id="userName"
-                type="text"
-                placeholder="名前またはニックネーム">
-
-        </label>
-
-
-        <label>
-
-            学年
-
-            <select id="userGrade">
-
-                <option value="">
-                    選択してください
-                </option>
-
-                <option value="中学1年">
-                    中学1年
-                </option>
-
-                <option value="中学2年">
-                    中学2年
-                </option>
-
-                <option value="中学3年">
-                    中学3年
-                </option>
-
-                <option value="高校1年">
-                    高校1年
-                </option>
-
-                <option value="高校2年">
-                    高校2年
-                </option>
-
-                <option value="高校3年">
-                    高校3年
-                </option>
-
-            </select>
-
-        </label>
-
-
-        <button
-            id="saveSettings"
-            class="save-button">
-
-            保存
-
-        </button>
-
-
-        <p
-            id="saveMessage"
-            style="
-                margin-top:12px;
-                text-align:center;
-                color:#e85d75;
-            ">
-        </p>
-
+        設定ページです。
     </div>
 
-</main>
+</section>
 
 
 
-<!-- =================================
+<!-- =========================
      下部メニュー
-================================= -->
+========================= -->
 
 <nav class="bottom-nav">
 
 
     <button
         class="nav-button"
-        data-page="calendar-page">
+        onclick="showPage('calendar', this)">
 
         <span class="nav-icon">🗓️</span>
-
         <span>月予定</span>
 
     </button>
@@ -471,10 +224,9 @@ label {
 
     <button
         class="nav-button"
-        data-page="todo-page">
+        onclick="showPage('todo', this)">
 
         <span class="nav-icon">✅</span>
-
         <span>やること</span>
 
     </button>
@@ -482,10 +234,9 @@ label {
 
     <button
         class="nav-button active"
-        data-page="home-page">
+        onclick="showPage('home', this)">
 
         <span class="nav-icon">🏠</span>
-
         <span>ホーム</span>
 
     </button>
@@ -493,10 +244,9 @@ label {
 
     <button
         class="nav-button"
-        data-page="belongings-page">
+        onclick="showPage('belongings', this)">
 
         <span class="nav-icon">🎒</span>
-
         <span>持ち物</span>
 
     </button>
@@ -504,10 +254,9 @@ label {
 
     <button
         class="nav-button"
-        data-page="settings-page">
+        onclick="showPage('settings', this)">
 
         <span class="nav-icon">⚙️</span>
-
         <span>設定</span>
 
     </button>
@@ -519,10 +268,9 @@ label {
 
 <script>
 
-
-/* =================================
+/* =========================
    今日の日付
-================================= */
+========================= */
 
 function showToday() {
 
@@ -538,307 +286,67 @@ function showToday() {
         "土"
     ];
 
-    const year =
-        today.getFullYear();
+    const text =
+        today.getFullYear() +
+        "年" +
+        (today.getMonth() + 1) +
+        "月" +
+        today.getDate() +
+        "日（" +
+        days[today.getDay()] +
+        "）";
 
-    const month =
-        today.getMonth() + 1;
-
-    const date =
-        today.getDate();
-
-    const day =
-        days[today.getDay()];
-
-    document
-        .getElementById("today")
-        .textContent =
-        `${year}年${month}月${date}日（${day}）`;
+    document.getElementById("today").textContent = text;
 }
 
 showToday();
 
 
 
-/* =================================
+/* =========================
    ページ切り替え
-================================= */
+========================= */
 
-const navButtons =
-    document.querySelectorAll(".nav-button");
+function showPage(pageId, button) {
 
-const pages =
-    document.querySelectorAll(".page");
+    console.log("ページ切り替え:", pageId);
 
 
-navButtons.forEach(button => {
+    // 全ページを非表示
+    const pages =
+        document.querySelectorAll(".page");
 
-    button.addEventListener("click", () => {
+    pages.forEach(function(page) {
 
-        const pageId =
-            button.dataset.page;
-
-
-        pages.forEach(page => {
-
-            page.classList.remove("active");
-
-        });
-
-
-        document
-            .getElementById(pageId)
-            .classList.add("active");
-
-
-        navButtons.forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-
-        button.classList.add("active");
+        page.classList.remove("active");
 
     });
 
-});
 
+    // 選択したページを表示
+    document
+        .getElementById(pageId)
+        .classList.add("active");
 
 
-/* =================================
-   IndexedDB
-================================= */
+    // 全ボタンのactiveを解除
+    const buttons =
+        document.querySelectorAll(".nav-button");
 
-const DB_NAME =
-    "ScheduleManagementApp";
+    buttons.forEach(function(btn) {
 
-const DB_VERSION = 1;
+        btn.classList.remove("active");
 
-const STORE_NAME =
-    "settings";
+    });
 
-let db = null;
 
-
-
-/* データベースを開く */
-
-const request =
-    indexedDB.open(
-        DB_NAME,
-        DB_VERSION
-    );
-
-
-
-/* 初回作成 */
-
-request.onupgradeneeded =
-    function(event) {
-
-        db =
-            event.target.result;
-
-
-        if (
-            !db.objectStoreNames.contains(
-                STORE_NAME
-            )
-        ) {
-
-            db.createObjectStore(
-                STORE_NAME,
-                {
-                    keyPath: "id"
-                }
-            );
-
-        }
-
-    };
-
-
-
-/* 接続成功 */
-
-request.onsuccess =
-    function(event) {
-
-        db =
-            event.target.result;
-
-        console.log(
-            "IndexedDB接続成功"
-        );
-
-        loadSettings();
-
-    };
-
-
-
-/* エラー */
-
-request.onerror =
-    function(event) {
-
-        console.error(
-            "IndexedDBエラー",
-            event.target.error
-        );
-
-    };
-
-
-
-/* =================================
-   設定を保存
-================================= */
-
-document
-    .getElementById("saveSettings")
-    .addEventListener(
-        "click",
-        saveSettings
-    );
-
-
-function saveSettings() {
-
-    if (!db) {
-
-        alert(
-            "データベースの準備中です。少し待ってからもう一度押してください。"
-        );
-
-        return;
-
-    }
-
-
-    const name =
-        document
-            .getElementById("userName")
-            .value;
-
-
-    const grade =
-        document
-            .getElementById("userGrade")
-            .value;
-
-
-
-    const data = {
-
-        id: "user",
-
-        name: name,
-
-        grade: grade
-
-    };
-
-
-
-    const transaction =
-        db.transaction(
-            STORE_NAME,
-            "readwrite"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            STORE_NAME
-        );
-
-
-    store.put(data);
-
-
-
-    transaction.oncomplete =
-        function() {
-
-            document
-                .getElementById("saveMessage")
-                .textContent =
-                "✓ 保存しました";
-
-        };
-
-
-    transaction.onerror =
-        function() {
-
-            alert(
-                "保存できませんでした。"
-            );
-
-        };
-
-}
-
-
-
-/* =================================
-   設定を読み込む
-================================= */
-
-function loadSettings() {
-
-    if (!db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            STORE_NAME,
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            STORE_NAME
-        );
-
-
-    const request =
-        store.get("user");
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            if (!data) {
-                return;
-            }
-
-
-            document
-                .getElementById("userName")
-                .value =
-                data.name || "";
-
-
-            document
-                .getElementById("userGrade")
-                .value =
-                data.grade || "";
-
-        };
+    // 押したボタンをactiveにする
+    button.classList.add("active");
 
 }
 
 </script>
+
 
 </body>
 </html>
