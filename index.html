@@ -674,25 +674,25 @@
            IndexedDB接続成功
         ========================= */
 
-        request.onsuccess =
-            function(event) {
+       request.onsuccess =
+    function(event) {
 
+        db =
+            event.target.result;
 
-                db =
-                    event.target.result;
+        console.log(
+            "IndexedDB接続成功"
+        );
 
+        /* 保存データを読み込む */
 
-                console.log(
-                    "IndexedDB接続成功"
-                );
+        loadSettings();
 
+        /* 保存した時間割を読み込む */
 
-                /* 保存データを読み込む */
+        loadTimetable();
 
-                loadSettings();
-
-            };
-
+    };
 
 
         /* =========================
