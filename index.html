@@ -1,47 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>時間割・予定管理</title>
 
+
     <style>
-        label {
-    display: block;
-    margin-bottom: 15px;
-}
 
-input,
-select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 7px;
+        /* =========================
+           基本設定
+        ========================= */
 
-    border: 1px solid #ccc;
-    border-radius: 10px;
-
-    font-size: 16px;
-}
-
-.save-button {
-    width: 100%;
-    padding: 12px;
-
-    border: none;
-    border-radius: 10px;
-
-    background: #e85d75;
-    color: white;
-
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#saveMessage {
-    margin-top: 12px;
-    text-align: center;
-    color: #e85d75;
-}
         * {
             box-sizing: border-box;
         }
@@ -52,6 +28,11 @@ select {
             background: #f8fafc;
             padding-bottom: 80px;
         }
+
+
+        /* =========================
+           ヘッダー
+        ========================= */
 
         header {
             background: white;
@@ -69,7 +50,10 @@ select {
             color: #777;
         }
 
-        /* ページ */
+
+        /* =========================
+           ページ
+        ========================= */
 
         .page {
             display: none;
@@ -80,6 +64,11 @@ select {
             display: block;
         }
 
+
+        /* =========================
+           カード
+        ========================= */
+
         .card {
             background: white;
             padding: 20px;
@@ -87,7 +76,66 @@ select {
             border-radius: 15px;
         }
 
-        /* 下部ボタン */
+
+        /* =========================
+           設定の入力欄
+        ========================= */
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+
+            border: 1px solid #ccc;
+            border-radius: 10px;
+
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           保存ボタン
+        ========================= */
+
+        .save-button {
+            width: 100%;
+            padding: 12px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #e85d75;
+            color: white;
+
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .save-button:active {
+            transform: scale(0.98);
+        }
+
+
+        /* =========================
+           保存メッセージ
+        ========================= */
+
+        #saveMessage {
+            margin-top: 12px;
+            text-align: center;
+            color: #e85d75;
+        }
+
+
+        /* =========================
+           下部ボタン
+        ========================= */
 
         .bottom-nav {
             position: fixed;
@@ -103,7 +151,10 @@ select {
             display: flex;
             justify-content: space-around;
             align-items: center;
+
+            z-index: 100;
         }
+
 
         .nav-button {
             border: none;
@@ -122,497 +173,737 @@ select {
             font-size: 12px;
         }
 
+
         .nav-icon {
             font-size: 22px;
         }
+
 
         .nav-button.active {
             color: #e85d75;
             font-weight: bold;
         }
+
     </style>
+
 </head>
 
 
 <body>
 
 
-<!-- =========================
-     ヘッダー
-========================= -->
+    <!-- =========================
+         ヘッダー
+    ========================= -->
 
-<header>
+    <header>
 
-    <h1>時間割・予定管理</h1>
+        <h1>時間割・予定管理</h1>
 
-    <div id="today"></div>
+        <div id="today"></div>
 
-</header>
-
-
-
-<!-- =========================
-     月予定
-========================= -->
-
-<section
-    id="calendar"
-    class="page">
-
-    <h2>月予定</h2>
-
-    <div class="card">
-        月予定ページです。
-    </div>
-
-</section>
+    </header>
 
 
 
-<!-- =========================
-     やること
-========================= -->
+    <!-- =========================
+         月予定
+    ========================= -->
 
-<section
-    id="todo"
-    class="page">
+    <section
+        id="calendar"
+        class="page">
 
-    <h2>やること</h2>
+        <h2>月予定</h2>
 
-    <div class="card">
-        やることリストページです。
-    </div>
+        <div class="card">
 
-</section>
+            月予定ページです。
 
+        </div>
 
-
-<!-- =========================
-     ホーム
-========================= -->
-
-<section
-    id="home"
-    class="page active">
-
-    <h2>ホーム</h2>
-
-    <div class="card">
-        ホームページです。
-    </div>
-
-</section>
+    </section>
 
 
 
-<!-- =========================
-     持ち物
-========================= -->
+    <!-- =========================
+         やること
+    ========================= -->
 
-<section
-    id="belongings"
-    class="page">
+    <section
+        id="todo"
+        class="page">
 
-    <h2>持ち物</h2>
+        <h2>やること</h2>
 
-    <div class="card">
-        持ち物ページです。
-    </div>
+        <div class="card">
 
-</section>
+            やることリストページです。
+
+        </div>
+
+    </section>
 
 
 
-<!-- =========================
-     設定
-========================= -->
+    <!-- =========================
+         ホーム
+    ========================= -->
 
-<section
-    id="settings"
-    class="page">
+    <section
+        id="home"
+        class="page active">
 
-    <h2>設定</h2>
+        <h2>ホーム</h2>
 
-    <div class="card">
+        <div class="card">
 
-        <h3>基本情報</h3>
+            ホームページです。
 
-        <label>
-            名前・ニックネーム
+        </div>
 
-            <input
-                id="userName"
-                type="text"
-                placeholder="例：ゆうな">
-        </label>
+    </section>
 
-        <br>
 
-        <label>
-            学年
 
-            <select id="userGrade">
+    <!-- =========================
+         持ち物
+    ========================= -->
 
-                <option value="">
-                    選択してください
-                </option>
+    <section
+        id="belongings"
+        class="page">
 
-                <option value="中学1年">
-                    中学1年
-                </option>
+        <h2>持ち物</h2>
 
-                <option value="中学2年">
-                    中学2年
-                </option>
+        <div class="card">
 
-                <option value="中学3年">
-                    中学3年
-                </option>
+            持ち物ページです。
 
-                <option value="高校1年">
-                    高校1年
-                </option>
+        </div>
 
-                <option value="高校2年">
-                    高校2年
-                </option>
+    </section>
 
-                <option value="高校3年">
-                    高校3年
-                </option>
 
-            </select>
-        </label>
+
+    <!-- =========================
+         設定
+    ========================= -->
+
+    <section
+        id="settings"
+        class="page">
+
+        <h2>設定</h2>
+
+
+        <div class="card">
+
+            <h3>基本情報</h3>
+
+
+            <!-- 名前 -->
+
+            <label>
+
+                名前・ニックネーム
+
+                <input
+                    id="userName"
+                    type="text"
+                    placeholder="例：ゆうな">
+
+            </label>
+
+
+            <!-- 学年 -->
+
+            <label>
+
+                学年
+
+                <select id="userGrade">
+
+                    <option value="">
+                        選択してください
+                    </option>
+
+                    <option value="中学1年">
+                        中学1年
+                    </option>
+
+                    <option value="中学2年">
+                        中学2年
+                    </option>
+
+                    <option value="中学3年">
+                        中学3年
+                    </option>
+
+                    <option value="高校1年">
+                        高校1年
+                    </option>
+
+                    <option value="高校2年">
+                        高校2年
+                    </option>
+
+                    <option value="高校3年">
+                        高校3年
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <!-- 保存 -->
+
+            <button
+                id="saveSettings"
+                class="save-button">
+
+                保存
+
+            </button>
+
+
+            <!-- 保存結果 -->
+
+            <p id="saveMessage"></p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         下部ナビゲーション
+    ========================= -->
+
+    <nav class="bottom-nav">
+
+
+        <!-- 月予定 -->
 
         <button
-            id="saveSettings"
-            class="save-button">
+            class="nav-button"
+            onclick="showPage('calendar', this)">
 
-            保存
+            <span class="nav-icon">
+                🗓️
+            </span>
+
+            <span>
+                月予定
+            </span>
 
         </button>
 
-        <p id="saveMessage"></p>
 
-    </div>
+        <!-- やること -->
 
-</section>
+        <button
+            class="nav-button"
+            onclick="showPage('todo', this)">
 
+            <span class="nav-icon">
+                ✅
+            </span>
 
+            <span>
+                やること
+            </span>
 
-<!-- =========================
-     下部メニュー
-========================= -->
+        </button>
 
-<nav class="bottom-nav">
 
+        <!-- ホーム -->
 
-    <button
-        class="nav-button"
-        onclick="showPage('calendar', this)">
+        <button
+            class="nav-button active"
+            onclick="showPage('home', this)">
 
-        <span class="nav-icon">🗓️</span>
-        <span>月予定</span>
+            <span class="nav-icon">
+                🏠
+            </span>
 
-    </button>
+            <span>
+                ホーム
+            </span>
 
+        </button>
 
-    <button
-        class="nav-button"
-        onclick="showPage('todo', this)">
 
-        <span class="nav-icon">✅</span>
-        <span>やること</span>
+        <!-- 持ち物 -->
 
-    </button>
+        <button
+            class="nav-button"
+            onclick="showPage('belongings', this)">
 
+            <span class="nav-icon">
+                🎒
+            </span>
 
-    <button
-        class="nav-button active"
-        onclick="showPage('home', this)">
+            <span>
+                持ち物
+            </span>
 
-        <span class="nav-icon">🏠</span>
-        <span>ホーム</span>
+        </button>
 
-    </button>
 
+        <!-- 設定 -->
 
-    <button
-        class="nav-button"
-        onclick="showPage('belongings', this)">
+        <button
+            class="nav-button"
+            onclick="showPage('settings', this)">
 
-        <span class="nav-icon">🎒</span>
-        <span>持ち物</span>
+            <span class="nav-icon">
+                ⚙️
+            </span>
 
-    </button>
+            <span>
+                設定
+            </span>
 
+        </button>
 
-    <button
-        class="nav-button"
-        onclick="showPage('settings', this)">
 
-        <span class="nav-icon">⚙️</span>
-        <span>設定</span>
+    </nav>
 
-    </button>
 
 
-</nav>
+    <!-- =========================
+         JavaScript
+    ========================= -->
 
+    <script>
 
 
-<script>
+        /* =========================
+           今日の日付
+        ========================= */
 
-/* =========================
-   今日の日付
-========================= */
+        function showToday() {
 
-function showToday() {
+            const today = new Date();
 
-    const today = new Date();
+            const days = [
+                "日",
+                "月",
+                "火",
+                "水",
+                "木",
+                "金",
+                "土"
+            ];
 
-    const days = [
-        "日",
-        "月",
-        "火",
-        "水",
-        "木",
-        "金",
-        "土"
-    ];
+            const text =
+                today.getFullYear() +
+                "年" +
+                (today.getMonth() + 1) +
+                "月" +
+                today.getDate() +
+                "日（" +
+                days[today.getDay()] +
+                "）";
+
+
+            document
+                .getElementById("today")
+                .textContent = text;
 
-    const text =
-        today.getFullYear() +
-        "年" +
-        (today.getMonth() + 1) +
-        "月" +
-        today.getDate() +
-        "日（" +
-        days[today.getDay()] +
-        "）";
-
-    document.getElementById("today").textContent = text;
-}
-
-showToday();
-
-
-
-/* =========================
-   ページ切り替え
-========================= */
-
-function showPage(pageId, button) {
-
-    console.log("ページ切り替え:", pageId);
-
-
-    // 全ページを非表示
-    const pages =
-        document.querySelectorAll(".page");
-
-    pages.forEach(function(page) {
-
-        page.classList.remove("active");
-
-    });
-
-
-    // 選択したページを表示
-    document
-        .getElementById(pageId)
-        .classList.add("active");
-
-
-    // 全ボタンのactiveを解除
-    const buttons =
-        document.querySelectorAll(".nav-button");
-
-    buttons.forEach(function(btn) {
-
-        btn.classList.remove("active");
-
-    });
-
-
-    // 押したボタンをactiveにする
-    button.classList.add("active");
-
-}
-
-    /* =========================
-   IndexedDB
-========================= */
-
-const DB_NAME = "ScheduleApp";
-const DB_VERSION = 1;
-const STORE_NAME = "settings";
-
-let db;
-
-
-/* データベースを開く */
-
-const request = indexedDB.open(
-    DB_NAME,
-    DB_VERSION
-);
-
-
-/* 初めてデータベースを作る */
-
-request.onupgradeneeded = function(event) {
-
-    db = event.target.result;
-
-    if (!db.objectStoreNames.contains(STORE_NAME)) {
-
-        db.createObjectStore(
-            STORE_NAME,
-            {
-                keyPath: "id"
-            }
-        );
-
-    }
-
-};
-
-
-/* データベースを開けた */
-
-request.onsuccess = function(event) {
-
-    db = event.target.result;
-
-    console.log("IndexedDB接続成功");
-
-    loadSettings();
-
-};
-
-
-/* エラー */
-
-request.onerror = function(event) {
-
-    console.error(
-        "IndexedDBエラー",
-        event.target.error
-    );
-
-};
-
-
-/* =========================
-   設定を保存
-========================= */
-
-document
-    .getElementById("saveSettings")
-    .addEventListener(
-        "click",
-        saveSettings
-    );
-
-
-function saveSettings() {
-
-    const name =
-        document.getElementById("userName").value;
-
-    const grade =
-        document.getElementById("userGrade").value;
-
-
-    const data = {
-
-        id: "user",
-
-        name: name,
-
-        grade: grade
-
-    };
-
-
-    const transaction =
-        db.transaction(
-            STORE_NAME,
-            "readwrite"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            STORE_NAME
-        );
-
-
-    store.put(data);
-
-
-    transaction.oncomplete = function() {
-
-        document
-            .getElementById("saveMessage")
-            .textContent =
-            "✓ 保存しました";
-
-    };
-
-}
-
-
-/* =========================
-   保存した設定を読み込む
-========================= */
-
-function loadSettings() {
-
-    const transaction =
-        db.transaction(
-            STORE_NAME,
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            STORE_NAME
-        );
-
-
-    const request =
-        store.get("user");
-
-
-    request.onsuccess = function() {
-
-        const data = request.result;
-
-
-        if (!data) {
-            return;
         }
 
 
+        showToday();
+
+
+
+        /* =========================
+           ページ切り替え
+        ========================= */
+
+        function showPage(pageId, button) {
+
+
+            console.log(
+                "ページ切り替え:",
+                pageId
+            );
+
+
+            /* 全ページを非表示 */
+
+            const pages =
+                document.querySelectorAll(
+                    ".page"
+                );
+
+
+            pages.forEach(function(page) {
+
+                page.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+
+            /* 選択したページを表示 */
+
+            document
+                .getElementById(pageId)
+                .classList.add("active");
+
+
+
+            /* 全ボタンの選択状態を解除 */
+
+            const buttons =
+                document.querySelectorAll(
+                    ".nav-button"
+                );
+
+
+            buttons.forEach(function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+
+            /* 押したボタンを選択状態にする */
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+
+        /* =========================
+           IndexedDB
+        ========================= */
+
+
+        const DB_NAME =
+            "ScheduleApp";
+
+
+        const DB_VERSION =
+            1;
+
+
+        const STORE_NAME =
+            "settings";
+
+
+        let db = null;
+
+
+
+        /* =========================
+           データベースを開く
+        ========================= */
+
+        const request =
+            indexedDB.open(
+                DB_NAME,
+                DB_VERSION
+            );
+
+
+
+        /* =========================
+           初回データベース作成
+        ========================= */
+
+        request.onupgradeneeded =
+            function(event) {
+
+
+                db =
+                    event.target.result;
+
+
+
+                if (
+                    !db.objectStoreNames.contains(
+                        STORE_NAME
+                    )
+                ) {
+
+
+                    db.createObjectStore(
+                        STORE_NAME,
+                        {
+                            keyPath: "id"
+                        }
+                    );
+
+
+                }
+
+            };
+
+
+
+        /* =========================
+           IndexedDB接続成功
+        ========================= */
+
+        request.onsuccess =
+            function(event) {
+
+
+                db =
+                    event.target.result;
+
+
+                console.log(
+                    "IndexedDB接続成功"
+                );
+
+
+                /* 保存データを読み込む */
+
+                loadSettings();
+
+            };
+
+
+
+        /* =========================
+           IndexedDBエラー
+        ========================= */
+
+        request.onerror =
+            function(event) {
+
+
+                console.error(
+                    "IndexedDBエラー:",
+                    event.target.error
+                );
+
+            };
+
+
+
+        /* =========================
+           保存ボタン
+        ========================= */
+
         document
-            .getElementById("userName")
-            .value =
-            data.name || "";
+            .getElementById(
+                "saveSettings"
+            )
+            .addEventListener(
+                "click",
+                saveSettings
+            );
 
 
-        document
-            .getElementById("userGrade")
-            .value =
-            data.grade || "";
 
-    };
+        /* =========================
+           設定を保存
+        ========================= */
 
-}
-</script>
+        function saveSettings() {
+
+
+            /* DBがまだ準備できていない場合 */
+
+            if (!db) {
+
+                alert(
+                    "データベースを準備しています。少し待ってからもう一度押してください。"
+                );
+
+                return;
+
+            }
+
+
+
+            /* 入力された値を取得 */
+
+            const name =
+                document
+                    .getElementById(
+                        "userName"
+                    )
+                    .value;
+
+
+            const grade =
+                document
+                    .getElementById(
+                        "userGrade"
+                    )
+                    .value;
+
+
+
+            /* 保存するデータ */
+
+            const data = {
+
+                id: "user",
+
+                name: name,
+
+                grade: grade
+
+            };
+
+
+
+            /* 保存処理開始 */
+
+            const transaction =
+                db.transaction(
+                    STORE_NAME,
+                    "readwrite"
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    STORE_NAME
+                );
+
+
+
+            /* 保存 */
+
+            store.put(data);
+
+
+
+            /* 保存成功 */
+
+            transaction.oncomplete =
+                function() {
+
+
+                    document
+                        .getElementById(
+                            "saveMessage"
+                        )
+                        .textContent =
+                        "✓ 保存しました";
+
+
+                };
+
+
+
+            /* 保存失敗 */
+
+            transaction.onerror =
+                function() {
+
+
+                    alert(
+                        "保存に失敗しました。"
+                    );
+
+
+                };
+
+        }
+
+
+
+        /* =========================
+           設定を読み込む
+        ========================= */
+
+        function loadSettings() {
+
+
+            if (!db) {
+
+                return;
+
+            }
+
+
+
+            const transaction =
+                db.transaction(
+                    STORE_NAME,
+                    "readonly"
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    STORE_NAME
+                );
+
+
+
+            const request =
+                store.get("user");
+
+
+
+            request.onsuccess =
+                function() {
+
+
+                    const data =
+                        request.result;
+
+
+
+                    /* データがなければ終了 */
+
+                    if (!data) {
+
+                        return;
+
+                    }
+
+
+
+                    /* 名前を表示 */
+
+                    document
+                        .getElementById(
+                            "userName"
+                        )
+                        .value =
+                        data.name || "";
+
+
+
+                    /* 学年を表示 */
+
+                    document
+                        .getElementById(
+                            "userGrade"
+                        )
+                        .value =
+                        data.grade || "";
+
+                };
+
+        }
+
+
+    </script>
 
 
 </body>
+
 </html>
