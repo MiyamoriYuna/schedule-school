@@ -6,6 +6,42 @@
     <title>時間割・予定管理</title>
 
     <style>
+        label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 7px;
+
+    border: 1px solid #ccc;
+    border-radius: 10px;
+
+    font-size: 16px;
+}
+
+.save-button {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #e85d75;
+    color: white;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#saveMessage {
+    margin-top: 12px;
+    text-align: center;
+    color: #e85d75;
+}
         * {
             box-sizing: border-box;
         }
@@ -198,7 +234,64 @@
     <h2>設定</h2>
 
     <div class="card">
-        設定ページです。
+
+        <h3>基本情報</h3>
+
+        <label>
+            名前・ニックネーム
+            <input
+                id="userName"
+                type="text"
+                placeholder="例：ゆうな">
+        </label>
+
+        <br>
+
+        <label>
+            学年
+            <select id="userGrade">
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="中学1年">
+                    中学1年
+                </option>
+
+                <option value="中学2年">
+                    中学2年
+                </option>
+
+                <option value="中学3年">
+                    中学3年
+                </option>
+
+                <option value="高校1年">
+                    高校1年
+                </option>
+
+                <option value="高校2年">
+                    高校2年
+                </option>
+
+                <option value="高校3年">
+                    高校3年
+                </option>
+
+            </select>
+        </label>
+
+        <button
+            id="saveSettings"
+            class="save-button">
+
+            保存
+
+        </button>
+
+        <p id="saveMessage"></p>
+
     </div>
 
 </section>
@@ -345,6 +438,177 @@ function showPage(pageId, button) {
 
 }
 
+    /* =========================
+   IndexedDB
+========================= */
+
+const DB_NAME = "ScheduleApp";
+const DB_VERSION = 1;
+const STORE_NAME = "settings";
+
+let db;
+
+
+/* データベースを開く */
+
+const request = indexedDB.open(
+    DB_NAME,
+    DB_VERSION
+);
+
+
+/* 初めてデータベースを作る */
+
+request.onupgradeneeded = function(event) {
+
+    db = event.target.result;
+
+    if (!db.objectStoreNames.contains(STORE_NAME)) {
+
+        db.createObjectStore(
+            STORE_NAME,
+            {
+                keyPath: "id"
+            }
+        );
+
+    }
+
+};
+
+
+/* データベースを開けた */
+
+request.onsuccess = function(event) {
+
+    db = event.target.result;
+
+    console.log("IndexedDB接続成功");
+
+    loadSettings();
+
+};
+
+
+/* エラー */
+
+request.onerror = function(event) {
+
+    console.error(
+        "IndexedDBエラー",
+        event.target.error
+    );
+
+};
+
+
+/* =========================
+   設定を保存
+========================= */
+
+document
+    .getElementById("saveSettings")
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
+function saveSettings() {
+
+    const name =
+        document.getElementById("userName").value;
+
+    const grade =
+        document.getElementById("userGrade").value;
+
+
+    const data = {
+
+        id: "user",
+
+        name: name,
+
+        grade: grade
+
+    };
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    store.put(data);
+
+
+    transaction.oncomplete = function() {
+
+        document
+            .getElementById("saveMessage")
+            .textContent =
+            "✓ 保存しました";
+
+    };
+
+}
+
+
+/* =========================
+   保存した設定を読み込む
+========================= */
+
+function loadSettings() {
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    const request =
+        store.get("user");
+
+
+    request.onsuccess = function() {
+
+        const data = request.result;
+
+
+        if (!data) {
+            return;
+        }
+
+
+        document
+            .getElementById("userName")
+            .value =
+            data.name || "";
+
+
+        document
+            .getElementById("userGrade")
+            .value =
+            data.grade || "";
+
+    };
+
+}
 </script>
 
 
