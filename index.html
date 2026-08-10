@@ -254,13 +254,17 @@
         id="home"
         class="page active">
 
-        <h2>ホーム</h2>
+      <h2>ホーム</h2>
 
-        <div class="card">
+<div class="card">
 
-            ホームページです。
+    <h3>今日の時間割</h3>
 
-        </div>
+    <div id="todayTimetable">
+        時間割を読み込んでいます...
+    </div>
+
+</div>
 
     </section>
 
@@ -1221,6 +1225,148 @@ function loadTimetable() {
 
 createTimetableSettings();
 
+        /* =========================
+   今日の時間割を表示
+========================= */
+
+function showTodayTimetable() {
+
+    if (!db) {
+        return;
+    }
+
+    const today = new Date();
+
+    const dayNames = [
+        "日曜日",
+        "月曜日",
+        "火曜日",
+        "水曜日",
+        "木曜日",
+        "金曜日",
+        "土曜日"
+    ];
+
+    const todayName =
+        dayNames[today.getDay()];
+
+    const container =
+        document.getElementById(
+            "todayTimetable"
+        );
+
+    /* 土日 */
+
+    if (
+        todayName === "土曜日" ||
+        todayName === "日曜日"
+    ) {
+
+        container.innerHTML =
+            "<p>今日は学校がお休みです。</p>";
+
+        return;
+
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+    const request =
+        store.get("timetable");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !data.timetable ||
+                !data.timetable[todayName]
+            ) {
+
+                container.innerHTML =
+                    "<p>今日の時間割が登録されていません。</p>";
+
+                return;
+
+            }
+
+
+            const timetable =
+                data.timetable[todayName];
+
+
+            container.innerHTML = "";
+
+
+            timetable.forEach(
+                function(subject, index) {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+                    row.style.padding =
+                        "10px 0";
+
+                    row.style.borderBottom =
+                        "1px solid #eee";
+
+
+                    const period =
+                        document.createElement(
+                            "strong"
+                        );
+
+                    period.textContent =
+                        (index + 1) +
+                        "時間目　";
+
+
+                    const subjectText =
+                        document.createElement(
+                            "span"
+                        );
+
+                    subjectText.textContent =
+                        subject ||
+                        "未登録";
+
+
+                    row.appendChild(
+                        period
+                    );
+
+                    row.appendChild(
+                        subjectText
+                    );
+
+
+                    container.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        };
+
+}
     </script>
 
 
