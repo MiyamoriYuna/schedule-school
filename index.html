@@ -504,7 +504,250 @@
 
         });
 
-    </script>
+    <script>
+    // ========================================
+    // 今日の日付
+    // ========================================
+
+    function showToday() {
+
+        const today = new Date();
+
+        const days = [
+            "日", "月", "火", "水",
+            "木", "金", "土"
+        ];
+
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        const date = today.getDate();
+        const day = days[today.getDay()];
+
+        document.getElementById("today").textContent =
+            `${year}年${month}月${date}日（${day}）`;
+    }
+
+    showToday();
+
+
+    // ========================================
+    // ページ切り替え
+    // ========================================
+
+    const navButtons =
+        document.querySelectorAll(".nav-button");
+
+    const pages =
+        document.querySelectorAll(".page");
+
+    navButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const pageId = button.dataset.page;
+
+            // すべてのページを非表示
+            pages.forEach(page => {
+                page.classList.remove("active");
+            });
+
+            // 選択したページを表示
+            document
+                .getElementById(pageId)
+                .classList.add("active");
+
+            // ナビボタンの選択状態
+            navButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            button.classList.add("active");
+        });
+
+    });
+
+
+    // ========================================
+    // IndexedDB
+    // ========================================
+
+    const DB_NAME = "scheduleAppDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "settings";
+
+    let db;
+
+
+    // データベースを開く
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+
+    // 初めてデータベースを作るとき
+    request.onupgradeneeded = function(event) {
+
+        db = event.target.result;
+
+        // settingsという保存場所を作る
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+
+            db.createObjectStore(STORE_NAME, {
+                keyPath: "id"
+            });
+
+        }
+    };
+
+
+    // データベースを開けた
+    request.onsuccess = function(event) {
+
+        db = event.target.result;
+
+        console.log("IndexedDBに接続しました");
+
+        // 保存されている設定を読み込む
+        loadSettings();
+    };
+
+
+    // エラー
+    request.onerror = function(event) {
+
+        console.error(
+            "IndexedDBエラー:",
+            event.target.error
+        );
+
+    };
+
+
+    // ========================================
+    // 設定を保存
+    // ========================================
+
+    function saveSettings() {
+
+        const nameInput =
+            document.querySelector(
+                '#settings-page input[type="text"]'
+            );
+
+        const gradeInput =
+            document.querySelector(
+                '#settings-page select'
+            );
+
+
+        const data = {
+
+            id: "userSettings",
+
+            name: nameInput.value,
+
+            grade: gradeInput.value
+
+        };
+
+
+        const transaction =
+            db.transaction(
+                [STORE_NAME],
+                "readwrite"
+            );
+
+
+        const store =
+            transaction.objectStore(STORE_NAME);
+
+
+        store.put(data);
+
+
+        transaction.oncomplete = function() {
+
+            alert("設定を保存しました！");
+        };
+
+
+        transaction.onerror = function() {
+
+            alert("保存に失敗しました。");
+        };
+
+    }
+
+
+    // ========================================
+    // 設定を読み込む
+    // ========================================
+
+    function loadSettings() {
+
+        const transaction =
+            db.transaction(
+                [STORE_NAME],
+                "readonly"
+            );
+
+
+        const store =
+            transaction.objectStore(STORE_NAME);
+
+
+        const request =
+            store.get("userSettings");
+
+
+        request.onsuccess = function() {
+
+            const data = request.result;
+
+
+            // 保存データがなければ終了
+            if (!data) {
+                return;
+            }
+
+
+            const nameInput =
+                document.querySelector(
+                    '#settings-page input[type="text"]'
+                );
+
+            const gradeInput =
+                document.querySelector(
+                    '#settings-page select'
+                );
+
+
+            // 保存された値を表示
+            nameInput.value =
+                data.name || "";
+
+            gradeInput.value =
+                data.grade || "";
+
+        };
+
+    }
+
+
+    // ========================================
+    // 設定ページの保存ボタン
+    // ========================================
+
+    const saveButton =
+        document.querySelector(
+            '#settings-page .save-button'
+        );
+
+
+    saveButton.addEventListener(
+        "click",
+        saveSettings
+    );
+
+</script>
 
 </body>
 </html>
