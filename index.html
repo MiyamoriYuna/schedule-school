@@ -1,510 +1,844 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>時間割・予定管理</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<title>時間割・予定管理</title>
 
-        body {
-            font-family: sans-serif;
-            background: #f8fafc;
-            color: #333;
-            padding-bottom: 75px;
-        }
+<style>
 
-        /* 上部 */
-        header {
-            background: white;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        header h1 {
-            font-size: 20px;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    color: #333;
+    padding-bottom: 80px;
+}
 
-        #today {
-            font-size: 13px;
-            color: #777;
-            margin-top: 4px;
-        }
+/* ヘッダー */
 
-        /* ページ */
-        .page {
-            display: none;
-            padding: 20px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+header {
+    background: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
 
-        .page.active {
-            display: block;
-        }
+header h1 {
+    font-size: 20px;
+}
 
-        .page-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+#today {
+    margin-top: 5px;
+    color: #777;
+    font-size: 14px;
+}
 
-        /* カード */
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
 
-        .card h3 {
-            margin-bottom: 10px;
-        }
+/* ページ */
 
-        /* 仮の時間割 */
-        .timetable-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
+.page {
+    display: none;
+    padding: 20px;
+    max-width: 700px;
+    margin: auto;
+}
 
-        .timetable-item:last-child {
-            border-bottom: none;
-        }
+.page.active {
+    display: block;
+}
 
-        /* ナビゲーション */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background: white;
-            border-top: 1px solid #ddd;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 20;
-        }
+.page-title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
 
-        .nav-button {
-            border: none;
-            background: none;
-            color: #777;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
 
-        .nav-icon {
-            font-size: 22px;
-        }
+/* カード */
 
-        .nav-button.active {
-            color: #e85d75;
-            font-weight: bold;
-        }
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
-        /* 入力欄 */
-        input,
-        select,
-        button {
-            font: inherit;
-        }
+.card h3 {
+    margin-bottom: 15px;
+}
 
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin-top: 8px;
-        }
 
-        .save-button {
-            margin-top: 15px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: #e85d75;
-            color: white;
-            cursor: pointer;
-        }
+/* 入力 */
 
-        /* ToDo */
-        .todo-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 7px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+}
 
-        .todo-item label {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+label {
+    display: block;
+    margin-bottom: 15px;
+}
 
-        .todo-item input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-        }
-    </style>
+
+/* ボタン */
+
+.save-button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: #e85d75;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.save-button:active {
+    transform: scale(0.98);
+}
+
+
+/* 時間割 */
+
+.timetable-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+
+/* ToDo */
+
+.todo-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.todo-item label {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+.todo-item input {
+    width: auto;
+    margin: 0;
+}
+
+
+/* 下部メニュー */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: white;
+    border-top: 1px solid #ddd;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    z-index: 100;
+}
+
+.nav-button {
+    border: none;
+    background: none;
+    color: #777;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: 11px;
+}
+
+.nav-icon {
+    font-size: 22px;
+    margin-bottom: 3px;
+}
+
+.nav-button.active {
+    color: #e85d75;
+    font-weight: bold;
+}
+
+</style>
 </head>
+
 
 <body>
 
-    <!-- 共通ヘッダー -->
-    <header>
-        <h1>時間割・予定管理</h1>
-        <div id="today"></div>
-    </header>
+
+<!-- =================================
+     共通ヘッダー
+================================= -->
+
+<header>
+
+    <h1>時間割・予定管理</h1>
+
+    <div id="today"></div>
+
+</header>
 
 
-    <!-- =========================
-         ① 月予定
-    ========================== -->
-    <main id="calendar-page" class="page">
 
-        <h2 class="page-title">月予定</h2>
+<!-- =================================
+     月予定
+================================= -->
 
-        <div class="card">
-            <h3>2026年8月</h3>
+<main id="calendar-page" class="page">
 
-            <p>ここにカレンダーを表示します。</p>
+    <h2 class="page-title">
+        月予定
+    </h2>
 
-            <br>
+    <div class="card">
 
-            <p>日付をクリックすると、その日の予定を確認できます。</p>
+        <h3>カレンダー</h3>
+
+        <p>
+            ここに月予定を表示します。
+        </p>
+
+    </div>
+
+</main>
+
+
+
+<!-- =================================
+     やること
+================================= -->
+
+<main id="todo-page" class="page">
+
+    <h2 class="page-title">
+        やること
+    </h2>
+
+    <div class="card">
+
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                数学の宿題
+            </label>
         </div>
 
-        <div class="card">
-            <h3>予定</h3>
-            <p>予定がここに表示されます。</p>
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                英単語の勉強
+            </label>
         </div>
 
-    </main>
-
-
-    <!-- =========================
-         ② やることリスト
-    ========================== -->
-    <main id="todo-page" class="page">
-
-        <h2 class="page-title">やること</h2>
-
-        <div class="card">
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    数学の宿題
-                </label>
-            </div>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    英単語の勉強
-                </label>
-            </div>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    プリントを提出
-                </label>
-            </div>
-
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                プリントを提出
+            </label>
         </div>
 
-        <div class="card">
-            <h3>新しいやること</h3>
+    </div>
+
+</main>
+
+
+
+<!-- =================================
+     ホーム
+================================= -->
+
+<main id="home-page" class="page active">
+
+    <h2 class="page-title">
+        ホーム
+    </h2>
+
+    <div class="card">
+
+        <h3>今日の時間割</h3>
+
+        <div class="timetable-item">
+            <span>1時間目</span>
+            <strong>国語</strong>
+        </div>
+
+        <div class="timetable-item">
+            <span>2時間目</span>
+            <strong>数学</strong>
+        </div>
+
+        <div class="timetable-item">
+            <span>3時間目</span>
+            <strong>英語</strong>
+        </div>
+
+        <div class="timetable-item">
+            <span>4時間目</span>
+            <strong>理科</strong>
+        </div>
+
+        <div class="timetable-item">
+            <span>5時間目</span>
+            <strong>体育</strong>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>今日の予定</h3>
+
+        <p>16:00　部活動</p>
+        <p>19:00　塾</p>
+
+    </div>
+
+</main>
+
+
+
+<!-- =================================
+     持ち物
+================================= -->
+
+<main id="belongings-page" class="page">
+
+    <h2 class="page-title">
+        持ち物
+    </h2>
+
+    <div class="card">
+
+        <h3>今日の持ち物</h3>
+
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                教科書
+            </label>
+        </div>
+
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                ノート
+            </label>
+        </div>
+
+        <div class="todo-item">
+            <label>
+                <input type="checkbox">
+                筆箱
+            </label>
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =================================
+     設定
+================================= -->
+
+<main id="settings-page" class="page">
+
+    <h2 class="page-title">
+        設定
+    </h2>
+
+
+    <div class="card">
+
+        <h3>基本情報</h3>
+
+
+        <label>
+
+            名前
 
             <input
+                id="userName"
                 type="text"
-                placeholder="やることを入力">
+                placeholder="名前またはニックネーム">
 
-            <button class="save-button">
-                追加
-            </button>
-        </div>
-
-    </main>
+        </label>
 
 
-    <!-- =========================
-         ③ ホーム
-    ========================== -->
-    <main id="home-page" class="page active">
+        <label>
 
-        <h2 class="page-title">ホーム</h2>
+            学年
 
-        <div class="card">
+            <select id="userGrade">
 
-            <h3>今日の時間割</h3>
+                <option value="">
+                    選択してください
+                </option>
 
-            <div class="timetable-item">
-                <span>1時間目</span>
-                <strong>国語</strong>
-            </div>
+                <option value="中学1年">
+                    中学1年
+                </option>
 
-            <div class="timetable-item">
-                <span>2時間目</span>
-                <strong>数学</strong>
-            </div>
+                <option value="中学2年">
+                    中学2年
+                </option>
 
-            <div class="timetable-item">
-                <span>3時間目</span>
-                <strong>英語</strong>
-            </div>
+                <option value="中学3年">
+                    中学3年
+                </option>
 
-            <div class="timetable-item">
-                <span>4時間目</span>
-                <strong>理科</strong>
-            </div>
+                <option value="高校1年">
+                    高校1年
+                </option>
 
-            <div class="timetable-item">
-                <span>5時間目</span>
-                <strong>体育</strong>
-            </div>
+                <option value="高校2年">
+                    高校2年
+                </option>
 
-        </div>
+                <option value="高校3年">
+                    高校3年
+                </option>
 
-        <div class="card">
-            <h3>今日の予定</h3>
+            </select>
 
-            <p>16:00　部活動</p>
-            <p>19:00　塾</p>
-
-        </div>
-
-    </main>
+        </label>
 
 
-    <!-- =========================
-         ④ 持ち物
-    ========================== -->
-    <main id="belongings-page" class="page">
+        <button
+            id="saveSettings"
+            class="save-button">
 
-        <h2 class="page-title">持ち物</h2>
+            保存
 
-        <div class="card">
-
-            <h3>今日の持ち物</h3>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    国語の教科書
-                </label>
-            </div>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    数学の教科書
-                </label>
-            </div>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    英語のノート
-                </label>
-            </div>
-
-            <div class="todo-item">
-                <label>
-                    <input type="checkbox">
-                    体育着
-                </label>
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <h3>特別な持ち物</h3>
-
-            <input
-                type="text"
-                placeholder="例：絵の具">
-
-            <button class="save-button">
-                追加
-            </button>
-
-        </div>
-
-    </main>
-
-
-    <!-- =========================
-         ⑤ 設定
-    ========================== -->
-    <main id="settings-page" class="page">
-
-        <h2 class="page-title">設定</h2>
-
-        <div class="card">
-
-            <h3>基本情報</h3>
-
-            <label>
-                名前
-                <input
-                    type="text"
-                    placeholder="名前またはニックネーム">
-            </label>
-
-            <br>
-
-            <label>
-                学年
-                <select>
-                    <option>中学1年</option>
-                    <option>中学2年</option>
-                    <option>中学3年</option>
-                    <option>高校1年</option>
-                    <option>高校2年</option>
-                    <option>高校3年</option>
-                </select>
-            </label>
-
-            <button class="save-button">
-                保存
-            </button>
-
-        </div>
-
-        <div class="card">
-            <h3>デザイン</h3>
-            <p>ここで色やデザインを変更できるようにします。</p>
-        </div>
-
-        <div class="card">
-            <h3>教科・部活動</h3>
-            <p>後から教科や部活動、持ち物を設定できるようにします。</p>
-        </div>
-
-    </main>
-
-
-    <!-- =========================
-         下部ナビゲーション
-    ========================== -->
-    <nav class="bottom-nav">
-
-        <button class="nav-button" data-page="calendar-page">
-            <span class="nav-icon">🗓️</span>
-            <span>月予定</span>
         </button>
 
-        <button class="nav-button" data-page="todo-page">
-            <span class="nav-icon">✅</span>
-            <span>やること</span>
-        </button>
 
-        <button class="nav-button active" data-page="home-page">
-            <span class="nav-icon">🏠</span>
-            <span>ホーム</span>
-        </button>
+        <p
+            id="saveMessage"
+            style="
+                margin-top:12px;
+                text-align:center;
+                color:#e85d75;
+            ">
+        </p>
 
-        <button class="nav-button" data-page="belongings-page">
-            <span class="nav-icon">🎒</span>
-            <span>持ち物</span>
-        </button>
+    </div>
 
-        <button class="nav-button" data-page="settings-page">
-            <span class="nav-icon">⚙️</span>
-            <span>設定</span>
-        </button>
-
-    </nav>
+</main>
 
 
-    <script>
 
-        // =========================
-        // 今日の日付を表示
-        // =========================
+<!-- =================================
+     下部メニュー
+================================= -->
 
-        function showToday() {
-
-            const today = new Date();
-
-            const days = [
-                "日", "月", "火", "水",
-                "木", "金", "土"
-            ];
-
-            const year = today.getFullYear();
-            const month = today.getMonth() + 1;
-            const date = today.getDate();
-            const day = days[today.getDay()];
-
-            document.getElementById("today").textContent =
-                `${year}年${month}月${date}日（${day}）`;
-        }
-
-        showToday();
+<nav class="bottom-nav">
 
 
-        // =========================
-        // ページ切り替え
-        // =========================
+    <button
+        class="nav-button"
+        data-page="calendar-page">
 
-        const navButtons =
-            document.querySelectorAll(".nav-button");
+        <span class="nav-icon">🗓️</span>
 
-        const pages =
-            document.querySelectorAll(".page");
+        <span>月予定</span>
 
-
-        navButtons.forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const pageId =
-                    button.dataset.page;
+    </button>
 
 
-                // すべてのページを非表示
-                pages.forEach(page => {
-                    page.classList.remove("active");
-                });
+    <button
+        class="nav-button"
+        data-page="todo-page">
+
+        <span class="nav-icon">✅</span>
+
+        <span>やること</span>
+
+    </button>
 
 
-                // 選択したページを表示
-                document
-                    .getElementById(pageId)
-                    .classList.add("active");
+    <button
+        class="nav-button active"
+        data-page="home-page">
+
+        <span class="nav-icon">🏠</span>
+
+        <span>ホーム</span>
+
+    </button>
 
 
-                // ナビボタンの選択状態
-                navButtons.forEach(btn => {
-                    btn.classList.remove("active");
-                });
+    <button
+        class="nav-button"
+        data-page="belongings-page">
 
-                button.classList.add("active");
+        <span class="nav-icon">🎒</span>
 
-            });
+        <span>持ち物</span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="settings-page">
+
+        <span class="nav-icon">⚙️</span>
+
+        <span>設定</span>
+
+    </button>
+
+
+</nav>
+
+
+
+<script>
+
+
+/* =================================
+   今日の日付
+================================= */
+
+function showToday() {
+
+    const today = new Date();
+
+    const days = [
+        "日",
+        "月",
+        "火",
+        "水",
+        "木",
+        "金",
+        "土"
+    ];
+
+    const year =
+        today.getFullYear();
+
+    const month =
+        today.getMonth() + 1;
+
+    const date =
+        today.getDate();
+
+    const day =
+        days[today.getDay()];
+
+    document
+        .getElementById("today")
+        .textContent =
+        `${year}年${month}月${date}日（${day}）`;
+}
+
+showToday();
+
+
+
+/* =================================
+   ページ切り替え
+================================= */
+
+const navButtons =
+    document.querySelectorAll(".nav-button");
+
+const pages =
+    document.querySelectorAll(".page");
+
+
+navButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const pageId =
+            button.dataset.page;
+
+
+        pages.forEach(page => {
+
+            page.classList.remove("active");
 
         });
 
-    </script>
+
+        document
+            .getElementById(pageId)
+            .classList.add("active");
+
+
+        navButtons.forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+        button.classList.add("active");
+
+    });
+
+});
+
+
+
+/* =================================
+   IndexedDB
+================================= */
+
+const DB_NAME =
+    "ScheduleManagementApp";
+
+const DB_VERSION = 1;
+
+const STORE_NAME =
+    "settings";
+
+let db = null;
+
+
+
+/* データベースを開く */
+
+const request =
+    indexedDB.open(
+        DB_NAME,
+        DB_VERSION
+    );
+
+
+
+/* 初回作成 */
+
+request.onupgradeneeded =
+    function(event) {
+
+        db =
+            event.target.result;
+
+
+        if (
+            !db.objectStoreNames.contains(
+                STORE_NAME
+            )
+        ) {
+
+            db.createObjectStore(
+                STORE_NAME,
+                {
+                    keyPath: "id"
+                }
+            );
+
+        }
+
+    };
+
+
+
+/* 接続成功 */
+
+request.onsuccess =
+    function(event) {
+
+        db =
+            event.target.result;
+
+        console.log(
+            "IndexedDB接続成功"
+        );
+
+        loadSettings();
+
+    };
+
+
+
+/* エラー */
+
+request.onerror =
+    function(event) {
+
+        console.error(
+            "IndexedDBエラー",
+            event.target.error
+        );
+
+    };
+
+
+
+/* =================================
+   設定を保存
+================================= */
+
+document
+    .getElementById("saveSettings")
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
+function saveSettings() {
+
+    if (!db) {
+
+        alert(
+            "データベースの準備中です。少し待ってからもう一度押してください。"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document
+            .getElementById("userName")
+            .value;
+
+
+    const grade =
+        document
+            .getElementById("userGrade")
+            .value;
+
+
+
+    const data = {
+
+        id: "user",
+
+        name: name,
+
+        grade: grade
+
+    };
+
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    store.put(data);
+
+
+
+    transaction.oncomplete =
+        function() {
+
+            document
+                .getElementById("saveMessage")
+                .textContent =
+                "✓ 保存しました";
+
+        };
+
+
+    transaction.onerror =
+        function() {
+
+            alert(
+                "保存できませんでした。"
+            );
+
+        };
+
+}
+
+
+
+/* =================================
+   設定を読み込む
+================================= */
+
+function loadSettings() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    const request =
+        store.get("user");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (!data) {
+                return;
+            }
+
+
+            document
+                .getElementById("userName")
+                .value =
+                data.name || "";
+
+
+            document
+                .getElementById("userGrade")
+                .value =
+                data.grade || "";
+
+        };
+
+}
+
+</script>
 
 </body>
 </html>
