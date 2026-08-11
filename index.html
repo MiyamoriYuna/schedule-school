@@ -278,13 +278,17 @@
         id="belongings"
         class="page">
 
-        <h2>持ち物</h2>
+      <h2>持ち物</h2>
 
-        <div class="card">
+<div class="card">
 
-            持ち物ページです。
+    <h3>今日の持ち物</h3>
 
-        </div>
+    <div id="todayBelongings">
+        持ち物を読み込んでいます...
+    </div>
+
+</div>
 
     </section>
 
@@ -710,6 +714,8 @@ function(event) {
     loadBelongings();
 
     showTodayTimetable();
+
+    showTodayBelongings();
 
 };
 
@@ -1144,8 +1150,9 @@ function saveTimetable() {
 
         loadTimetable();
 
-        /* ホーム画面の時間割も更新 */
         showTodayTimetable();
+
+        showTodayBelongings();
 
     };
 
@@ -1594,6 +1601,306 @@ function loadBelongings() {
 ========================= */
 
 createBelongingsSettings();
+
+        /* =========================
+   今日の持ち物を表示
+========================= */
+
+function showTodayBelongings() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "todayBelongings"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const today =
+        new Date();
+
+
+    const dayNames = [
+        "日曜日",
+        "月曜日",
+        "火曜日",
+        "水曜日",
+        "木曜日",
+        "金曜日",
+        "土曜日"
+    ];
+
+
+    const todayName =
+        dayNames[today.getDay()];
+
+
+    /* 土日は学校の時間割がない */
+
+    if (
+        todayName === "土曜日" ||
+        todayName === "日曜日"
+    ) {
+
+        container.innerHTML =
+            "<p>今日は学校がお休みです。</p>";
+
+        return;
+
+    }
+
+
+    /* 時間割と持ち物を同時に読み込む */
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const timetableRequest =
+        store.get("timetable");
+
+
+    const belongingsRequest =
+        store.get("belongings");
+
+
+    timetableRequest.onsuccess =
+        function() {
+
+            const timetableData =
+                timetableRequest.result;
+
+
+            belongingsRequest.onsuccess =
+                function() {
+
+                    const belongingsData =
+                        belongingsRequest.result;
+
+
+                    /* データがない場合 */
+
+                    if (
+                        !timetableData ||
+                        !timetableData.timetable
+                    ) {
+
+                        container.innerHTML =
+                            "<p>時間割が登録されていません。</p>";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !belongingsData ||
+                        !belongingsData.belongings
+                    ) {
+
+                        container.innerHTML =
+                            "<p>教科ごとの持ち物が登録されていません。</p>";
+
+                        return;
+
+                    }
+
+
+                    const todayTimetable =
+                        timetableData
+                            .timetable[todayName];
+
+
+                    if (!todayTimetable) {
+
+                        container.innerHTML =
+                            "<p>今日の時間割が登録されていません。</p>";
+
+                        return;
+
+                    }
+
+
+                    container.innerHTML = "";
+
+
+                    let hasBelongings =
+                        false;
+
+
+                    /* 時間割を1時間ずつ確認 */
+
+                    todayTimetable.forEach(
+                        function(subject, index) {
+
+
+                            /* 教科が未登録なら無視 */
+
+                            if (!subject) {
+                                return;
+                            }
+
+
+                            const items =
+                                belongingsData
+                                    .belongings[subject];
+
+
+                            /* 持ち物が登録されていない */
+
+                            if (!items) {
+                                return;
+                            }
+
+
+                            /* カンマ・読点で分割 */
+
+                            const itemList =
+                                items
+                                    .split(/[,、]/)
+                                    .map(
+                                        function(item) {
+                                            return item.trim();
+                                        }
+                                    )
+                                    .filter(
+                                        function(item) {
+                                            return item !== "";
+                                        }
+                                    );
+
+
+                            if (
+                                itemList.length === 0
+                            ) {
+                                return;
+                            }
+
+
+                            hasBelongings =
+                                true;
+
+
+                            /* 教科の見出し */
+
+                            const subjectTitle =
+                                document.createElement(
+                                    "h4"
+                                );
+
+
+                            subjectTitle.textContent =
+                                (index + 1) +
+                                "時間目　" +
+                                subject;
+
+
+                            container.appendChild(
+                                subjectTitle
+                            );
+
+
+                            /* 持ち物 */
+
+                            itemList.forEach(
+                                function(item) {
+
+                                    const label =
+                                        document.createElement(
+                                            "label"
+                                        );
+
+
+                                    label.style.display =
+                                        "flex";
+
+                                    label.style.alignItems =
+                                        "center";
+
+                                    label.style.gap =
+                                        "10px";
+
+                                    label.style.padding =
+                                        "8px 0";
+
+
+                                    const checkbox =
+                                        document.createElement(
+                                            "input"
+                                        );
+
+
+                                    checkbox.type =
+                                        "checkbox";
+
+
+                                    checkbox.style.width =
+                                        "20px";
+
+                                    checkbox.style.height =
+                                        "20px";
+
+
+                                    const text =
+                                        document.createElement(
+                                            "span"
+                                        );
+
+
+                                    text.textContent =
+                                        item;
+
+
+                                    label.appendChild(
+                                        checkbox
+                                    );
+
+                                    label.appendChild(
+                                        text
+                                    );
+
+
+                                    container.appendChild(
+                                        label
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                    if (!hasBelongings) {
+
+                        container.innerHTML =
+                            "<p>今日必要な持ち物は登録されていません。</p>";
+
+                    }
+
+                };
+
+        };
+
+}
+        
     </script>
 
 
