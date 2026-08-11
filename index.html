@@ -1118,19 +1118,22 @@ function saveTimetable() {
     });
 
 
-    transaction.oncomplete =
-        function() {
+  transaction.oncomplete =
+    function() {
 
-            document
-                .getElementById(
-                    "timetableMessage"
-                )
-                .textContent =
-                "✓ 時間割を保存しました";
+        document
+            .getElementById(
+                "timetableMessage"
+            )
+            .textContent =
+            "✓ 時間割を保存しました";
 
-            loadTimetable();
+        loadTimetable();
 
-        };
+        /* ホーム画面の時間割も更新 */
+        showTodayTimetable();
+
+    };
 
 }
 
