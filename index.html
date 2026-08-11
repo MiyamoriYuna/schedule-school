@@ -2621,6 +2621,890 @@ function deleteSpecialBelonging(index) {
 ========================= */
 
 showSpecialBelongings();
+        /* =========================
+   月予定カレンダー
+========================= */
+
+let calendarDate = new Date();
+
+let selectedDate = null;
+
+
+/* =========================
+   カレンダー表示
+========================= */
+
+function renderCalendar() {
+
+    const calendar =
+        document.getElementById("calendar");
+
+    const title =
+        document.getElementById("calendarTitle");
+
+    if (!calendar || !title) {
+        return;
+    }
+
+
+    const year =
+        calendarDate.getFullYear();
+
+    const month =
+        calendarDate.getMonth();
+
+
+    title.textContent =
+        year + "年" + (month + 1) + "月";
+
+
+    calendar.innerHTML = "";
+
+
+    /* 曜日 */
+
+    const weekNames = [
+        "日",
+        "月",
+        "火",
+        "水",
+        "木",
+        "金",
+        "土"
+    ];
+
+
+    weekNames.forEach(function(day) {
+
+        const header =
+            document.createElement("div");
+
+        header.textContent = day;
+
+        header.style.textAlign =
+            "center";
+
+        header.style.fontWeight =
+            "bold";
+
+        header.style.padding =
+            "5px";
+
+
+        calendar.appendChild(header);
+
+    });
+
+
+    /* 月の1日 */
+
+    const firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
+
+
+    /* 月の日数 */
+
+    const lastDate =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    /* 空白 */
+
+    for (
+        let i = 0;
+        i < firstDay;
+        i++
+    ) {
+
+        const empty =
+            document.createElement("div");
+
+        calendar.appendChild(empty);
+
+    }
+
+
+    /* 日付 */
+
+    for (
+        let day = 1;
+        day <= lastDate;
+        day++
+    ) {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className =
+            "calendar-day";
+
+
+        const number =
+            document.createElement("div");
+
+        number.className =
+            "calendar-day-number";
+
+        number.textContent =
+            day;
+
+
+        cell.appendChild(number);
+
+
+        const dateString =
+            year +
+            "-" +
+            String(month + 1)
+                .padStart(2, "0") +
+            "-" +
+            String(day)
+                .padStart(2, "0");
+
+
+        /* 今日 */
+
+        const today =
+            new Date();
+
+
+        const todayString =
+            today.getFullYear() +
+            "-" +
+            String(
+                today.getMonth() + 1
+            ).padStart(2, "0") +
+            "-" +
+            String(
+                today.getDate()
+            ).padStart(2, "0");
+
+
+        if (
+            dateString === todayString
+        ) {
+
+            cell.classList.add(
+                "today"
+            );
+
+        }
+
+
+        /* 選択中 */
+
+        if (
+            dateString === selectedDate
+        ) {
+
+            cell.classList.add(
+                "selected"
+            );
+
+        }
+
+
+        /* 予定表示 */
+
+        loadEventsForDate(
+            dateString,
+            cell
+        );
+
+
+        /* 日付クリック */
+
+        cell.addEventListener(
+            "click",
+            function() {
+
+                selectCalendarDate(
+                    dateString
+                );
+
+            }
+        );
+
+
+        calendar.appendChild(cell);
+
+    }
+
+}
+
+
+/* =========================
+   日付を選択
+========================= */
+
+function selectCalendarDate(
+    dateString
+) {
+
+    selectedDate =
+        dateString;
+
+
+    document
+        .getElementById(
+            "selectedDateTitle"
+        )
+        .textContent =
+        dateString +
+        "の予定";
+
+
+    document
+        .getElementById(
+            "eventDate"
+        )
+        .value =
+        dateString;
+
+
+    renderCalendar();
+
+    showEvents(dateString);
+
+}
+
+
+/* =========================
+   予定を表示
+========================= */
+
+function showEvents(
+    dateString
+) {
+
+    const list =
+        document.getElementById(
+            "eventList"
+        );
+
+
+    if (!list || !db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "calendarEvents"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            list.innerHTML = "";
+
+
+            if (
+                !data ||
+                !Array.isArray(data.events)
+            ) {
+
+                list.innerHTML =
+                    "<p>予定はありません。</p>";
+
+                return;
+
+            }
+
+
+            const events =
+                data.events.filter(
+                    function(event) {
+
+                        return (
+                            event.date ===
+                            dateString
+                        );
+
+                    }
+                );
+
+
+            if (
+                events.length === 0
+            ) {
+
+                list.innerHTML =
+                    "<p>予定はありません。</p>";
+
+                return;
+
+            }
+
+
+            events.forEach(
+                function(event) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "event-item";
+
+
+                    const text =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    text.textContent =
+                        event.time +
+                        "　" +
+                        event.type +
+                        "　" +
+                        event.title;
+
+
+                    const deleteButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    deleteButton.textContent =
+                        "削除";
+
+                    deleteButton.className =
+                        "event-delete";
+
+
+                    deleteButton.onclick =
+                        function() {
+
+                            deleteEvent(
+                                event.id
+                            );
+
+                        };
+
+
+                    item.appendChild(
+                        text
+                    );
+
+                    item.appendChild(
+                        deleteButton
+                    );
+
+
+                    list.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        };
+
+}
+
+
+/* =========================
+   カレンダー上の予定
+========================= */
+
+function loadEventsForDate(
+    dateString,
+    cell
+) {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "calendarEvents"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.events)
+            ) {
+
+                return;
+
+            }
+
+
+            const events =
+                data.events.filter(
+                    function(event) {
+
+                        return (
+                            event.date ===
+                            dateString
+                        );
+
+                    }
+                );
+
+
+            events.forEach(
+                function(event) {
+
+                    const eventElement =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    eventElement.className =
+                        "calendar-event";
+
+
+                    eventElement.textContent =
+                        event.title;
+
+
+                    cell.appendChild(
+                        eventElement
+                    );
+
+                }
+            );
+
+        };
+
+}
+
+
+/* =========================
+   予定追加フォーム
+========================= */
+
+document
+    .getElementById("addEvent")
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "eventForm"
+                )
+                .style.display =
+                "block";
+
+
+            if (selectedDate) {
+
+                document
+                    .getElementById(
+                        "eventDate"
+                    )
+                    .value =
+                    selectedDate;
+
+            }
+
+        }
+    );
+
+
+/* =========================
+   キャンセル
+========================= */
+
+document
+    .getElementById("cancelEvent")
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "eventForm"
+                )
+                .style.display =
+                "none";
+
+        }
+    );
+
+
+/* =========================
+   予定を保存
+========================= */
+
+document
+    .getElementById("saveEvent")
+    .addEventListener(
+        "click",
+        function() {
+
+            saveCalendarEvent();
+
+        }
+    );
+
+
+function saveCalendarEvent() {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。"
+        );
+
+        return;
+
+    }
+
+
+    const date =
+        document
+            .getElementById(
+                "eventDate"
+            )
+            .value;
+
+
+    const time =
+        document
+            .getElementById(
+                "eventTime"
+            )
+            .value;
+
+
+    const type =
+        document
+            .getElementById(
+                "eventType"
+            )
+            .value;
+
+
+    const title =
+        document
+            .getElementById(
+                "eventTitle"
+            )
+            .value
+            .trim();
+
+
+    if (!date) {
+
+        alert(
+            "日付を選択してください。"
+        );
+
+        return;
+
+    }
+
+
+    if (!title) {
+
+        alert(
+            "予定を入力してください。"
+        );
+
+        return;
+
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "calendarEvents"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            let events = [];
+
+
+            if (
+                data &&
+                Array.isArray(data.events)
+            ) {
+
+                events =
+                    data.events;
+
+            }
+
+
+            events.push({
+
+                id:
+                    Date.now(),
+
+                date:
+                    date,
+
+                time:
+                    time || "時間未設定",
+
+                type:
+                    type,
+
+                title:
+                    title
+
+            });
+
+
+            store.put({
+
+                id:
+                    "calendarEvents",
+
+                events:
+                    events
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    selectedDate =
+                        date;
+
+
+                    document
+                        .getElementById(
+                            "eventForm"
+                        )
+                        .style.display =
+                        "none";
+
+
+                    document
+                        .getElementById(
+                            "eventTitle"
+                        )
+                        .value =
+                        "";
+
+
+                    document
+                        .getElementById(
+                            "eventTime"
+                        )
+                        .value =
+                        "";
+
+
+                    renderCalendar();
+
+                    showEvents(date);
+
+                };
+
+        };
+
+}
+
+
+/* =========================
+   予定を削除
+========================= */
+
+function deleteEvent(
+    eventId
+) {
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "calendarEvents"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.events)
+            ) {
+
+                return;
+
+            }
+
+
+            data.events =
+                data.events.filter(
+                    function(event) {
+
+                        return (
+                            event.id !==
+                            eventId
+                        );
+
+                    }
+                );
+
+
+            store.put({
+
+                id:
+                    "calendarEvents",
+
+                events:
+                    data.events
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    renderCalendar();
+
+                    if (selectedDate) {
+
+                        showEvents(
+                            selectedDate
+                        );
+
+                    }
+
+                };
+
+        };
+
+}
+
+
+/* =========================
+   前の月・次の月
+========================= */
+
+document
+    .getElementById("prevMonth")
+    .addEventListener(
+        "click",
+        function() {
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() - 1
+            );
+
+            renderCalendar();
+
+        }
+    );
+
+
+document
+    .getElementById("nextMonth")
+    .addEventListener(
+        "click",
+        function() {
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() + 1
+            );
+
+            renderCalendar();
+
+        }
+    );
+
+
+/* =========================
+   初期表示
+========================= */
+
+renderCalendar();
         
     </script>
 
