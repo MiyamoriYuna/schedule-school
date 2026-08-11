@@ -2646,6 +2646,17 @@ function renderCalendar() {
         return;
     }
 
+    /* カレンダーを必ず7列にする */
+    calendar.style.display = "grid";
+    calendar.style.gridTemplateColumns =
+        "repeat(7, minmax(0, 1fr))";
+    calendar.style.gap = "5px";
+    calendar.style.width = "100%";
+
+    if (!calendar || !title) {
+        return;
+    }
+
 
     const year =
         calendarDate.getFullYear();
