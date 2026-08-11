@@ -545,6 +545,85 @@ select {
     }
 
 }
+    /* =========================
+   やること
+========================= */
+
+.todo-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+.todo-checkbox {
+
+    width: 20px !important;
+
+    height: 20px;
+
+    margin: 0 !important;
+
+    flex-shrink: 0;
+
+}
+
+
+.todo-content {
+
+    flex: 1;
+
+}
+
+
+.todo-title {
+
+    font-size: 16px;
+
+}
+
+
+.todo-date {
+
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: #777;
+
+}
+
+
+.todo-delete {
+
+    border: none;
+
+    background: none;
+
+    color: #e85d75;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
+
+
+.todo-completed {
+
+    text-decoration: line-through;
+
+    color: #999;
+
+}
 
 </style>
 
@@ -740,21 +819,79 @@ select {
      やること
 ========================= -->
 
+<!-- =========================
+     やること
+========================= -->
+
 <section
     id="todo"
     class="page">
 
     <h2>やること</h2>
 
+
+    <!-- やること追加 -->
+
     <div class="card">
 
-        <h3>
-            やることリスト
-        </h3>
+        <h3>新しいやること</h3>
 
-        <p>
-            次の段階で、ここにToDo機能を追加します。
-        </p>
+        <label>
+            やること
+
+            <input
+                id="todoTitle"
+                type="text"
+                placeholder="例：数学の宿題">
+        </label>
+
+
+        <label>
+            期限
+
+            <input
+                id="todoDate"
+                type="date">
+        </label>
+
+
+        <button
+            id="addTodo"
+            class="save-button">
+
+            ＋ やることを追加
+
+        </button>
+
+    </div>
+
+
+    <!-- 未完了 -->
+
+    <div class="card">
+
+        <h3>やること</h3>
+
+        <div id="todoList">
+
+            <p>やることはありません。</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- 完了 -->
+
+    <div class="card">
+
+        <h3>完了したやること</h3>
+
+        <div id="completedTodoList">
+
+            <p>完了したやることはありません。</p>
+
+        </div>
 
     </div>
 
@@ -1253,6 +1390,8 @@ request.onsuccess =
         showSpecialBelongings();
 
         renderCalendar();
+
+        showTodos();
 
     };
 
@@ -3538,6 +3677,724 @@ document
     )
     .valueAsDate =
     new Date();
+/* =========================
+   やること
+========================= */
+
+
+/* =========================
+   やること追加ボタン
+========================= */
+
+document
+    .getElementById("addTodo")
+    .addEventListener(
+        "click",
+        addTodo
+    );
+
+
+/* =========================
+   やることを追加
+========================= */
+
+function addTodo() {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。少し待ってください。"
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        document
+            .getElementById("todoTitle")
+            .value
+            .trim();
+
+
+    const date =
+        document
+            .getElementById("todoDate")
+            .value;
+
+
+    /* やることが空の場合 */
+
+    if (!title) {
+
+        alert(
+            "やることを入力してください。"
+        );
+
+        return;
+
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("todos");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            let todos = [];
+
+
+            if (
+                data &&
+                Array.isArray(data.todos)
+            ) {
+
+                todos =
+                    data.todos;
+
+            }
+
+
+            /* 新しいやること */
+
+            todos.push({
+
+                id:
+                    Date.now(),
+
+                title:
+                    title,
+
+                date:
+                    date || "",
+
+                completed:
+                    false
+
+            });
+
+
+            store.put({
+
+                id:
+                    "todos",
+
+                todos:
+                    todos
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    /* 入力欄を空にする */
+
+                    document
+                        .getElementById(
+                            "todoTitle"
+                        )
+                        .value =
+                        "";
+
+
+                    document
+                        .getElementById(
+                            "todoDate"
+                        )
+                        .value =
+                        "";
+
+
+                    /* 再表示 */
+
+                    showTodos();
+
+                };
+
+        };
+
+}
+
+
+/* =========================
+   やることを表示
+========================= */
+
+function showTodos() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const todoList =
+        document.getElementById(
+            "todoList"
+        );
+
+
+    const completedList =
+        document.getElementById(
+            "completedTodoList"
+        );
+
+
+    if (
+        !todoList ||
+        !completedList
+    ) {
+
+        return;
+
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("todos");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            /* 一度空にする */
+
+            todoList.innerHTML = "";
+
+            completedList.innerHTML = "";
+
+
+            /* データがない場合 */
+
+            if (
+                !data ||
+                !Array.isArray(data.todos) ||
+                data.todos.length === 0
+            ) {
+
+                todoList.innerHTML =
+                    "<p>やることはありません。</p>";
+
+                completedList.innerHTML =
+                    "<p>完了したやることはありません。</p>";
+
+                return;
+
+            }
+
+
+            /* 未完了 */
+
+            const incompleteTodos =
+                data.todos.filter(
+                    function(todo) {
+
+                        return !todo.completed;
+
+                    }
+                );
+
+
+            /* 完了 */
+
+            const completedTodos =
+                data.todos.filter(
+                    function(todo) {
+
+                        return todo.completed;
+
+                    }
+                );
+
+
+            /* 未完了がない場合 */
+
+            if (
+                incompleteTodos.length === 0
+            ) {
+
+                todoList.innerHTML =
+                    "<p>やることはありません。</p>";
+
+            }
+
+
+            /* 未完了を表示 */
+
+            incompleteTodos.forEach(
+                function(todo) {
+
+                    createTodoElement(
+                        todo,
+                        todoList
+                    );
+
+                }
+            );
+
+
+            /* 完了がない場合 */
+
+            if (
+                completedTodos.length === 0
+            ) {
+
+                completedList.innerHTML =
+                    "<p>完了したやることはありません。</p>";
+
+            }
+
+
+            /* 完了を表示 */
+
+            completedTodos.forEach(
+                function(todo) {
+
+                    createTodoElement(
+                        todo,
+                        completedList
+                    );
+
+                }
+            );
+
+        };
+
+}
+
+
+/* =========================
+   やること1件を作成
+========================= */
+
+function createTodoElement(
+    todo,
+    container
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "todo-item";
+
+
+    /* チェックボックス */
+
+    const checkbox =
+        document.createElement(
+            "input"
+        );
+
+
+    checkbox.type =
+        "checkbox";
+
+
+    checkbox.className =
+        "todo-checkbox";
+
+
+    checkbox.checked =
+        todo.completed;
+
+
+    checkbox.addEventListener(
+        "change",
+        function() {
+
+            toggleTodo(
+                todo.id
+            );
+
+        }
+    );
+
+
+    /* 内容 */
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+
+    content.className =
+        "todo-content";
+
+
+    /* タイトル */
+
+    const title =
+        document.createElement(
+            "div"
+        );
+
+
+    title.className =
+        "todo-title";
+
+
+    title.textContent =
+        todo.title;
+
+
+    if (todo.completed) {
+
+        title.classList.add(
+            "todo-completed"
+        );
+
+    }
+
+
+    content.appendChild(
+        title
+    );
+
+
+    /* 期限 */
+
+    if (todo.date) {
+
+        const date =
+            document.createElement(
+                "div"
+            );
+
+
+        date.className =
+            "todo-date";
+
+
+        date.textContent =
+            "期限：" +
+            formatTodoDate(
+                todo.date
+            );
+
+
+        content.appendChild(
+            date
+        );
+
+    }
+
+
+    /* 削除 */
+
+    const deleteButton =
+        document.createElement(
+            "button"
+        );
+
+
+    deleteButton.className =
+        "todo-delete";
+
+
+    deleteButton.textContent =
+        "削除";
+
+
+    deleteButton.addEventListener(
+        "click",
+        function() {
+
+            deleteTodo(
+                todo.id
+            );
+
+        }
+    );
+
+
+    row.appendChild(
+        checkbox
+    );
+
+
+    row.appendChild(
+        content
+    );
+
+
+    row.appendChild(
+        deleteButton
+    );
+
+
+    container.appendChild(
+        row
+    );
+
+}
+
+
+/* =========================
+   日付表示
+========================= */
+
+function formatTodoDate(
+    dateString
+) {
+
+    if (!dateString) {
+        return "";
+    }
+
+
+    const parts =
+        dateString.split("-");
+
+
+    return (
+        parts[0] +
+        "年" +
+        Number(parts[1]) +
+        "月" +
+        Number(parts[2]) +
+        "日"
+    );
+
+}
+
+
+/* =========================
+   完了・未完了を変更
+========================= */
+
+function toggleTodo(
+    todoId
+) {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("todos");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.todos)
+            ) {
+
+                return;
+
+            }
+
+
+            const todo =
+                data.todos.find(
+                    function(item) {
+
+                        return (
+                            item.id ===
+                            todoId
+                        );
+
+                    }
+                );
+
+
+            if (!todo) {
+                return;
+            }
+
+
+            todo.completed =
+                !todo.completed;
+
+
+            store.put({
+
+                id:
+                    "todos",
+
+                todos:
+                    data.todos
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    showTodos();
+
+                };
+
+        };
+
+}
+
+
+/* =========================
+   やることを削除
+========================= */
+
+function deleteTodo(
+    todoId
+) {
+
+    if (!db) {
+        return;
+    }
+
+
+    const result =
+        confirm(
+            "このやることを削除しますか？"
+        );
+
+
+    if (!result) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("todos");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.todos)
+            ) {
+
+                return;
+
+            }
+
+
+            data.todos =
+                data.todos.filter(
+                    function(todo) {
+
+                        return (
+                            todo.id !==
+                            todoId
+                        );
+
+                    }
+                );
+
+
+            store.put({
+
+                id:
+                    "todos",
+
+                todos:
+                    data.todos
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    showTodos();
+
+                };
+
+        };
+
+}
+
+
+/* =========================
+   IndexedDB接続後に表示
+========================= */
+
+if (db) {
+
+    showTodos();
+
+}
 
 </script>
 
