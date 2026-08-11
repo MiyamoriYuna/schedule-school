@@ -390,6 +390,21 @@
 </button>
 
 <p id="timetableMessage"></p>
+            <hr>
+
+<h3>教科ごとの持ち物</h3>
+
+<div id="belongingsSettings"></div>
+
+<button
+    id="saveBelongings"
+    class="save-button">
+
+    持ち物を保存
+
+</button>
+
+<p id="belongingsMessage"></p>
 
         </div>
 
@@ -688,13 +703,12 @@ function(event) {
         "IndexedDB接続成功"
     );
 
-    /* 保存した設定を読み込む */
     loadSettings();
 
-    /* 保存した時間割を読み込む */
     loadTimetable();
 
-    /* 今日の時間割をホームに表示 */
+    loadBelongings();
+
     showTodayTimetable();
 
 };
@@ -1370,6 +1384,216 @@ function showTodayTimetable() {
         };
 
 }
+        /* =========================
+   教科ごとの持ち物
+========================= */
+
+function createBelongingsSettings() {
+
+    const container =
+        document.getElementById(
+            "belongingsSettings"
+        );
+
+    container.innerHTML = "";
+
+
+    subjects.forEach(function(subject) {
+
+        const label =
+            document.createElement("label");
+
+        label.textContent =
+            subject + "の持ち物";
+
+
+        const input =
+            document.createElement("input");
+
+        input.type = "text";
+
+        input.id =
+            "belongings-" + subject;
+
+        input.placeholder =
+            "例：教科書、ノート";
+
+
+        label.appendChild(input);
+
+        container.appendChild(label);
+
+    });
+
+}
+
+
+
+/* =========================
+   持ち物を保存
+========================= */
+
+document
+    .getElementById("saveBelongings")
+    .addEventListener(
+        "click",
+        saveBelongings
+    );
+
+
+function saveBelongings() {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。少し待ってください。"
+        );
+
+        return;
+
+    }
+
+
+    const belongings = {};
+
+
+    subjects.forEach(function(subject) {
+
+        const input =
+            document.getElementById(
+                "belongings-" + subject
+            );
+
+
+        belongings[subject] =
+            input.value;
+
+    });
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    store.put({
+
+        id: "belongings",
+
+        belongings: belongings
+
+    });
+
+
+    transaction.oncomplete =
+        function() {
+
+            document
+                .getElementById(
+                    "belongingsMessage"
+                )
+                .textContent =
+                "✓ 持ち物を保存しました";
+
+
+        };
+
+
+
+    transaction.onerror =
+        function() {
+
+            alert(
+                "持ち物の保存に失敗しました。"
+            );
+
+        };
+
+}
+
+
+
+/* =========================
+   保存した持ち物を読み込む
+========================= */
+
+function loadBelongings() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("belongings");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (!data) {
+                return;
+            }
+
+
+            subjects.forEach(
+                function(subject) {
+
+                    const input =
+                        document.getElementById(
+                            "belongings-" +
+                            subject
+                        );
+
+
+                    if (input) {
+
+                        input.value =
+                            data.belongings[
+                                subject
+                            ] || "";
+
+                    }
+
+                }
+            );
+
+        };
+
+}
+
+
+
+/* =========================
+   持ち物設定を作成
+========================= */
+
+createBelongingsSettings();
     </script>
 
 
