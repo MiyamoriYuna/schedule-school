@@ -624,6 +624,74 @@ select {
     color: #999;
 
 }
+    /* =========================
+   ホームの予定・やること
+========================= */
+
+.home-list-item {
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+.home-list-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.home-list-time {
+
+    font-size: 13px;
+
+    color: #777;
+
+    margin-bottom: 3px;
+
+}
+
+
+.home-todo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+.home-todo-checkbox {
+
+    width: 20px !important;
+
+    height: 20px;
+
+    margin: 0 !important;
+
+}
+
+
+.home-more {
+
+    margin-top: 10px;
+
+    text-align: center;
+
+    color: #e85d75;
+
+    font-size: 13px;
+
+}
 
 </style>
 
@@ -906,6 +974,34 @@ select {
 <section
     id="home"
     class="page active">
+    <!-- =========================
+     今日の予定
+========================= -->
+
+<div class="card">
+
+    <h3>📅 今日の予定</h3>
+
+    <div id="todayEvents">
+        予定を読み込んでいます...
+    </div>
+
+</div>
+
+
+<!-- =========================
+     今日のやること
+========================= -->
+
+<div class="card">
+
+    <h3>✅ 今日のやること</h3>
+
+    <div id="todayTodos">
+        やることを読み込んでいます...
+    </div>
+
+</div>
 
     <h2>ホーム</h2>
 
@@ -1366,34 +1462,30 @@ request.onupgradeneeded =
 
 
 request.onsuccess =
-    function(event) {
+function(event) {
 
-        db =
-            event.target.result;
+    db =
+        event.target.result;
 
+    console.log(
+        "IndexedDB接続成功"
+    );
 
-        console.log(
-            "IndexedDB接続成功"
-        );
+    loadSettings();
 
+    loadTimetable();
 
-        loadSettings();
+    loadBelongings();
 
-        loadTimetable();
+    showTodayTimetable();
 
-        loadBelongings();
+    showTodayBelongings();
 
-        showTodayTimetable();
+    showTodayEvents();
 
-        showTodayBelongings();
+    showTodayTodos();
 
-        showSpecialBelongings();
-
-        renderCalendar();
-
-        showTodos();
-
-    };
+};
 
 
 request.onerror =
@@ -4393,6 +4485,385 @@ function deleteTodo(
 if (db) {
 
     showTodos();
+
+}
+    /* =========================
+   ホーム：今日の予定
+========================= */
+
+function showTodayEvents() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "todayEvents"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const today =
+        new Date();
+
+
+    const todayString =
+        today.getFullYear() +
+        "-" +
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "calendarEvents"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            container.innerHTML = "";
+
+
+            if (
+                !data ||
+                !Array.isArray(data.events)
+            ) {
+
+                container.innerHTML =
+                    "<p>今日は予定がありません。</p>";
+
+                return;
+
+            }
+
+
+            const events =
+                data.events
+                    .filter(
+                        function(event) {
+
+                            return (
+                                event.date ===
+                                todayString
+                            );
+
+                        }
+                    )
+                    .sort(
+                        function(a, b) {
+
+                            return (
+                                a.time || ""
+                            ).localeCompare(
+                                b.time || ""
+                            );
+
+                        }
+                    );
+
+
+            if (
+                events.length === 0
+            ) {
+
+                container.innerHTML =
+                    "<p>今日は予定がありません。</p>";
+
+                return;
+
+            }
+
+
+            events.forEach(
+                function(event) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "home-list-item";
+
+
+                    const time =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    time.className =
+                        "home-list-time";
+
+
+                    time.textContent =
+                        event.time || "時間未設定";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    title.textContent =
+                        event.type +
+                        "　" +
+                        event.title;
+
+
+                    item.appendChild(
+                        time
+                    );
+
+
+                    item.appendChild(
+                        title
+                    );
+
+
+                    container.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        };
+
+}
+    /* =========================
+   ホーム：今日のやること
+========================= */
+
+function showTodayTodos() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "todayTodos"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "todos"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            container.innerHTML = "";
+
+
+            if (
+                !data ||
+                !Array.isArray(data.todos)
+            ) {
+
+                container.innerHTML =
+                    "<p>やることはありません。</p>";
+
+                return;
+
+            }
+
+
+            /* 未完了だけ表示 */
+
+            const todos =
+                data.todos.filter(
+                    function(todo) {
+
+                        return !todo.completed;
+
+                    }
+                );
+
+
+            if (
+                todos.length === 0
+            ) {
+
+                container.innerHTML =
+                    "<p>未完了のやることはありません。</p>";
+
+                return;
+
+            }
+
+
+            todos.forEach(
+                function(todo) {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    row.className =
+                        "home-todo";
+
+
+                    const checkbox =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    checkbox.type =
+                        "checkbox";
+
+
+                    checkbox.className =
+                        "home-todo-checkbox";
+
+
+                    checkbox.addEventListener(
+                        "change",
+                        function() {
+
+                            toggleTodo(
+                                todo.id
+                            );
+
+
+                            showTodayTodos();
+
+                        }
+                    );
+
+
+                    const content =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    content.style.flex =
+                        "1";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    title.textContent =
+                        todo.title;
+
+
+                    content.appendChild(
+                        title
+                    );
+
+
+                    /* 期限がある場合 */
+
+                    if (todo.date) {
+
+                        const date =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        date.className =
+                            "home-list-time";
+
+
+                        date.textContent =
+                            "期限：" +
+                            formatTodoDate(
+                                todo.date
+                            );
+
+
+                        content.appendChild(
+                            date
+                        );
+
+                    }
+
+
+                    row.appendChild(
+                        checkbox
+                    );
+
+
+                    row.appendChild(
+                        content
+                    );
+
+
+                    container.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        };
 
 }
 
