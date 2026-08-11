@@ -278,7 +278,7 @@
         id="belongings"
         class="page">
 
-      <h2>持ち物</h2>
+    <h2>持ち物</h2>
 
 <div class="card">
 
@@ -287,6 +287,25 @@
     <div id="todayBelongings">
         持ち物を読み込んでいます...
     </div>
+
+</div>
+
+
+<div class="card">
+
+    <h3>特別な持ち物</h3>
+
+    <div id="specialBelongings">
+        特別な持ち物はありません。
+    </div>
+
+    <button
+        id="addSpecialBelonging"
+        class="save-button">
+
+        ＋ 特別な持ち物を追加
+
+    </button>
 
 </div>
 
@@ -1900,6 +1919,435 @@ function showTodayBelongings() {
         };
 
 }
+        /* =========================
+   特別な持ち物
+========================= */
+
+
+/* =========================
+   特別な持ち物を表示
+========================= */
+
+function showSpecialBelongings() {
+
+    if (!db) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "specialBelongings"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get("specialBelongings");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            container.innerHTML = "";
+
+
+            if (
+                !data ||
+                !data.items ||
+                data.items.length === 0
+            ) {
+
+                container.innerHTML =
+                    "<p>特別な持ち物はありません。</p>";
+
+                return;
+
+            }
+
+
+            data.items.forEach(
+                function(item, index) {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    row.style.display =
+                        "flex";
+
+                    row.style.alignItems =
+                        "center";
+
+                    row.style.justifyContent =
+                        "space-between";
+
+                    row.style.gap =
+                        "10px";
+
+                    row.style.padding =
+                        "8px 0";
+
+                    row.style.borderBottom =
+                        "1px solid #eee";
+
+
+                    /* チェックボックス */
+
+                    const label =
+                        document.createElement(
+                            "label"
+                        );
+
+
+                    label.style.display =
+                        "flex";
+
+                    label.style.alignItems =
+                        "center";
+
+                    label.style.gap =
+                        "10px";
+
+                    label.style.margin =
+                        "0";
+
+
+                    const checkbox =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    checkbox.type =
+                        "checkbox";
+
+
+                    checkbox.style.width =
+                        "20px";
+
+                    checkbox.style.height =
+                        "20px";
+
+
+                    /* 持ち物名 */
+
+                    const text =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    text.textContent =
+                        item;
+
+
+                    label.appendChild(
+                        checkbox
+                    );
+
+                    label.appendChild(
+                        text
+                    );
+
+
+                    /* 削除ボタン */
+
+                    const deleteButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    deleteButton.textContent =
+                        "削除";
+
+
+                    deleteButton.style.border =
+                        "none";
+
+                    deleteButton.style.background =
+                        "none";
+
+                    deleteButton.style.color =
+                        "#e85d75";
+
+                    deleteButton.style.cursor =
+                        "pointer";
+
+
+                    deleteButton.onclick =
+                        function() {
+
+                            deleteSpecialBelonging(
+                                index
+                            );
+
+                        };
+
+
+                    row.appendChild(
+                        label
+                    );
+
+                    row.appendChild(
+                        deleteButton
+                    );
+
+
+                    container.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        };
+
+}
+
+
+
+/* =========================
+   特別な持ち物を追加
+========================= */
+
+document
+    .getElementById(
+        "addSpecialBelonging"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            const item =
+                prompt(
+                    "追加する持ち物を入力してください。"
+                );
+
+
+            /* キャンセル */
+
+            if (item === null) {
+                return;
+            }
+
+
+            const trimmedItem =
+                item.trim();
+
+
+            /* 空欄 */
+
+            if (trimmedItem === "") {
+
+                alert(
+                    "持ち物を入力してください。"
+                );
+
+                return;
+
+            }
+
+
+            addSpecialBelonging(
+                trimmedItem
+            );
+
+        }
+    );
+
+
+
+/* =========================
+   特別な持ち物を保存
+========================= */
+
+function addSpecialBelonging(item) {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。少し待ってください。"
+        );
+
+        return;
+
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "specialBelongings"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            let items = [];
+
+
+            if (
+                data &&
+                Array.isArray(data.items)
+            ) {
+
+                items =
+                    data.items;
+
+            }
+
+
+            items.push(item);
+
+
+            store.put({
+
+                id:
+                    "specialBelongings",
+
+                items:
+                    items
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    showSpecialBelongings();
+
+                };
+
+        };
+
+}
+
+
+
+/* =========================
+   特別な持ち物を削除
+========================= */
+
+function deleteSpecialBelonging(index) {
+
+    if (!db) {
+        return;
+    }
+
+
+    const transaction =
+        db.transaction(
+            "settings",
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            "settings"
+        );
+
+
+    const request =
+        store.get(
+            "specialBelongings"
+        );
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.items)
+            ) {
+
+                return;
+
+            }
+
+
+            data.items.splice(
+                index,
+                1
+            );
+
+
+            store.put({
+
+                id:
+                    "specialBelongings",
+
+                items:
+                    data.items
+
+            });
+
+
+            transaction.oncomplete =
+                function() {
+
+                    showSpecialBelongings();
+
+                };
+
+        };
+
+}
+
+
+
+/* =========================
+   IndexedDB接続後に表示
+========================= */
+
+showSpecialBelongings();
         
     </script>
 
