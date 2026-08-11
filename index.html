@@ -3,187 +3,338 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-    <title>時間割・予定管理</title>
+<title>時間割・予定管理</title>
 
+<style>
 
-    <style>
+/* =========================
+   基本
+========================= */
 
-        /* =========================
-           基本設定
-        ========================= */
+* {
+    box-sizing: border-box;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    font-family:
+        Arial,
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        sans-serif;
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8fafc;
-            padding-bottom: 80px;
-        }
+    background: #f8fafc;
 
-
-        /* =========================
-           ヘッダー
-        ========================= */
-
-        header {
-            background: white;
-            padding: 15px 20px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        #today {
-            margin-top: 5px;
-            color: #777;
-        }
+    padding-bottom: 80px;
+}
 
 
-        /* =========================
-           ページ
-        ========================= */
+/* =========================
+   ヘッダー
+========================= */
 
-        .page {
-            display: none;
-            padding: 20px;
-        }
+header {
 
-        .page.active {
-            display: block;
-        }
+    background: white;
 
+    padding: 15px 20px;
 
-        /* =========================
-           カード
-        ========================= */
+    border-bottom: 1px solid #ddd;
 
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-        }
+}
 
+header h1 {
 
-        /* =========================
-           設定の入力欄
-        ========================= */
+    margin: 0;
 
-        label {
-            display: block;
-            margin-bottom: 15px;
-        }
+    font-size: 20px;
 
-        input,
-        select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 7px;
+}
 
-            border: 1px solid #ccc;
-            border-radius: 10px;
+#today {
 
-            font-size: 16px;
-        }
+    margin-top: 5px;
+
+    color: #777;
+
+}
 
 
-        /* =========================
-           保存ボタン
-        ========================= */
+/* =========================
+   ページ
+========================= */
 
-        .save-button {
-            width: 100%;
-            padding: 12px;
+.page {
 
-            border: none;
-            border-radius: 10px;
+    display: none;
 
-            background: #e85d75;
-            color: white;
+    padding: 20px;
 
-            font-size: 16px;
-            cursor: pointer;
-        }
+}
 
-        .save-button:active {
-            transform: scale(0.98);
-        }
+.page.active {
+
+    display: block;
+
+}
 
 
-        /* =========================
-           保存メッセージ
-        ========================= */
+/* =========================
+   カード
+========================= */
 
-        #saveMessage {
-            margin-top: 12px;
-            text-align: center;
-            color: #e85d75;
-        }
+.card {
 
+    background: white;
 
-        /* =========================
-           下部ボタン
-        ========================= */
+    padding: 20px;
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+    margin-bottom: 15px;
 
-            height: 70px;
+    border-radius: 15px;
 
-            background: white;
-            border-top: 1px solid #ddd;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.03);
 
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-
-            z-index: 100;
-        }
+}
 
 
-        .nav-button {
-            border: none;
-            background: none;
+/* =========================
+   入力
+========================= */
 
-            padding: 8px;
+label {
 
-            cursor: pointer;
+    display: block;
 
-            color: #777;
+    margin-bottom: 15px;
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+}
 
-            font-size: 12px;
-        }
+input,
+select {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 7px;
+
+    border:
+        1px solid #ccc;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    background: white;
+
+}
 
 
-        .nav-icon {
-            font-size: 22px;
-        }
+/* =========================
+   ボタン
+========================= */
+
+.save-button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #e85d75;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+}
+
+.save-button:active {
+
+    transform: scale(0.98);
+
+}
 
 
-        .nav-button.active {
-            color: #e85d75;
-            font-weight: bold;
-        }
-        /* =========================
+.cancel-button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #eee;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+}
+
+
+/* =========================
+   メッセージ
+========================= */
+
+.message {
+
+    text-align: center;
+
+    color: #e85d75;
+
+    margin-top: 10px;
+
+}
+
+
+/* =========================
+   下部ナビ
+========================= */
+
+.bottom-nav {
+
+    position: fixed;
+
+    bottom: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 70px;
+
+    background: white;
+
+    border-top: 1px solid #ddd;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 100;
+
+}
+
+
+.nav-button {
+
+    border: none;
+
+    background: none;
+
+    padding: 8px;
+
+    cursor: pointer;
+
+    color: #777;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    font-size: 12px;
+
+}
+
+
+.nav-icon {
+
+    font-size: 22px;
+
+}
+
+
+.nav-button.active {
+
+    color: #e85d75;
+
+    font-weight: bold;
+
+}
+
+
+/* =========================
+   時間割
+========================= */
+
+.timetable-row {
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 12px 0;
+
+    border-bottom:
+        1px solid #eee;
+
+}
+
+.period {
+
+    width: 90px;
+
+    font-weight: bold;
+
+}
+
+.subject {
+
+    flex: 1;
+
+}
+
+
+/* =========================
+   持ち物
+========================= */
+
+.belonging-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px 0;
+
+}
+
+.belonging-item input {
+
+    width: 20px;
+
+    height: 20px;
+
+    margin: 0;
+
+}
+
+
+/* =========================
    月予定カレンダー
 ========================= */
 
@@ -204,6 +355,8 @@
 
     margin: 0;
 
+    font-size: 20px;
+
 }
 
 
@@ -224,218 +377,176 @@
 }
 
 
-.calendar {
+/* カレンダー本体 */
+
+.calendar-grid {
 
     display: grid;
 
     grid-template-columns:
-        repeat(7, 1fr);
+        repeat(7, minmax(0, 1fr));
 
     gap: 5px;
 
-}
-
-
-.calendar-day {
-
-    min-height: 55px;
-
-    border: 1px solid #eee;
-
-    border-radius: 8px;
-
-    background: white;
-
-    padding: 5px;
-
-    cursor: pointer;
-
-}
-
-
-.calendar-day:hover {
-
-    background: #fff1f4;
-
-}
-
-
-.calendar-day.today {
-
-    border: 2px solid #e85d75;
-
-}
-
-
-.calendar-day.selected {
-
-    background: #ffe5eb;
-
-}
-
-
-.calendar-day-number {
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-}
-
-
-.calendar-event {
-
-    font-size: 10px;
-
-    margin-top: 3px;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-}
-
-
-.event-item {
-
-    padding: 10px 0;
-
-    border-bottom: 1px solid #eee;
-
-}
-
-
-.event-delete {
-
-    border: none;
-
-    background: none;
-
-    color: #e85d75;
-
-    cursor: pointer;
-
-    float: right;
-
-}
-        /* =========================
-   月予定
-========================= */
-
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.calendar-header h3 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.calendar-header button {
-    border: none;
-    background: #f1f5f9;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-
-/* カレンダー */
-
-.calendar {
-    display: grid !important;
-    grid-template-columns:
-        repeat(7, minmax(0, 1fr)) !important;
-    gap: 5px;
     width: 100%;
+
 }
 
 
 /* 曜日 */
 
 .calendar-week {
+
     text-align: center;
+
     font-weight: bold;
+
     padding: 5px;
+
 }
 
 
 /* 日付 */
 
 .calendar-day {
+
     min-height: 70px;
+
     border: 1px solid #eee;
+
     border-radius: 8px;
+
     background: white;
+
     padding: 7px;
+
     cursor: pointer;
+
+    overflow: hidden;
+
 }
+
 
 .calendar-day:hover {
+
     background: #fff1f4;
+
 }
+
 
 .calendar-day.today {
-    border: 2px solid #e85d75;
+
+    border:
+        2px solid #e85d75;
+
 }
+
 
 .calendar-day.selected {
+
     background: #ffe5eb;
+
 }
+
 
 .calendar-day-number {
+
     font-size: 14px;
+
     font-weight: bold;
+
 }
 
 
-/* カレンダー上の予定 */
+/* カレンダー内予定 */
 
 .calendar-event {
+
     font-size: 10px;
+
     margin-top: 4px;
+
     padding: 2px 4px;
+
     border-radius: 4px;
+
     background: #ffe5eb;
+
     overflow: hidden;
+
     white-space: nowrap;
+
 }
 
 
-/* 予定一覧 */
+/* =========================
+   予定一覧
+========================= */
 
 .event-item {
+
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+
+    border-bottom:
+        1px solid #eee;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
 }
+
 
 .event-delete {
-    float: right;
+
     border: none;
+
     background: none;
+
     color: #e85d75;
+
     cursor: pointer;
+
+    white-space: nowrap;
+
 }
 
 
-/* キャンセル */
+/* =========================
+   スマホ
+========================= */
 
-.cancel-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    background: #eee;
-    cursor: pointer;
-    font-size: 16px;
+@media (max-width: 500px) {
+
+    .page {
+
+        padding: 15px;
+
+    }
+
+    .card {
+
+        padding: 15px;
+
+    }
+
+    .calendar-day {
+
+        min-height: 60px;
+
+    }
+
+    .calendar-event {
+
+        font-size: 9px;
+
+    }
+
 }
 
-    </style>
+</style>
 
 </head>
 
@@ -443,1027 +554,835 @@
 <body>
 
 
-    <!-- =========================
-         ヘッダー
-    ========================= -->
+<!-- =========================
+     ヘッダー
+========================= -->
 
-    <header>
+<header>
 
-        <h1>時間割・予定管理</h1>
+    <h1>時間割・予定管理</h1>
 
-        <div id="today"></div>
+    <div id="today"></div>
 
-    </header>
+</header>
 
 
 
-    <!-- =========================
-         月予定
-    ========================= -->
+<!-- =========================
+     月予定
+========================= -->
 
-    <section
-        id="calendar"
-        class="page">
+<section
+    id="monthly"
+    class="page">
 
-<h2>月予定</h2>
+    <h2>月予定</h2>
 
-<div class="card">
 
-    <div class="calendar-header">
+    <div class="card">
 
-        <button id="prevMonth">
-            ◀
-        </button>
+        <div class="calendar-header">
 
-        <h3 id="calendarTitle"></h3>
+            <button id="prevMonth">
+                ◀
+            </button>
 
-        <button id="nextMonth">
-            ▶
-        </button>
+            <h3 id="calendarTitle"></h3>
 
-    </div>
-
-    <div id="calendar" class="calendar"></div>
-
-</div>
-
-
-<!-- 選択した日の予定 -->
-
-<div class="card">
-
-    <h3 id="selectedDateTitle">
-        日付を選択してください
-    </h3>
-
-    <div id="eventList">
-        <p>予定はありません。</p>
-    </div>
-
-    <button
-        id="addEvent"
-        class="save-button">
-
-        ＋ 予定を追加
-
-    </button>
-
-</div>
-
-
-<!-- 予定追加フォーム -->
-
-<div
-    id="eventForm"
-    class="card"
-    style="display:none;">
-
-    <h3>予定を追加</h3>
-
-
-    <label>
-        予定の種類
-
-        <select id="eventType">
-
-            <option value="部活動">
-                部活動
-            </option>
-
-            <option value="旅行">
-                旅行
-            </option>
-
-            <option value="その他">
-                その他
-            </option>
-
-        </select>
-
-    </label>
-
-
-    <label>
-        日付
-
-        <input
-            id="eventDate"
-            type="date">
-
-    </label>
-
-
-    <label>
-        時間
-
-        <input
-            id="eventTime"
-            type="time">
-
-    </label>
-
-
-    <label>
-        予定
-
-        <input
-            id="eventTitle"
-            type="text"
-            placeholder="例：部活動">
-
-    </label>
-
-
-    <button
-        id="saveEvent"
-        class="save-button">
-
-        保存
-
-    </button>
-
-
-    <button
-        id="cancelEvent"
-        type="button"
-        class="cancel-button">
-
-        キャンセル
-
-    </button>
-
-
-    <p id="eventMessage"></p>
-
-</div>
-
-
-    <div
-        id="calendar"
-        class="calendar">
-    </div>
-
-</div>
-
-
-<div class="card">
-
-    <h3 id="selectedDateTitle">
-        日付を選択してください
-    </h3>
-
-    <div id="eventList">
-        予定はありません。
-    </div>
-
-    <button
-        id="addEvent"
-        class="save-button">
-
-        ＋ 予定を追加
-
-    </button>
-
-</div>
-
-
-<div
-    id="eventForm"
-    class="card"
-    style="display:none;">
-
-    <h3>予定を追加</h3>
-
-
-    <label>
-
-        予定の種類
-
-        <select id="eventType">
-
-            <option value="部活動">
-                部活動
-            </option>
-
-            <option value="旅行">
-                旅行
-            </option>
-
-            <option value="その他">
-                その他
-            </option>
-
-        </select>
-
-    </label>
-
-
-    <label>
-
-        日付
-
-        <input
-            id="eventDate"
-            type="date">
-
-    </label>
-
-
-    <label>
-
-        時間
-
-        <input
-            id="eventTime"
-            type="time">
-
-    </label>
-
-
-    <label>
-
-        予定
-
-        <input
-            id="eventTitle"
-            type="text"
-            placeholder="例：部活動">
-
-    </label>
-
-
-    <button
-        id="saveEvent"
-        class="save-button">
-
-        保存
-
-    </button>
-
-
-    <button
-        id="cancelEvent"
-        type="button"
-        style="
-            width:100%;
-            padding:12px;
-            margin-top:10px;
-            border:none;
-            border-radius:10px;
-            background:#eee;
-            cursor:pointer;
-        ">
-
-        キャンセル
-
-    </button>
-
-
-    <p id="eventMessage"></p>
-
-</div>
-
-    </section>
-
-
-
-    <!-- =========================
-         やること
-    ========================= -->
-
-    <section
-        id="todo"
-        class="page">
-
-        <h2>やること</h2>
-
-        <div class="card">
-
-            やることリストページです。
+            <button id="nextMonth">
+                ▶
+            </button>
 
         </div>
 
-    </section>
 
+        <!-- ここだけがカレンダー本体 -->
 
+        <div
+            id="calendarGrid"
+            class="calendar-grid">
+        </div>
 
-    <!-- =========================
-         ホーム
-    ========================= -->
-
-    <section
-        id="home"
-        class="page active">
-
-      <h2>ホーム</h2>
-
-<div class="card">
-
-    <h3>今日の時間割</h3>
-
-    <div id="todayTimetable">
-        時間割を読み込んでいます...
     </div>
 
-</div>
 
-    </section>
+    <!-- 選択した日の予定 -->
+
+    <div class="card">
+
+        <h3 id="selectedDateTitle">
+            日付を選択してください
+        </h3>
+
+        <div id="eventList">
+
+            <p>
+                予定はありません。
+            </p>
+
+        </div>
+
+
+        <button
+            id="addEvent"
+            class="save-button">
+
+            ＋ 予定を追加
+
+        </button>
+
+    </div>
+
+
+    <!-- 予定追加フォーム -->
+
+    <div
+        id="eventForm"
+        class="card"
+        style="display:none;">
+
+        <h3>
+            予定を追加
+        </h3>
+
+
+        <label>
+
+            予定の種類
+
+            <select id="eventType">
+
+                <option value="部活動">
+                    部活動
+                </option>
+
+                <option value="学校行事">
+                    学校行事
+                </option>
+
+                <option value="旅行">
+                    旅行
+                </option>
+
+                <option value="その他">
+                    その他
+                </option>
+
+            </select>
+
+        </label>
+
+
+        <label>
+
+            日付
+
+            <input
+                id="eventDate"
+                type="date">
+
+        </label>
+
+
+        <label>
+
+            時間
+
+            <input
+                id="eventTime"
+                type="time">
+
+        </label>
+
+
+        <label>
+
+            予定
+
+            <input
+                id="eventTitle"
+                type="text"
+                placeholder="例：部活動">
+
+        </label>
+
+
+        <button
+            id="saveEvent"
+            class="save-button">
+
+            保存
+
+        </button>
+
+
+        <button
+            id="cancelEvent"
+            class="cancel-button">
+
+            キャンセル
+
+        </button>
+
+
+        <p
+            id="eventMessage"
+            class="message">
+        </p>
+
+    </div>
+
+</section>
 
 
 
-    <!-- =========================
-         持ち物
-    ========================= -->
+<!-- =========================
+     やること
+========================= -->
 
-    <section
-        id="belongings"
-        class="page">
+<section
+    id="todo"
+    class="page">
+
+    <h2>やること</h2>
+
+    <div class="card">
+
+        <h3>
+            やることリスト
+        </h3>
+
+        <p>
+            次の段階で、ここにToDo機能を追加します。
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     ホーム
+========================= -->
+
+<section
+    id="home"
+    class="page active">
+
+    <h2>ホーム</h2>
+
+
+    <div class="card">
+
+        <h3>
+            今日の時間割
+        </h3>
+
+        <div id="todayTimetable">
+
+            時間割を読み込んでいます...
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     持ち物
+========================= -->
+
+<section
+    id="belongings"
+    class="page">
 
     <h2>持ち物</h2>
 
-<div class="card">
 
-    <h3>今日の持ち物</h3>
+    <div class="card">
 
-    <div id="todayBelongings">
-        持ち物を読み込んでいます...
-    </div>
+        <h3>
+            今日の持ち物
+        </h3>
 
-</div>
+        <div id="todayBelongings">
 
-
-<div class="card">
-
-    <h3>特別な持ち物</h3>
-
-    <div id="specialBelongings">
-        特別な持ち物はありません。
-    </div>
-
-    <button
-        id="addSpecialBelonging"
-        class="save-button">
-
-        ＋ 特別な持ち物を追加
-
-    </button>
-
-</div>
-
-    </section>
-
-
-
-    <!-- =========================
-         設定
-    ========================= -->
-
-    <section
-        id="settings"
-        class="page">
-
-        <h2>設定</h2>
-
-
-        <div class="card">
-
-            <h3>基本情報</h3>
-
-
-            <!-- 名前 -->
-
-            <label>
-
-                名前・ニックネーム
-
-                <input
-                    id="userName"
-                    type="text"
-                    placeholder="例：ゆうな">
-
-            </label>
-
-
-            <!-- 学年 -->
-
-            <label>
-
-                学年
-
-                <select id="userGrade">
-
-                    <option value="">
-                        選択してください
-                    </option>
-
-                    <option value="中学1年">
-                        中学1年
-                    </option>
-
-                    <option value="中学2年">
-                        中学2年
-                    </option>
-
-                    <option value="中学3年">
-                        中学3年
-                    </option>
-
-                    <option value="高校1年">
-                        高校1年
-                    </option>
-
-                    <option value="高校2年">
-                        高校2年
-                    </option>
-
-                    <option value="高校3年">
-                        高校3年
-                    </option>
-
-                </select>
-
-            </label>
-
-
-            <!-- 保存 -->
-
-            <button
-                id="saveSettings"
-                class="save-button">
-
-                保存
-
-            </button>
-
-
-            <!-- 保存結果 -->
-
-            <p id="saveMessage"></p>
-            <hr>
-
-<h3>時間割設定</h3>
-
-<div id="timetableSettings"></div>
-
-<button
-    id="saveTimetable"
-    class="save-button">
-
-    時間割を保存
-
-</button>
-
-<p id="timetableMessage"></p>
-            <hr>
-
-<h3>教科ごとの持ち物</h3>
-
-<div id="belongingsSettings"></div>
-
-<button
-    id="saveBelongings"
-    class="save-button">
-
-    持ち物を保存
-
-</button>
-
-<p id="belongingsMessage"></p>
+            持ち物を読み込んでいます...
 
         </div>
 
-    </section>
+    </div>
 
 
+    <div class="card">
 
-    <!-- =========================
-         下部ナビゲーション
-    ========================= -->
+        <h3>
+            特別な持ち物
+        </h3>
 
-    <nav class="bottom-nav">
+        <div id="specialBelongings">
 
+            特別な持ち物はありません。
 
-        <!-- 月予定 -->
+        </div>
+
 
         <button
-            class="nav-button"
-            onclick="showPage('calendar', this)">
+            id="addSpecialBelonging"
+            class="save-button">
 
-            <span class="nav-icon">
-                🗓️
-            </span>
+            ＋ 特別な持ち物を追加
 
-            <span>
-                月予定
-            </span>
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     設定
+========================= -->
+
+<section
+    id="settings"
+    class="page">
+
+    <h2>設定</h2>
+
+
+    <!-- 基本情報 -->
+
+    <div class="card">
+
+        <h3>
+            基本情報
+        </h3>
+
+
+        <label>
+
+            名前・ニックネーム
+
+            <input
+                id="userName"
+                type="text"
+                placeholder="例：ゆうな">
+
+        </label>
+
+
+        <label>
+
+            学年
+
+            <select id="userGrade">
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="中学1年">
+                    中学1年
+                </option>
+
+                <option value="中学2年">
+                    中学2年
+                </option>
+
+                <option value="中学3年">
+                    中学3年
+                </option>
+
+                <option value="高校1年">
+                    高校1年
+                </option>
+
+                <option value="高校2年">
+                    高校2年
+                </option>
+
+                <option value="高校3年">
+                    高校3年
+                </option>
+
+            </select>
+
+        </label>
+
+
+        <button
+            id="saveSettings"
+            class="save-button">
+
+            保存
 
         </button>
 
 
-        <!-- やること -->
+        <p
+            id="saveMessage"
+            class="message">
+        </p>
+
+    </div>
+
+
+
+    <!-- 時間割設定 -->
+
+    <div class="card">
+
+        <h3>
+            時間割設定
+        </h3>
+
+        <div id="timetableSettings"></div>
+
 
         <button
-            class="nav-button"
-            onclick="showPage('todo', this)">
+            id="saveTimetable"
+            class="save-button">
 
-            <span class="nav-icon">
-                ✅
-            </span>
-
-            <span>
-                やること
-            </span>
+            時間割を保存
 
         </button>
 
 
-        <!-- ホーム -->
+        <p
+            id="timetableMessage"
+            class="message">
+        </p>
+
+    </div>
+
+
+
+    <!-- 持ち物設定 -->
+
+    <div class="card">
+
+        <h3>
+            教科ごとの持ち物
+        </h3>
+
+        <div id="belongingsSettings"></div>
+
 
         <button
-            class="nav-button active"
-            onclick="showPage('home', this)">
+            id="saveBelongings"
+            class="save-button">
 
-            <span class="nav-icon">
-                🏠
-            </span>
-
-            <span>
-                ホーム
-            </span>
+            持ち物を保存
 
         </button>
 
 
-        <!-- 持ち物 -->
+        <p
+            id="belongingsMessage"
+            class="message">
+        </p>
 
-        <button
-            class="nav-button"
-            onclick="showPage('belongings', this)">
+    </div>
 
-            <span class="nav-icon">
-                🎒
-            </span>
+</section>
 
-            <span>
-                持ち物
-            </span>
 
-        </button>
 
+<!-- =========================
+     下部ナビ
+========================= -->
 
-        <!-- 設定 -->
+<nav class="bottom-nav">
 
-        <button
-            class="nav-button"
-            onclick="showPage('settings', this)">
 
-            <span class="nav-icon">
-                ⚙️
-            </span>
+    <button
+        class="nav-button"
+        onclick="showPage('monthly', this)">
 
-            <span>
-                設定
-            </span>
+        <span class="nav-icon">
+            🗓️
+        </span>
 
-        </button>
+        <span>
+            月予定
+        </span>
 
+    </button>
 
-    </nav>
 
+    <button
+        class="nav-button"
+        onclick="showPage('todo', this)">
 
+        <span class="nav-icon">
+            ✅
+        </span>
 
-    <!-- =========================
-         JavaScript
-    ========================= -->
+        <span>
+            やること
+        </span>
 
-    <script>
+    </button>
 
 
-        /* =========================
-           今日の日付
-        ========================= */
+    <button
+        class="nav-button active"
+        onclick="showPage('home', this)">
 
-        function showToday() {
+        <span class="nav-icon">
+            🏠
+        </span>
 
-            const today = new Date();
+        <span>
+            ホーム
+        </span>
 
-            const days = [
-                "日",
-                "月",
-                "火",
-                "水",
-                "木",
-                "金",
-                "土"
-            ];
+    </button>
 
-            const text =
-                today.getFullYear() +
-                "年" +
-                (today.getMonth() + 1) +
-                "月" +
-                today.getDate() +
-                "日（" +
-                days[today.getDay()] +
-                "）";
 
+    <button
+        class="nav-button"
+        onclick="showPage('belongings', this)">
 
-            document
-                .getElementById("today")
-                .textContent = text;
+        <span class="nav-icon">
+            🎒
+        </span>
 
-        }
+        <span>
+            持ち物
+        </span>
 
+    </button>
 
-        showToday();
 
+    <button
+        class="nav-button"
+        onclick="showPage('settings', this)">
 
+        <span class="nav-icon">
+            ⚙️
+        </span>
 
-        /* =========================
-           ページ切り替え
-        ========================= */
+        <span>
+            設定
+        </span>
 
-        function showPage(pageId, button) {
+    </button>
 
+</nav>
 
-            console.log(
-                "ページ切り替え:",
-                pageId
-            );
 
 
-            /* 全ページを非表示 */
+<script>
 
-            const pages =
-                document.querySelectorAll(
-                    ".page"
-                );
+/* =====================================================
+   基本
+===================================================== */
 
+function showToday() {
 
-            pages.forEach(function(page) {
+    const today = new Date();
 
-                page.classList.remove(
-                    "active"
-                );
+    const days = [
+        "日",
+        "月",
+        "火",
+        "水",
+        "木",
+        "金",
+        "土"
+    ];
 
-            });
+    document
+        .getElementById("today")
+        .textContent =
+        today.getFullYear() +
+        "年" +
+        (today.getMonth() + 1) +
+        "月" +
+        today.getDate() +
+        "日（" +
+        days[today.getDay()] +
+        "）";
 
+}
 
+showToday();
 
-            /* 選択したページを表示 */
 
-            document
-                .getElementById(pageId)
-                .classList.add("active");
 
+/* =====================================================
+   ページ切り替え
+===================================================== */
 
+function showPage(pageId, button) {
 
-            /* 全ボタンの選択状態を解除 */
+    document
+        .querySelectorAll(".page")
+        .forEach(function(page) {
 
-            const buttons =
-                document.querySelectorAll(
-                    ".nav-button"
-                );
+            page.classList.remove("active");
 
+        });
 
-            buttons.forEach(function(btn) {
 
-                btn.classList.remove(
-                    "active"
-                );
+    const page =
+        document.getElementById(pageId);
 
-            });
+    if (page) {
 
+        page.classList.add("active");
 
+    }
 
-            /* 押したボタンを選択状態にする */
 
-            button.classList.add(
-                "active"
-            );
+    document
+        .querySelectorAll(".nav-button")
+        .forEach(function(btn) {
 
-        }
+            btn.classList.remove("active");
 
+        });
 
 
-        /* =========================
-           IndexedDB
-        ========================= */
+    if (button) {
 
+        button.classList.add("active");
 
-        const DB_NAME =
-            "ScheduleApp";
+    }
 
 
-        const DB_VERSION =
-            1;
+    /* 月予定を開いたとき */
 
+    if (pageId === "monthly") {
 
-        const STORE_NAME =
-            "settings";
+        renderCalendar();
 
+    }
 
-        let db = null;
 
+    /* 持ち物を開いたとき */
 
+    if (pageId === "belongings") {
 
-        /* =========================
-           データベースを開く
-        ========================= */
+        showTodayBelongings();
 
-        const request =
-            indexedDB.open(
-                DB_NAME,
-                DB_VERSION
-            );
+        showSpecialBelongings();
 
+    }
 
+}
 
-        /* =========================
-           初回データベース作成
-        ========================= */
 
-        request.onupgradeneeded =
-            function(event) {
 
+/* =====================================================
+   IndexedDB
+===================================================== */
 
-                db =
-                    event.target.result;
+const DB_NAME =
+    "ScheduleApp";
 
+const DB_VERSION =
+    1;
 
+const STORE_NAME =
+    "settings";
 
-                if (
-                    !db.objectStoreNames.contains(
-                        STORE_NAME
-                    )
-                ) {
+let db = null;
 
 
-                    db.createObjectStore(
-                        STORE_NAME,
-                        {
-                            keyPath: "id"
-                        }
-                    );
-
-
-                }
-
-            };
-
-
-
-/* =========================
-   IndexedDB接続成功
-========================= */
-
-request.onsuccess =
-function(event) {
-
-    db =
-        event.target.result;
-
-    console.log(
-        "IndexedDB接続成功"
+const request =
+    indexedDB.open(
+        DB_NAME,
+        DB_VERSION
     );
 
-    loadSettings();
 
-    loadTimetable();
+request.onupgradeneeded =
+    function(event) {
 
-    loadBelongings();
-
-    showTodayTimetable();
-
-    showTodayBelongings();
-
-};
-
-        /* =========================
-           IndexedDBエラー
-        ========================= */
-
-        request.onerror =
-            function(event) {
+        db =
+            event.target.result;
 
 
-                console.error(
-                    "IndexedDBエラー:",
-                    event.target.error
-                );
-
-            };
-
-
-
-        /* =========================
-           保存ボタン
-        ========================= */
-
-        document
-            .getElementById(
-                "saveSettings"
+        if (
+            !db.objectStoreNames.contains(
+                STORE_NAME
             )
-            .addEventListener(
-                "click",
-                saveSettings
+        ) {
+
+            db.createObjectStore(
+                STORE_NAME,
+                {
+                    keyPath: "id"
+                }
             );
 
-
-
-        /* =========================
-           設定を保存
-        ========================= */
-
-        function saveSettings() {
-
-
-            /* DBがまだ準備できていない場合 */
-
-            if (!db) {
-
-                alert(
-                    "データベースを準備しています。少し待ってからもう一度押してください。"
-                );
-
-                return;
-
-            }
-
-
-
-            /* 入力された値を取得 */
-
-            const name =
-                document
-                    .getElementById(
-                        "userName"
-                    )
-                    .value;
-
-
-            const grade =
-                document
-                    .getElementById(
-                        "userGrade"
-                    )
-                    .value;
-
-
-
-            /* 保存するデータ */
-
-            const data = {
-
-                id: "user",
-
-                name: name,
-
-                grade: grade
-
-            };
-
-
-
-            /* 保存処理開始 */
-
-            const transaction =
-                db.transaction(
-                    STORE_NAME,
-                    "readwrite"
-                );
-
-
-            const store =
-                transaction.objectStore(
-                    STORE_NAME
-                );
-
-
-
-            /* 保存 */
-
-            store.put(data);
-
-
-
-            /* 保存成功 */
-
-            transaction.oncomplete =
-                function() {
-
-
-                    document
-                        .getElementById(
-                            "saveMessage"
-                        )
-                        .textContent =
-                        "✓ 保存しました";
-
-
-                };
-
-
-
-            /* 保存失敗 */
-
-            transaction.onerror =
-                function() {
-
-
-                    alert(
-                        "保存に失敗しました。"
-                    );
-
-
-                };
-
         }
 
+    };
 
 
-        /* =========================
-           設定を読み込む
-        ========================= */
+request.onsuccess =
+    function(event) {
 
-        function loadSettings() {
-
-
-            if (!db) {
-
-                return;
-
-            }
+        db =
+            event.target.result;
 
 
-
-            const transaction =
-                db.transaction(
-                    STORE_NAME,
-                    "readonly"
-                );
+        console.log(
+            "IndexedDB接続成功"
+        );
 
 
-            const store =
-                transaction.objectStore(
-                    STORE_NAME
-                );
+        loadSettings();
+
+        loadTimetable();
+
+        loadBelongings();
+
+        showTodayTimetable();
+
+        showTodayBelongings();
+
+        showSpecialBelongings();
+
+        renderCalendar();
+
+    };
 
 
+request.onerror =
+    function(event) {
 
-            const request =
-                store.get("user");
+        console.error(
+            "IndexedDBエラー",
+            event.target.error
+        );
 
-
-
-            request.onsuccess =
-                function() {
-
-
-                    const data =
-                        request.result;
-
-
-
-                    /* データがなければ終了 */
-
-                    if (!data) {
-
-                        return;
-
-                    }
+    };
 
 
 
-                    /* 名前を表示 */
+/* =====================================================
+   設定
+===================================================== */
 
-                    document
-                        .getElementById(
-                            "userName"
-                        )
-                        .value =
-                        data.name || "";
+document
+    .getElementById("saveSettings")
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
+function saveSettings() {
+
+    if (!db) {
+
+        alert(
+            "データベースを準備しています。"
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        id: "user",
+
+        name:
+            document
+                .getElementById("userName")
+                .value,
+
+        grade:
+            document
+                .getElementById("userGrade")
+                .value
+
+    };
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readwrite"
+        );
+
+
+    transaction
+        .objectStore(STORE_NAME)
+        .put(data);
+
+
+    transaction.oncomplete =
+        function() {
+
+            document
+                .getElementById("saveMessage")
+                .textContent =
+                "✓ 保存しました";
+
+        };
+
+}
+
+
+function loadSettings() {
+
+    if (!db) return;
+
+
+    const request =
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("user");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            if (!data) return;
+
+
+            document
+                .getElementById("userName")
+                .value =
+                data.name || "";
+
+
+            document
+                .getElementById("userGrade")
+                .value =
+                data.grade || "";
+
+        };
+
+}
 
 
 
-                    /* 学年を表示 */
-
-                    document
-                        .getElementById(
-                            "userGrade"
-                        )
-                        .value =
-                        data.grade || "";
-
-                };
-
-        }
-
-        /* =========================
+/* =====================================================
    時間割
-========================= */
+===================================================== */
 
 const subjects = [
+
     "国語",
     "数学",
     "英語",
@@ -1474,22 +1393,26 @@ const subjects = [
     "美術",
     "技術・家庭",
     "その他"
+
 ];
 
+
 const weekdays = [
+
     "月曜日",
     "火曜日",
     "水曜日",
     "木曜日",
     "金曜日"
+
 ];
+
 
 const periods = 6;
 
 
-/* =========================
-   時間割入力欄を作成
-========================= */
+
+/* 時間割入力欄 */
 
 function createTimetableSettings() {
 
@@ -1498,90 +1421,108 @@ function createTimetableSettings() {
             "timetableSettings"
         );
 
+
     container.innerHTML = "";
 
 
-    weekdays.forEach(function(day, dayIndex) {
+    weekdays.forEach(
+        function(day, dayIndex) {
 
-        const dayTitle =
-            document.createElement("h4");
+            const title =
+                document.createElement("h4");
 
-        dayTitle.textContent = day;
+            title.textContent =
+                day;
 
-        container.appendChild(dayTitle);
-
-
-        for (
-            let period = 1;
-            period <= periods;
-            period++
-        ) {
-
-            const label =
-                document.createElement("label");
-
-            label.textContent =
-                period + "時間目";
+            container.appendChild(title);
 
 
-            const select =
-                document.createElement("select");
+            for (
+                let period = 1;
+                period <= periods;
+                period++
+            ) {
 
-            select.id =
-                "timetable-" +
-                dayIndex +
-                "-" +
-                period;
-
-
-            /* 未選択 */
-
-            const emptyOption =
-                document.createElement("option");
-
-            emptyOption.value = "";
-
-            emptyOption.textContent =
-                "選択してください";
-
-            select.appendChild(
-                emptyOption
-            );
+                const label =
+                    document.createElement(
+                        "label"
+                    );
 
 
-            /* 教科 */
+                label.textContent =
+                    period +
+                    "時間目";
 
-            subjects.forEach(function(subject) {
 
-                const option =
-                    document.createElement("option");
+                const select =
+                    document.createElement(
+                        "select"
+                    );
 
-                option.value = subject;
 
-                option.textContent = subject;
+                select.id =
+                    "timetable-" +
+                    dayIndex +
+                    "-" +
+                    period;
+
+
+                const empty =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                empty.value = "";
+
+                empty.textContent =
+                    "選択してください";
+
 
                 select.appendChild(
-                    option
+                    empty
                 );
 
-            });
+
+                subjects.forEach(
+                    function(subject) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value =
+                            subject;
+
+                        option.textContent =
+                            subject;
+
+                        select.appendChild(
+                            option
+                        );
+
+                    }
+                );
 
 
-            label.appendChild(select);
+                label.appendChild(select);
 
-            container.appendChild(label);
+                container.appendChild(label);
+
+            }
 
         }
-
-    });
+    );
 
 }
 
 
+createTimetableSettings();
 
-/* =========================
-   時間割保存
-========================= */
+
+
+/* 時間割保存 */
 
 document
     .getElementById("saveTimetable")
@@ -1596,7 +1537,7 @@ function saveTimetable() {
     if (!db) {
 
         alert(
-            "データベースを準備しています。少し待ってください。"
+            "データベースを準備しています。"
         );
 
         return;
@@ -1607,105 +1548,91 @@ function saveTimetable() {
     const timetable = {};
 
 
-    weekdays.forEach(function(day, dayIndex) {
+    weekdays.forEach(
+        function(day, dayIndex) {
 
-        timetable[day] = [];
+            timetable[day] = [];
 
 
-        for (
-            let period = 1;
-            period <= periods;
-            period++
-        ) {
+            for (
+                let period = 1;
+                period <= periods;
+                period++
+            ) {
 
-            const select =
-                document.getElementById(
-                    "timetable-" +
-                    dayIndex +
-                    "-" +
-                    period
+                const select =
+                    document.getElementById(
+                        "timetable-" +
+                        dayIndex +
+                        "-" +
+                        period
+                    );
+
+
+                timetable[day].push(
+                    select.value
                 );
 
-
-            timetable[day].push(
-                select.value
-            );
+            }
 
         }
-
-    });
+    );
 
 
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    transaction
+        .objectStore(STORE_NAME)
+        .put({
+
+            id: "timetable",
+
+            timetable:
+                timetable
+
+        });
 
 
-    store.put({
+    transaction.oncomplete =
+        function() {
 
-        id: "timetable",
+            document
+                .getElementById(
+                    "timetableMessage"
+                )
+                .textContent =
+                "✓ 時間割を保存しました";
 
-        timetable: timetable
 
-    });
+            showTodayTimetable();
 
+            showTodayBelongings();
 
-  transaction.oncomplete =
-    function() {
-
-        document
-            .getElementById(
-                "timetableMessage"
-            )
-            .textContent =
-            "✓ 時間割を保存しました";
-
-        loadTimetable();
-
-        showTodayTimetable();
-
-        showTodayBelongings();
-
-    };
+        };
 
 }
 
 
 
-/* =========================
-   時間割読み込み
-========================= */
+/* 時間割読み込み */
 
 function loadTimetable() {
 
-    if (!db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    if (!db) return;
 
 
     const request =
-        store.get("timetable");
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("timetable");
 
 
     request.onsuccess =
@@ -1715,8 +1642,13 @@ function loadTimetable() {
                 request.result;
 
 
-            if (!data) {
+            if (
+                !data ||
+                !data.timetable
+            ) {
+
                 return;
+
             }
 
 
@@ -1727,9 +1659,7 @@ function loadTimetable() {
                         data.timetable[day];
 
 
-                    if (!dayData) {
-                        return;
-                    }
+                    if (!dayData) return;
 
 
                     dayData.forEach(
@@ -1763,25 +1693,27 @@ function loadTimetable() {
 
 
 
-/* =========================
-   時間割設定を最初に作る
-========================= */
-
-createTimetableSettings();
-
-        /* =========================
-   今日の時間割を表示
-========================= */
+/* =====================================================
+   今日の時間割
+===================================================== */
 
 function showTodayTimetable() {
 
-    if (!db) {
-        return;
-    }
+    if (!db) return;
 
-    const today = new Date();
+
+    const container =
+        document.getElementById(
+            "todayTimetable"
+        );
+
+
+    const today =
+        new Date();
+
 
     const dayNames = [
+
         "日曜日",
         "月曜日",
         "火曜日",
@@ -1789,17 +1721,13 @@ function showTodayTimetable() {
         "木曜日",
         "金曜日",
         "土曜日"
+
     ];
+
 
     const todayName =
         dayNames[today.getDay()];
 
-    const container =
-        document.getElementById(
-            "todayTimetable"
-        );
-
-    /* 土日 */
 
     if (
         todayName === "土曜日" ||
@@ -1814,19 +1742,13 @@ function showTodayTimetable() {
     }
 
 
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
     const request =
-        store.get("timetable");
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("timetable");
 
 
     request.onsuccess =
@@ -1850,70 +1772,78 @@ function showTodayTimetable() {
             }
 
 
-            const timetable =
-                data.timetable[todayName];
-
-
             container.innerHTML = "";
 
 
-            timetable.forEach(
-                function(subject, index) {
+            data.timetable[todayName]
+                .forEach(
+                    function(subject, index) {
 
-                    const row =
-                        document.createElement(
-                            "div"
+                        const row =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        row.className =
+                            "timetable-row";
+
+
+                        const period =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        period.className =
+                            "period";
+
+
+                        period.textContent =
+                            (index + 1) +
+                            "時間目";
+
+
+                        const subjectElement =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        subjectElement.className =
+                            "subject";
+
+
+                        subjectElement.textContent =
+                            subject ||
+                            "未登録";
+
+
+                        row.appendChild(
+                            period
                         );
 
-                    row.style.padding =
-                        "10px 0";
-
-                    row.style.borderBottom =
-                        "1px solid #eee";
-
-
-                    const period =
-                        document.createElement(
-                            "strong"
+                        row.appendChild(
+                            subjectElement
                         );
 
-                    period.textContent =
-                        (index + 1) +
-                        "時間目　";
 
-
-                    const subjectText =
-                        document.createElement(
-                            "span"
+                        container.appendChild(
+                            row
                         );
 
-                    subjectText.textContent =
-                        subject ||
-                        "未登録";
-
-
-                    row.appendChild(
-                        period
-                    );
-
-                    row.appendChild(
-                        subjectText
-                    );
-
-
-                    container.appendChild(
-                        row
-                    );
-
-                }
-            );
+                    }
+                );
 
         };
 
 }
-        /* =========================
+
+
+
+/* =====================================================
    教科ごとの持ち物
-========================= */
+===================================================== */
 
 function createBelongingsSettings() {
 
@@ -1922,43 +1852,61 @@ function createBelongingsSettings() {
             "belongingsSettings"
         );
 
+
     container.innerHTML = "";
 
 
-    subjects.forEach(function(subject) {
+    subjects.forEach(
+        function(subject) {
 
-        const label =
-            document.createElement("label");
-
-        label.textContent =
-            subject + "の持ち物";
-
-
-        const input =
-            document.createElement("input");
-
-        input.type = "text";
-
-        input.id =
-            "belongings-" + subject;
-
-        input.placeholder =
-            "例：教科書、ノート";
+            const label =
+                document.createElement(
+                    "label"
+                );
 
 
-        label.appendChild(input);
+            label.textContent =
+                subject +
+                "の持ち物";
 
-        container.appendChild(label);
 
-    });
+            const input =
+                document.createElement(
+                    "input"
+                );
+
+
+            input.type =
+                "text";
+
+
+            input.id =
+                "belongings-" +
+                subject;
+
+
+            input.placeholder =
+                "例：教科書、ノート";
+
+
+            label.appendChild(input);
+
+
+            container.appendChild(
+                label
+            );
+
+        }
+    );
 
 }
 
 
+createBelongingsSettings();
 
-/* =========================
-   持ち物を保存
-========================= */
+
+
+/* 持ち物保存 */
 
 document
     .getElementById("saveBelongings")
@@ -1973,7 +1921,7 @@ function saveBelongings() {
     if (!db) {
 
         alert(
-            "データベースを準備しています。少し待ってください。"
+            "データベースを準備しています。"
         );
 
         return;
@@ -1984,40 +1932,38 @@ function saveBelongings() {
     const belongings = {};
 
 
-    subjects.forEach(function(subject) {
+    subjects.forEach(
+        function(subject) {
 
-        const input =
-            document.getElementById(
-                "belongings-" + subject
-            );
+            belongings[subject] =
+                document
+                    .getElementById(
+                        "belongings-" +
+                        subject
+                    )
+                    .value;
 
-
-        belongings[subject] =
-            input.value;
-
-    });
+        }
+    );
 
 
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    transaction
+        .objectStore(STORE_NAME)
+        .put({
 
+            id: "belongings",
 
-    store.put({
+            belongings:
+                belongings
 
-        id: "belongings",
-
-        belongings: belongings
-
-    });
+        });
 
 
     transaction.oncomplete =
@@ -2031,16 +1977,7 @@ function saveBelongings() {
                 "✓ 持ち物を保存しました";
 
 
-        };
-
-
-
-    transaction.onerror =
-        function() {
-
-            alert(
-                "持ち物の保存に失敗しました。"
-            );
+            showTodayBelongings();
 
         };
 
@@ -2048,32 +1985,20 @@ function saveBelongings() {
 
 
 
-/* =========================
-   保存した持ち物を読み込む
-========================= */
+/* 持ち物読み込み */
 
 function loadBelongings() {
 
-    if (!db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    if (!db) return;
 
 
     const request =
-        store.get("belongings");
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("belongings");
 
 
     request.onsuccess =
@@ -2083,8 +2008,13 @@ function loadBelongings() {
                 request.result;
 
 
-            if (!data) {
+            if (
+                !data ||
+                !data.belongings
+            ) {
+
                 return;
+
             }
 
 
@@ -2116,21 +2046,13 @@ function loadBelongings() {
 
 
 
-/* =========================
-   持ち物設定を作成
-========================= */
-
-createBelongingsSettings();
-
-        /* =========================
-   今日の持ち物を表示
-========================= */
+/* =====================================================
+   今日の持ち物
+===================================================== */
 
 function showTodayBelongings() {
 
-    if (!db) {
-        return;
-    }
+    if (!db) return;
 
 
     const container =
@@ -2139,16 +2061,12 @@ function showTodayBelongings() {
         );
 
 
-    if (!container) {
-        return;
-    }
-
-
     const today =
         new Date();
 
 
     const dayNames = [
+
         "日曜日",
         "月曜日",
         "火曜日",
@@ -2156,14 +2074,13 @@ function showTodayBelongings() {
         "木曜日",
         "金曜日",
         "土曜日"
+
     ];
 
 
     const todayName =
         dayNames[today.getDay()];
 
-
-    /* 土日は学校の時間割がない */
 
     if (
         todayName === "土曜日" ||
@@ -2178,18 +2095,16 @@ function showTodayBelongings() {
     }
 
 
-    /* 時間割と持ち物を同時に読み込む */
-
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readonly"
         );
 
 
     const store =
         transaction.objectStore(
-            "settings"
+            STORE_NAME
         );
 
 
@@ -2204,18 +2119,16 @@ function showTodayBelongings() {
     timetableRequest.onsuccess =
         function() {
 
-            const timetableData =
-                timetableRequest.result;
-
-
             belongingsRequest.onsuccess =
                 function() {
+
+                    const timetableData =
+                        timetableRequest.result;
+
 
                     const belongingsData =
                         belongingsRequest.result;
 
-
-                    /* データがない場合 */
 
                     if (
                         !timetableData ||
@@ -2251,7 +2164,7 @@ function showTodayBelongings() {
                     if (!todayTimetable) {
 
                         container.innerHTML =
-                            "<p>今日の時間割が登録されていません。</p>";
+                            "<p>今日の時間割がありません。</p>";
 
                         return;
 
@@ -2261,36 +2174,24 @@ function showTodayBelongings() {
                     container.innerHTML = "";
 
 
-                    let hasBelongings =
-                        false;
+                    let hasItems = false;
 
-
-                    /* 時間割を1時間ずつ確認 */
 
                     todayTimetable.forEach(
                         function(subject, index) {
 
-
-                            /* 教科が未登録なら無視 */
-
-                            if (!subject) {
-                                return;
-                            }
+                            if (!subject) return;
 
 
                             const items =
                                 belongingsData
-                                    .belongings[subject];
+                                    .belongings[
+                                        subject
+                                    ];
 
 
-                            /* 持ち物が登録されていない */
+                            if (!items) return;
 
-                            if (!items) {
-                                return;
-                            }
-
-
-                            /* カンマ・読点で分割 */
 
                             const itemList =
                                 items
@@ -2310,55 +2211,43 @@ function showTodayBelongings() {
                             if (
                                 itemList.length === 0
                             ) {
+
                                 return;
+
                             }
 
 
-                            hasBelongings =
-                                true;
+                            hasItems = true;
 
 
-                            /* 教科の見出し */
-
-                            const subjectTitle =
+                            const title =
                                 document.createElement(
                                     "h4"
                                 );
 
 
-                            subjectTitle.textContent =
+                            title.textContent =
                                 (index + 1) +
                                 "時間目　" +
                                 subject;
 
 
                             container.appendChild(
-                                subjectTitle
+                                title
                             );
 
-
-                            /* 持ち物 */
 
                             itemList.forEach(
                                 function(item) {
 
-                                    const label =
+                                    const row =
                                         document.createElement(
                                             "label"
                                         );
 
 
-                                    label.style.display =
-                                        "flex";
-
-                                    label.style.alignItems =
-                                        "center";
-
-                                    label.style.gap =
-                                        "10px";
-
-                                    label.style.padding =
-                                        "8px 0";
+                                    row.className =
+                                        "belonging-item";
 
 
                                     const checkbox =
@@ -2371,13 +2260,6 @@ function showTodayBelongings() {
                                         "checkbox";
 
 
-                                    checkbox.style.width =
-                                        "20px";
-
-                                    checkbox.style.height =
-                                        "20px";
-
-
                                     const text =
                                         document.createElement(
                                             "span"
@@ -2388,17 +2270,17 @@ function showTodayBelongings() {
                                         item;
 
 
-                                    label.appendChild(
+                                    row.appendChild(
                                         checkbox
                                     );
 
-                                    label.appendChild(
+                                    row.appendChild(
                                         text
                                     );
 
 
                                     container.appendChild(
-                                        label
+                                        row
                                     );
 
                                 }
@@ -2408,7 +2290,7 @@ function showTodayBelongings() {
                     );
 
 
-                    if (!hasBelongings) {
+                    if (!hasItems) {
 
                         container.innerHTML =
                             "<p>今日必要な持ち物は登録されていません。</p>";
@@ -2420,221 +2302,12 @@ function showTodayBelongings() {
         };
 
 }
-        /* =========================
+
+
+
+/* =====================================================
    特別な持ち物
-========================= */
-
-
-/* =========================
-   特別な持ち物を表示
-========================= */
-
-function showSpecialBelongings() {
-
-    if (!db) {
-        return;
-    }
-
-
-    const container =
-        document.getElementById(
-            "specialBelongings"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
-
-    const request =
-        store.get("specialBelongings");
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            container.innerHTML = "";
-
-
-            if (
-                !data ||
-                !data.items ||
-                data.items.length === 0
-            ) {
-
-                container.innerHTML =
-                    "<p>特別な持ち物はありません。</p>";
-
-                return;
-
-            }
-
-
-            data.items.forEach(
-                function(item, index) {
-
-                    const row =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    row.style.display =
-                        "flex";
-
-                    row.style.alignItems =
-                        "center";
-
-                    row.style.justifyContent =
-                        "space-between";
-
-                    row.style.gap =
-                        "10px";
-
-                    row.style.padding =
-                        "8px 0";
-
-                    row.style.borderBottom =
-                        "1px solid #eee";
-
-
-                    /* チェックボックス */
-
-                    const label =
-                        document.createElement(
-                            "label"
-                        );
-
-
-                    label.style.display =
-                        "flex";
-
-                    label.style.alignItems =
-                        "center";
-
-                    label.style.gap =
-                        "10px";
-
-                    label.style.margin =
-                        "0";
-
-
-                    const checkbox =
-                        document.createElement(
-                            "input"
-                        );
-
-
-                    checkbox.type =
-                        "checkbox";
-
-
-                    checkbox.style.width =
-                        "20px";
-
-                    checkbox.style.height =
-                        "20px";
-
-
-                    /* 持ち物名 */
-
-                    const text =
-                        document.createElement(
-                            "span"
-                        );
-
-
-                    text.textContent =
-                        item;
-
-
-                    label.appendChild(
-                        checkbox
-                    );
-
-                    label.appendChild(
-                        text
-                    );
-
-
-                    /* 削除ボタン */
-
-                    const deleteButton =
-                        document.createElement(
-                            "button"
-                        );
-
-
-                    deleteButton.textContent =
-                        "削除";
-
-
-                    deleteButton.style.border =
-                        "none";
-
-                    deleteButton.style.background =
-                        "none";
-
-                    deleteButton.style.color =
-                        "#e85d75";
-
-                    deleteButton.style.cursor =
-                        "pointer";
-
-
-                    deleteButton.onclick =
-                        function() {
-
-                            deleteSpecialBelonging(
-                                index
-                            );
-
-                        };
-
-
-                    row.appendChild(
-                        label
-                    );
-
-                    row.appendChild(
-                        deleteButton
-                    );
-
-
-                    container.appendChild(
-                        row
-                    );
-
-                }
-            );
-
-        };
-
-}
-
-
-
-/* =========================
-   特別な持ち物を追加
-========================= */
+===================================================== */
 
 document
     .getElementById(
@@ -2650,20 +2323,14 @@ document
                 );
 
 
-            /* キャンセル */
-
-            if (item === null) {
-                return;
-            }
+            if (item === null) return;
 
 
-            const trimmedItem =
+            const text =
                 item.trim();
 
 
-            /* 空欄 */
-
-            if (trimmedItem === "") {
+            if (!text) {
 
                 alert(
                     "持ち物を入力してください。"
@@ -2674,42 +2341,27 @@ document
             }
 
 
-            addSpecialBelonging(
-                trimmedItem
-            );
+            addSpecialBelonging(text);
 
         }
     );
 
 
-
-/* =========================
-   特別な持ち物を保存
-========================= */
-
 function addSpecialBelonging(item) {
 
-    if (!db) {
-
-        alert(
-            "データベースを準備しています。少し待ってください。"
-        );
-
-        return;
-
-    }
+    if (!db) return;
 
 
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
     const store =
         transaction.objectStore(
-            "settings"
+            STORE_NAME
         );
 
 
@@ -2766,28 +2418,184 @@ function addSpecialBelonging(item) {
 }
 
 
+function showSpecialBelongings() {
 
-/* =========================
-   特別な持ち物を削除
-========================= */
+    if (!db) return;
+
+
+    const container =
+        document.getElementById(
+            "specialBelongings"
+        );
+
+
+    const request =
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("specialBelongings");
+
+
+    request.onsuccess =
+        function() {
+
+            const data =
+                request.result;
+
+
+            container.innerHTML = "";
+
+
+            if (
+                !data ||
+                !Array.isArray(data.items) ||
+                data.items.length === 0
+            ) {
+
+                container.innerHTML =
+                    "<p>特別な持ち物はありません。</p>";
+
+                return;
+
+            }
+
+
+            data.items.forEach(
+                function(item, index) {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    row.className =
+                        "event-item";
+
+
+                    const label =
+                        document.createElement(
+                            "label"
+                        );
+
+
+                    label.style.display =
+                        "flex";
+
+
+                    label.style.alignItems =
+                        "center";
+
+
+                    label.style.gap =
+                        "10px";
+
+
+                    label.style.margin =
+                        "0";
+
+
+                    const checkbox =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    checkbox.type =
+                        "checkbox";
+
+
+                    checkbox.style.width =
+                        "20px";
+
+
+                    checkbox.style.height =
+                        "20px";
+
+
+                    const text =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    text.textContent =
+                        item;
+
+
+                    label.appendChild(
+                        checkbox
+                    );
+
+
+                    label.appendChild(
+                        text
+                    );
+
+
+                    const deleteButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    deleteButton.textContent =
+                        "削除";
+
+
+                    deleteButton.className =
+                        "event-delete";
+
+
+                    deleteButton.onclick =
+                        function() {
+
+                            deleteSpecialBelonging(
+                                index
+                            );
+
+                        };
+
+
+                    row.appendChild(
+                        label
+                    );
+
+
+                    row.appendChild(
+                        deleteButton
+                    );
+
+
+                    container.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        };
+
+}
+
 
 function deleteSpecialBelonging(index) {
 
-    if (!db) {
-        return;
-    }
+    if (!db) return;
 
 
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
     const store =
         transaction.objectStore(
-            "settings"
+            STORE_NAME
         );
 
 
@@ -2804,14 +2612,7 @@ function deleteSpecialBelonging(index) {
                 request.result;
 
 
-            if (
-                !data ||
-                !Array.isArray(data.items)
-            ) {
-
-                return;
-
-            }
+            if (!data) return;
 
 
             data.items.splice(
@@ -2820,15 +2621,7 @@ function deleteSpecialBelonging(index) {
             );
 
 
-            store.put({
-
-                id:
-                    "specialBelongings",
-
-                items:
-                    data.items
-
-            });
+            store.put(data);
 
 
             transaction.oncomplete =
@@ -2844,945 +2637,47 @@ function deleteSpecialBelonging(index) {
 
 
 
-/* =========================
-   IndexedDB接続後に表示
-========================= */
-
-showSpecialBelongings();
-        /* =========================
+/* =====================================================
    月予定カレンダー
-========================= */
+===================================================== */
 
-let calendarDate = new Date();
+let calendarDate =
+    new Date();
 
-let selectedDate = null;
+let selectedDate =
+    null;
 
 
-/* =========================
-   カレンダー表示
-========================= */
+
+/* カレンダー描画 */
 
 function renderCalendar() {
 
     const calendar =
-        document.getElementById("calendar");
-
-    const title =
-        document.getElementById("calendarTitle");
-
-    if (!calendar || !title) {
-        return;
-    }
-
-    /* カレンダーを必ず7列にする */
-    calendar.style.display = "grid";
-    calendar.style.gridTemplateColumns =
-        "repeat(7, minmax(0, 1fr))";
-    calendar.style.gap = "5px";
-    calendar.style.width = "100%";
-
-    if (!calendar || !title) {
-        return;
-    }
-
-
-    const year =
-        calendarDate.getFullYear();
-
-    const month =
-        calendarDate.getMonth();
-
-
-    title.textContent =
-        year + "年" + (month + 1) + "月";
-
-
-    calendar.innerHTML = "";
-
-
-    /* 曜日 */
-
-    const weekNames = [
-        "日",
-        "月",
-        "火",
-        "水",
-        "木",
-        "金",
-        "土"
-    ];
-
-
-    weekNames.forEach(function(day) {
-
-        const header =
-            document.createElement("div");
-
-        header.textContent = day;
-
-        header.style.textAlign =
-            "center";
-
-        header.style.fontWeight =
-            "bold";
-
-        header.style.padding =
-            "5px";
-
-
-        calendar.appendChild(header);
-
-    });
-
-
-    /* 月の1日 */
-
-    const firstDay =
-        new Date(
-            year,
-            month,
-            1
-        ).getDay();
-
-
-    /* 月の日数 */
-
-    const lastDate =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    /* 空白 */
-
-    for (
-        let i = 0;
-        i < firstDay;
-        i++
-    ) {
-
-        const empty =
-            document.createElement("div");
-
-        calendar.appendChild(empty);
-
-    }
-
-
-    /* 日付 */
-
-    for (
-        let day = 1;
-        day <= lastDate;
-        day++
-    ) {
-
-        const cell =
-            document.createElement("div");
-
-        cell.className =
-            "calendar-day";
-
-
-        const number =
-            document.createElement("div");
-
-        number.className =
-            "calendar-day-number";
-
-        number.textContent =
-            day;
-
-
-        cell.appendChild(number);
-
-
-        const dateString =
-            year +
-            "-" +
-            String(month + 1)
-                .padStart(2, "0") +
-            "-" +
-            String(day)
-                .padStart(2, "0");
-
-
-        /* 今日 */
-
-        const today =
-            new Date();
-
-
-        const todayString =
-            today.getFullYear() +
-            "-" +
-            String(
-                today.getMonth() + 1
-            ).padStart(2, "0") +
-            "-" +
-            String(
-                today.getDate()
-            ).padStart(2, "0");
-
-
-        if (
-            dateString === todayString
-        ) {
-
-            cell.classList.add(
-                "today"
-            );
-
-        }
-
-
-        /* 選択中 */
-
-        if (
-            dateString === selectedDate
-        ) {
-
-            cell.classList.add(
-                "selected"
-            );
-
-        }
-
-
-        /* 予定表示 */
-
-        loadEventsForDate(
-            dateString,
-            cell
-        );
-
-
-        /* 日付クリック */
-
-        cell.addEventListener(
-            "click",
-            function() {
-
-                selectCalendarDate(
-                    dateString
-                );
-
-            }
-        );
-
-
-        calendar.appendChild(cell);
-
-    }
-
-}
-
-
-/* =========================
-   日付を選択
-========================= */
-
-function selectCalendarDate(
-    dateString
-) {
-
-    selectedDate =
-        dateString;
-
-
-    document
-        .getElementById(
-            "selectedDateTitle"
-        )
-        .textContent =
-        dateString +
-        "の予定";
-
-
-    document
-        .getElementById(
-            "eventDate"
-        )
-        .value =
-        dateString;
-
-
-    renderCalendar();
-
-    showEvents(dateString);
-
-}
-
-
-/* =========================
-   予定を表示
-========================= */
-
-function showEvents(
-    dateString
-) {
-
-    const list =
         document.getElementById(
-            "eventList"
+            "calendarGrid"
         );
-
-
-    if (!list || !db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
-
-    const request =
-        store.get(
-            "calendarEvents"
-        );
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            list.innerHTML = "";
-
-
-            if (
-                !data ||
-                !Array.isArray(data.events)
-            ) {
-
-                list.innerHTML =
-                    "<p>予定はありません。</p>";
-
-                return;
-
-            }
-
-
-            const events =
-                data.events.filter(
-                    function(event) {
-
-                        return (
-                            event.date ===
-                            dateString
-                        );
-
-                    }
-                );
-
-
-            if (
-                events.length === 0
-            ) {
-
-                list.innerHTML =
-                    "<p>予定はありません。</p>";
-
-                return;
-
-            }
-
-
-            events.forEach(
-                function(event) {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "event-item";
-
-
-                    const text =
-                        document.createElement(
-                            "span"
-                        );
-
-
-                    text.textContent =
-                        event.time +
-                        "　" +
-                        event.type +
-                        "　" +
-                        event.title;
-
-
-                    const deleteButton =
-                        document.createElement(
-                            "button"
-                        );
-
-
-                    deleteButton.textContent =
-                        "削除";
-
-                    deleteButton.className =
-                        "event-delete";
-
-
-                    deleteButton.onclick =
-                        function() {
-
-                            deleteEvent(
-                                event.id
-                            );
-
-                        };
-
-
-                    item.appendChild(
-                        text
-                    );
-
-                    item.appendChild(
-                        deleteButton
-                    );
-
-
-                    list.appendChild(
-                        item
-                    );
-
-                }
-            );
-
-        };
-
-}
-
-
-/* =========================
-   カレンダー上の予定
-========================= */
-
-function loadEventsForDate(
-    dateString,
-    cell
-) {
-
-    if (!db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
-
-    const request =
-        store.get(
-            "calendarEvents"
-        );
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            if (
-                !data ||
-                !Array.isArray(data.events)
-            ) {
-
-                return;
-
-            }
-
-
-            const events =
-                data.events.filter(
-                    function(event) {
-
-                        return (
-                            event.date ===
-                            dateString
-                        );
-
-                    }
-                );
-
-
-            events.forEach(
-                function(event) {
-
-                    const eventElement =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    eventElement.className =
-                        "calendar-event";
-
-
-                    eventElement.textContent =
-                        event.title;
-
-
-                    cell.appendChild(
-                        eventElement
-                    );
-
-                }
-            );
-
-        };
-
-}
-
-
-/* =========================
-   予定追加フォーム
-========================= */
-
-document
-    .getElementById("addEvent")
-    .addEventListener(
-        "click",
-        function() {
-
-            document
-                .getElementById(
-                    "eventForm"
-                )
-                .style.display =
-                "block";
-
-
-            if (selectedDate) {
-
-                document
-                    .getElementById(
-                        "eventDate"
-                    )
-                    .value =
-                    selectedDate;
-
-            }
-
-        }
-    );
-
-
-/* =========================
-   キャンセル
-========================= */
-
-document
-    .getElementById("cancelEvent")
-    .addEventListener(
-        "click",
-        function() {
-
-            document
-                .getElementById(
-                    "eventForm"
-                )
-                .style.display =
-                "none";
-
-        }
-    );
-
-
-/* =========================
-   予定を保存
-========================= */
-
-document
-    .getElementById("saveEvent")
-    .addEventListener(
-        "click",
-        function() {
-
-            saveCalendarEvent();
-
-        }
-    );
-
-
-function saveCalendarEvent() {
-
-    if (!db) {
-
-        alert(
-            "データベースを準備しています。"
-        );
-
-        return;
-
-    }
-
-
-    const date =
-        document
-            .getElementById(
-                "eventDate"
-            )
-            .value;
-
-
-    const time =
-        document
-            .getElementById(
-                "eventTime"
-            )
-            .value;
-
-
-    const type =
-        document
-            .getElementById(
-                "eventType"
-            )
-            .value;
 
 
     const title =
-        document
-            .getElementById(
-                "eventTitle"
-            )
-            .value
-            .trim();
-
-
-    if (!date) {
-
-        alert(
-            "日付を選択してください。"
+        document.getElementById(
+            "calendarTitle"
         );
+
+
+    if (
+        !calendar ||
+        !title
+    ) {
 
         return;
 
     }
-
-
-    if (!title) {
-
-        alert(
-            "予定を入力してください。"
-        );
-
-        return;
-
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readwrite"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
-
-    const request =
-        store.get(
-            "calendarEvents"
-        );
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            let events = [];
-
-
-            if (
-                data &&
-                Array.isArray(data.events)
-            ) {
-
-                events =
-                    data.events;
-
-            }
-
-
-            events.push({
-
-                id:
-                    Date.now(),
-
-                date:
-                    date,
-
-                time:
-                    time || "時間未設定",
-
-                type:
-                    type,
-
-                title:
-                    title
-
-            });
-
-
-            store.put({
-
-                id:
-                    "calendarEvents",
-
-                events:
-                    events
-
-            });
-
-
-            transaction.oncomplete =
-                function() {
-
-                    selectedDate =
-                        date;
-
-
-                    document
-                        .getElementById(
-                            "eventForm"
-                        )
-                        .style.display =
-                        "none";
-
-
-                    document
-                        .getElementById(
-                            "eventTitle"
-                        )
-                        .value =
-                        "";
-
-
-                    document
-                        .getElementById(
-                            "eventTime"
-                        )
-                        .value =
-                        "";
-
-
-                    renderCalendar();
-
-                    showEvents(date);
-
-                };
-
-        };
-
-}
-
-
-/* =========================
-   予定を削除
-========================= */
-
-function deleteEvent(
-    eventId
-) {
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readwrite"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
-
-
-    const request =
-        store.get(
-            "calendarEvents"
-        );
-
-
-    request.onsuccess =
-        function() {
-
-            const data =
-                request.result;
-
-
-            if (
-                !data ||
-                !Array.isArray(data.events)
-            ) {
-
-                return;
-
-            }
-
-
-            data.events =
-                data.events.filter(
-                    function(event) {
-
-                        return (
-                            event.id !==
-                            eventId
-                        );
-
-                    }
-                );
-
-
-            store.put({
-
-                id:
-                    "calendarEvents",
-
-                events:
-                    data.events
-
-            });
-
-
-            transaction.oncomplete =
-                function() {
-
-                    renderCalendar();
-
-                    if (selectedDate) {
-
-                        showEvents(
-                            selectedDate
-                        );
-
-                    }
-
-                };
-
-        };
-
-}
-
-
-/* =========================
-   前の月・次の月
-========================= */
-
-document
-    .getElementById("prevMonth")
-    .addEventListener(
-        "click",
-        function() {
-
-            calendarDate.setMonth(
-                calendarDate.getMonth() - 1
-            );
-
-            renderCalendar();
-
-        }
-    );
-
-
-document
-    .getElementById("nextMonth")
-    .addEventListener(
-        "click",
-        function() {
-
-            calendarDate.setMonth(
-                calendarDate.getMonth() + 1
-            );
-
-            renderCalendar();
-
-        }
-    );
-
-
-/* =========================
-   初期表示
-========================= */
-
-renderCalendar();
-        /* =========================
-   月予定
-========================= */
-
-let calendarDate = new Date();
-
-let selectedDate = null;
-
-
-/* =========================
-   カレンダー表示
-========================= */
-
-function renderCalendar() {
-
-    const calendar =
-        document.getElementById("calendar");
-
-    const title =
-        document.getElementById("calendarTitle");
-
-
-    if (!calendar || !title) {
-        return;
-    }
-
-
-    /* 7列を強制 */
-
-    calendar.style.display = "grid";
-
-    calendar.style.gridTemplateColumns =
-        "repeat(7, minmax(0, 1fr))";
-
-    calendar.style.gap = "5px";
 
 
     const year =
         calendarDate.getFullYear();
+
 
     const month =
         calendarDate.getMonth();
@@ -3798,9 +2693,8 @@ function renderCalendar() {
     calendar.innerHTML = "";
 
 
-    /* 曜日 */
-
     const weekNames = [
+
         "日",
         "月",
         "火",
@@ -3808,6 +2702,7 @@ function renderCalendar() {
         "木",
         "金",
         "土"
+
     ];
 
 
@@ -3815,13 +2710,18 @@ function renderCalendar() {
         function(day) {
 
             const element =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             element.className =
                 "calendar-week";
 
+
             element.textContent =
                 day;
+
 
             calendar.appendChild(
                 element
@@ -3831,8 +2731,6 @@ function renderCalendar() {
     );
 
 
-    /* 月初 */
-
     const firstDay =
         new Date(
             year,
@@ -3840,8 +2738,6 @@ function renderCalendar() {
             1
         ).getDay();
 
-
-    /* 月末 */
 
     const lastDate =
         new Date(
@@ -3851,7 +2747,7 @@ function renderCalendar() {
         ).getDate();
 
 
-    /* 月初までの空白 */
+    /* 月初の空白 */
 
     for (
         let i = 0;
@@ -3859,11 +2755,10 @@ function renderCalendar() {
         i++
     ) {
 
-        const empty =
-            document.createElement("div");
-
         calendar.appendChild(
-            empty
+            document.createElement(
+                "div"
+            )
         );
 
     }
@@ -3878,17 +2773,24 @@ function renderCalendar() {
     ) {
 
         const cell =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         cell.className =
             "calendar-day";
 
 
         const number =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         number.className =
             "calendar-day-number";
+
 
         number.textContent =
             day;
@@ -3902,14 +2804,13 @@ function renderCalendar() {
         const dateString =
             year +
             "-" +
-            String(month + 1)
-                .padStart(2, "0") +
+            String(
+                month + 1
+            ).padStart(2, "0") +
             "-" +
             String(day)
                 .padStart(2, "0");
 
-
-        /* 今日 */
 
         const today =
             new Date();
@@ -3928,7 +2829,8 @@ function renderCalendar() {
 
 
         if (
-            dateString === todayString
+            dateString ===
+            todayString
         ) {
 
             cell.classList.add(
@@ -3938,10 +2840,9 @@ function renderCalendar() {
         }
 
 
-        /* 選択中 */
-
         if (
-            dateString === selectedDate
+            dateString ===
+            selectedDate
         ) {
 
             cell.classList.add(
@@ -3950,8 +2851,6 @@ function renderCalendar() {
 
         }
 
-
-        /* クリック */
 
         cell.addEventListener(
             "click",
@@ -3970,8 +2869,6 @@ function renderCalendar() {
         );
 
 
-        /* 予定を表示 */
-
         showCalendarEvents(
             dateString,
             cell
@@ -3982,9 +2879,8 @@ function renderCalendar() {
 }
 
 
-/* =========================
-   日付選択
-========================= */
+
+/* 日付選択 */
 
 function selectCalendarDate(
     dateString
@@ -4013,6 +2909,7 @@ function selectCalendarDate(
 
     renderCalendar();
 
+
     showEvents(
         dateString
     );
@@ -4020,37 +2917,24 @@ function selectCalendarDate(
 }
 
 
-/* =========================
-   カレンダー上の予定
-========================= */
+
+/* カレンダー内の予定 */
 
 function showCalendarEvents(
     dateString,
     cell
 ) {
 
-    if (!db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    if (!db) return;
 
 
     const request =
-        store.get(
-            "calendarEvents"
-        );
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("calendarEvents");
 
 
     request.onsuccess =
@@ -4064,7 +2948,9 @@ function showCalendarEvents(
                 !data ||
                 !Array.isArray(data.events)
             ) {
+
                 return;
+
             }
 
 
@@ -4108,9 +2994,8 @@ function showCalendarEvents(
 }
 
 
-/* =========================
-   選択日の予定一覧
-========================= */
+
+/* 選択日の予定 */
 
 function showEvents(
     dateString
@@ -4122,28 +3007,16 @@ function showEvents(
         );
 
 
-    if (!list || !db) {
-        return;
-    }
-
-
-    const transaction =
-        db.transaction(
-            "settings",
-            "readonly"
-        );
-
-
-    const store =
-        transaction.objectStore(
-            "settings"
-        );
+    if (!db) return;
 
 
     const request =
-        store.get(
-            "calendarEvents"
-        );
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        )
+        .objectStore(STORE_NAME)
+        .get("calendarEvents");
 
 
     request.onsuccess =
@@ -4194,79 +3067,94 @@ function showEvents(
             }
 
 
-            events.forEach(
-                function(event) {
+            events
+                .sort(
+                    function(a, b) {
 
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "event-item";
-
-
-                    const text =
-                        document.createElement(
-                            "span"
-                        );
-
-
-                    text.textContent =
-                        event.time +
-                        "　" +
-                        event.type +
-                        "　" +
-                        event.title;
-
-
-                    const deleteButton =
-                        document.createElement(
-                            "button"
-                        );
-
-
-                    deleteButton.className =
-                        "event-delete";
-
-                    deleteButton.textContent =
-                        "削除";
-
-
-                    deleteButton.onclick =
-                        function() {
-
-                            deleteCalendarEvent(
-                                event.id
+                        return a.time
+                            .localeCompare(
+                                b.time
                             );
 
-                        };
+                    }
+                )
+                .forEach(
+                    function(event) {
+
+                        const item =
+                            document.createElement(
+                                "div"
+                            );
 
 
-                    item.appendChild(
-                        text
-                    );
-
-                    item.appendChild(
-                        deleteButton
-                    );
+                        item.className =
+                            "event-item";
 
 
-                    list.appendChild(
-                        item
-                    );
+                        const text =
+                            document.createElement(
+                                "span"
+                            );
 
-                }
-            );
+
+                        text.textContent =
+                            event.time +
+                            "　" +
+                            event.type +
+                            "　" +
+                            event.title;
+
+
+                        const deleteButton =
+                            document.createElement(
+                                "button"
+                            );
+
+
+                        deleteButton.className =
+                            "event-delete";
+
+
+                        deleteButton.textContent =
+                            "削除";
+
+
+                        deleteButton.onclick =
+                            function() {
+
+                                deleteCalendarEvent(
+                                    event.id
+                                );
+
+                            };
+
+
+                        item.appendChild(
+                            text
+                        );
+
+
+                        item.appendChild(
+                            deleteButton
+                        );
+
+
+                        list.appendChild(
+                            item
+                        );
+
+                    }
+                );
 
         };
 
 }
 
 
-/* =========================
-   予定追加ボタン
-========================= */
+
+/* =====================================================
+   予定追加
+===================================================== */
 
 document
     .getElementById("addEvent")
@@ -4297,9 +3185,8 @@ document
     );
 
 
-/* =========================
-   キャンセル
-========================= */
+
+/* キャンセル */
 
 document
     .getElementById("cancelEvent")
@@ -4318,9 +3205,8 @@ document
     );
 
 
-/* =========================
-   保存ボタン
-========================= */
+
+/* 保存 */
 
 document
     .getElementById("saveEvent")
@@ -4329,10 +3215,6 @@ document
         saveCalendarEvent
     );
 
-
-/* =========================
-   予定保存
-========================= */
 
 function saveCalendarEvent() {
 
@@ -4404,14 +3286,14 @@ function saveCalendarEvent() {
 
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
     const store =
         transaction.objectStore(
-            "settings"
+            STORE_NAME
         );
 
 
@@ -4507,6 +3389,7 @@ function saveCalendarEvent() {
 
                     renderCalendar();
 
+
                     showEvents(
                         date
                     );
@@ -4518,24 +3401,28 @@ function saveCalendarEvent() {
 }
 
 
-/* =========================
+
+/* =====================================================
    予定削除
-========================= */
+===================================================== */
 
 function deleteCalendarEvent(
     eventId
 ) {
 
+    if (!db) return;
+
+
     const transaction =
         db.transaction(
-            "settings",
+            STORE_NAME,
             "readwrite"
         );
 
 
     const store =
         transaction.objectStore(
-            "settings"
+            STORE_NAME
         );
 
 
@@ -4556,7 +3443,9 @@ function deleteCalendarEvent(
                 !data ||
                 !Array.isArray(data.events)
             ) {
+
                 return;
+
             }
 
 
@@ -4573,15 +3462,9 @@ function deleteCalendarEvent(
                 );
 
 
-            store.put({
-
-                id:
-                    "calendarEvents",
-
-                events:
-                    data.events
-
-            });
+            store.put(
+                data
+            );
 
 
             transaction.oncomplete =
@@ -4605,9 +3488,10 @@ function deleteCalendarEvent(
 }
 
 
-/* =========================
-   前月
-========================= */
+
+/* =====================================================
+   月移動
+===================================================== */
 
 document
     .getElementById("prevMonth")
@@ -4619,15 +3503,12 @@ document
                 calendarDate.getMonth() - 1
             );
 
+
             renderCalendar();
 
         }
     );
 
-
-/* =========================
-   次月
-========================= */
 
 document
     .getElementById("nextMonth")
@@ -4639,20 +3520,26 @@ document
                 calendarDate.getMonth() + 1
             );
 
+
             renderCalendar();
 
         }
     );
 
 
-/* =========================
-   初期表示
-========================= */
 
-renderCalendar();
-        
-    </script>
+/* =====================================================
+   初期設定
+===================================================== */
 
+document
+    .getElementById(
+        "eventDate"
+    )
+    .valueAsDate =
+    new Date();
+
+</script>
 
 </body>
 
