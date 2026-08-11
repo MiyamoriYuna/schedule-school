@@ -183,6 +183,141 @@
             color: #e85d75;
             font-weight: bold;
         }
+        /* =========================
+   月予定カレンダー
+========================= */
+
+.calendar-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+
+}
+
+
+.calendar-header h3 {
+
+    margin: 0;
+
+}
+
+
+.calendar-header button {
+
+    border: none;
+
+    background: #f1f5f9;
+
+    border-radius: 10px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+}
+
+
+.calendar {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+
+}
+
+
+.calendar-day {
+
+    min-height: 55px;
+
+    border: 1px solid #eee;
+
+    border-radius: 8px;
+
+    background: white;
+
+    padding: 5px;
+
+    cursor: pointer;
+
+}
+
+
+.calendar-day:hover {
+
+    background: #fff1f4;
+
+}
+
+
+.calendar-day.today {
+
+    border: 2px solid #e85d75;
+
+}
+
+
+.calendar-day.selected {
+
+    background: #ffe5eb;
+
+}
+
+
+.calendar-day-number {
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+}
+
+
+.calendar-event {
+
+    font-size: 10px;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+}
+
+
+.event-item {
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+.event-delete {
+
+    border: none;
+
+    background: none;
+
+    color: #e85d75;
+
+    cursor: pointer;
+
+    float: right;
+
+}
 
     </style>
 
@@ -214,13 +349,151 @@
         id="calendar"
         class="page">
 
-        <h2>月予定</h2>
+       <h2>月予定</h2>
 
-        <div class="card">
+<div class="card">
 
-            月予定ページです。
+    <div class="calendar-header">
 
-        </div>
+        <button
+            id="prevMonth">
+            ◀
+        </button>
+
+        <h3 id="calendarTitle"></h3>
+
+        <button
+            id="nextMonth">
+            ▶
+        </button>
+
+    </div>
+
+
+    <div
+        id="calendar"
+        class="calendar">
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <h3 id="selectedDateTitle">
+        日付を選択してください
+    </h3>
+
+    <div id="eventList">
+        予定はありません。
+    </div>
+
+    <button
+        id="addEvent"
+        class="save-button">
+
+        ＋ 予定を追加
+
+    </button>
+
+</div>
+
+
+<div
+    id="eventForm"
+    class="card"
+    style="display:none;">
+
+    <h3>予定を追加</h3>
+
+
+    <label>
+
+        予定の種類
+
+        <select id="eventType">
+
+            <option value="部活動">
+                部活動
+            </option>
+
+            <option value="旅行">
+                旅行
+            </option>
+
+            <option value="その他">
+                その他
+            </option>
+
+        </select>
+
+    </label>
+
+
+    <label>
+
+        日付
+
+        <input
+            id="eventDate"
+            type="date">
+
+    </label>
+
+
+    <label>
+
+        時間
+
+        <input
+            id="eventTime"
+            type="time">
+
+    </label>
+
+
+    <label>
+
+        予定
+
+        <input
+            id="eventTitle"
+            type="text"
+            placeholder="例：部活動">
+
+    </label>
+
+
+    <button
+        id="saveEvent"
+        class="save-button">
+
+        保存
+
+    </button>
+
+
+    <button
+        id="cancelEvent"
+        type="button"
+        style="
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border:none;
+            border-radius:10px;
+            background:#eee;
+            cursor:pointer;
+        ">
+
+        キャンセル
+
+    </button>
+
+
+    <p id="eventMessage"></p>
+
+</div>
 
     </section>
 
