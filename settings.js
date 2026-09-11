@@ -2,7 +2,7 @@
 // 設定ページ
 // ========================================
 
-
+console.log("settings.js 読み込み成功");
 // HTMLの読み込みが終わったら実行
 
 document.addEventListener(
@@ -36,6 +36,7 @@ document
   .getElementById("saveButton")
   .addEventListener("click", async () => {
 
+    console.log("保存ボタンが押されました");
 
     // 入力された名前
     const name =
