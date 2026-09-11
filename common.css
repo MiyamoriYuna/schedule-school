@@ -1,0 +1,165 @@
+/* =========================
+   全体
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 76px;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #f8fafc;
+  color: #1f2937;
+}
+
+
+/* =========================
+   ページ本体
+========================= */
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 18px;
+}
+
+
+/* =========================
+   ページ上部
+========================= */
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.today {
+  margin: 0;
+  color: #64748b;
+}
+
+
+/* =========================
+   カード
+========================= */
+
+.card {
+  background: white;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  padding: 20px;
+  margin-bottom: 16px;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+
+/* =========================
+   下部ナビゲーション
+========================= */
+
+.bottom-nav {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 68px;
+
+  display: flex;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-top: 1px solid #e2e8f0;
+
+  z-index: 100;
+}
+
+
+/* ナビゲーション内部 */
+
+.nav-inner {
+  width: 100%;
+  max-width: 720px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+}
+
+
+/* 各ボタン */
+
+.nav-link {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  text-decoration: none;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* アイコン */
+
+.nav-link .icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+
+/* 現在開いているページ */
+
+.nav-link.active {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+
+/* =========================
+   画面が大きい場合
+========================= */
+
+@media (min-width: 600px) {
+
+  .page {
+    padding-top: 36px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+  }
+
+}
