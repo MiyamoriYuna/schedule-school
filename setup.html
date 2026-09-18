@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>初期設定 | 学校生活管理アプリ</title>
+
+  <link
+    rel="stylesheet"
+    href="css/common.css"
+  >
+
+</head>
+
+
+<body>
+
+  <main class="page setup-page">
+
+
+    <!-- 初期設定のタイトル -->
+
+    <header class="page-header">
+
+      <h1>初期設定</h1>
+
+      <p>
+        学校生活管理アプリを始めるために、
+        基本情報を入力してください。
+      </p>
+
+    </header>
+
+
+    <!-- 初期設定フォーム -->
+
+    <section class="card">
+
+      <h2>基本情報</h2>
+
+
+      <!-- 名前 -->
+
+      <label>
+
+        名前・ニックネーム
+        <span class="required">必須</span>
+
+        <input
+          id="nameInput"
+          type="text"
+          placeholder="名前やニックネームを入力"
+        >
+
+      </label>
+
+
+      <br><br>
+
+
+      <!-- 学年 -->
+
+      <label>
+
+        学年
+        <span class="required">必須</span>
+
+        <select id="gradeInput">
+
+          <option value="">
+            選択してください
+          </option>
+
+          <option value="中学1年">
+            中学1年
+          </option>
+
+          <option value="中学2年">
+            中学2年
+          </option>
+
+          <option value="中学3年">
+            中学3年
+          </option>
+
+          <option value="高校1年">
+            高校1年
+          </option>
+
+          <option value="高校2年">
+            高校2年
+          </option>
+
+          <option value="高校3年">
+            高校3年
+          </option>
+
+        </select>
+
+      </label>
+
+
+      <br><br>
+
+
+      <!-- 通知 -->
+
+      <fieldset>
+
+        <legend>
+          通知を受け取りますか？
+          <span class="required">必須</span>
+        </legend>
+
+
+        <label class="radio-label">
+
+          <input
+            type="radio"
+            name="notification"
+            value="yes"
+          >
+
+          通知を受け取る
+
+        </label>
+
+
+        <label class="radio-label">
+
+          <input
+            type="radio"
+            name="notification"
+            value="no"
+          >
+
+          通知を受け取らない
+
+        </label>
+
+      </fieldset>
+
+
+      <br>
+
+
+      <!-- エラーメッセージ -->
+
+      <p
+        id="errorMessage"
+        class="error-message"
+      ></p>
+
+
+      <!-- 保存ボタン -->
+
+      <button id="setupButton">
+
+        初期設定を完了する
+
+      </button>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- JavaScript -->
+
+  <script src="js/database.js"></script>
+
+  <script src="js/common.js"></script>
+
+  <script src="js/setup.js"></script>
+
+
+</body>
+
+</html>
