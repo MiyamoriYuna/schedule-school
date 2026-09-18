@@ -4,15 +4,18 @@
 
 function displayToday() {
 
-  // 現在の日時を取得する
   const now = new Date();
 
-  // 年・月・日を取得する
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const date = now.getDate();
+  const year =
+    now.getFullYear();
 
-  // 曜日の一覧
+  const month =
+    now.getMonth() + 1;
+
+  const date =
+    now.getDate();
+
+
   const weekdays = [
     "日",
     "月",
@@ -23,18 +26,19 @@ function displayToday() {
     "土"
   ];
 
-  // 今日の曜日を取得する
-  const weekday = weekdays[now.getDay()];
 
-  // 表示する文字を作る
+  const weekday =
+    weekdays[now.getDay()];
+
+
   const text =
     `${year}年${month}月${date}日（${weekday}）`;
 
-  // class="today"の要素を取得する
+
   const todayElements =
     document.querySelectorAll(".today");
 
-  // 取得した要素に日付を表示する
+
   todayElements.forEach((element) => {
 
     element.textContent = text;
@@ -45,33 +49,28 @@ function displayToday() {
 
 
 // ========================================
-// 現在のページを判定する
+// 現在のページを選択状態にする
 // ========================================
 
 function setActiveNavigation() {
 
-  // 現在開いているHTMLファイル名を取得する
   const currentPage =
-    location.pathname.split("/").pop() || "index.html";
+    location.pathname.split("/").pop()
+    || "index.html";
 
 
-  // 下部ナビゲーションのボタンをすべて取得する
   const navigationLinks =
     document.querySelectorAll(".nav-link");
 
 
-  // それぞれのボタンを確認する
   navigationLinks.forEach((link) => {
 
-    // ボタンのリンク先を取得する
     const linkPage =
       link.getAttribute("href");
 
 
-    // 現在のページとリンク先が同じなら
     if (linkPage === currentPage) {
 
-      // activeクラスを追加する
       link.classList.add("active");
 
     }
@@ -82,18 +81,74 @@ function setActiveNavigation() {
 
 
 // ========================================
-// ページの読み込みが完了したら実行
+// 初期設定が完了しているか確認する
+// ========================================
+
+async function checkInitialSetup() {
+
+
+  // 現在のページを取得
+
+  const currentPage =
+    location.pathname.split("/").pop()
+    || "index.html";
+
+
+  // 初期設定ページならチェックしない
+
+  if (currentPage === "setup.html") {
+
+    return;
+
+  }
+
+
+  try {
+
+    // 保存されているユーザー情報を取得
+
+    const user =
+      await getUser();
+
+
+    // 初期設定が完了していなければ
+    // setup.htmlへ移動
+
+    if (
+      !user ||
+      user.setupCompleted !== true
+    ) {
+
+      window.location.href =
+        "setup.html";
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "初期設定の確認に失敗しました:",
+      error
+    );
+
+  }
+
+}
+
+
+// ========================================
+// ページ読み込み後に実行
 // ========================================
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async () => {
 
-    // 今日の日付を表示
     displayToday();
 
-    // 現在のページを選択状態にする
     setActiveNavigation();
+
+    await checkInitialSetup();
 
   }
 );
