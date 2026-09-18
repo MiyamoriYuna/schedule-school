@@ -2,13 +2,10 @@
 // データベースの基本設定
 // ========================================
 
-// データベースの名前
 const DB_NAME = "SchoolLifeApp";
 
-// データベースのバージョン
 const DB_VERSION = 1;
 
-// データを保存する場所の名前
 const USER_STORE = "user";
 
 
@@ -20,7 +17,6 @@ function openDatabase() {
 
   return new Promise((resolve, reject) => {
 
-    // データベースを開く
     const request = indexedDB.open(
       DB_NAME,
       DB_VERSION
@@ -32,7 +28,8 @@ function openDatabase() {
 
       const db = event.target.result;
 
-      // userという保存場所を作る
+
+      // userという保存場所がなければ作る
       if (!db.objectStoreNames.contains(USER_STORE)) {
 
         db.createObjectStore(
