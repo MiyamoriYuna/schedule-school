@@ -2,71 +2,149 @@
 <html lang="ja">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>持ち物 | 学校生活管理アプリ</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="css/common.css">
+  <title>持ち物設定</title>
+
+  <link
+    rel="stylesheet"
+    href="css/common.css">
+
 </head>
+
 
 <body>
 
-  <main class="page">
+  <main class="container">
 
     <header class="page-header">
-      <h1>持ち物</h1>
-      <p class="today"></p>
+
+      <div>
+
+        <h1>持ち物</h1>
+
+        <p class="today"></p>
+
+      </div>
+
     </header>
 
+
+    <!-- 今日の持ち物 -->
+
     <section class="card">
+
       <h2>今日の持ち物</h2>
 
+      <div id="todayBelongings"></div>
+
+    </section>
+
+
+    <!-- 教科ごとの設定 -->
+
+    <section class="card">
+
+      <h2>教科ごとの持ち物</h2>
+
       <p>
-        ここに時間割や予定から
-        自動生成された持ち物を表示します。
+        教科ごとの通常の持ち物を登録すると、
+        今日の時間割から自動的に持ち物を作成できます。
       </p>
+
+      <div id="subjectBelongingsContainer"></div>
+
+    </section>
+
+
+    <!-- 毎日の持ち物 -->
+
+    <section class="card">
+
+      <h2>毎日持っていくもの</h2>
+
+      <p>
+        時間割に関係なく毎日持っていくものを登録します。
+      </p>
+
+      <div id="dailyBelongingsContainer"></div>
+
+      <button
+        id="addDailyItemButton"
+        class="button">
+
+        ＋ 持ち物を追加
+
+      </button>
+
+    </section>
+
+
+    <!-- 保存 -->
+
+    <section class="card">
+
+      <button
+        id="saveBelongingsButton"
+        class="button">
+
+        持ち物設定を保存
+
+      </button>
+
+      <p
+        id="saveMessage"
+        class="save-message">
+      </p>
+
     </section>
 
   </main>
 
 
+  <!-- ナビ -->
+
   <nav class="bottom-nav">
 
-    <div class="nav-inner">
+    <a href="calendar.html">
+      <span>🗓️</span>
+      <span>月予定</span>
+    </a>
 
-      <a class="nav-link" href="calendar.html">
-        <span class="icon">🗓️</span>
-        <span>月予定</span>
-      </a>
+    <a href="todo.html">
+      <span>✅</span>
+      <span>やること</span>
+    </a>
 
-      <a class="nav-link" href="todo.html">
-        <span class="icon">✅</span>
-        <span>やること</span>
-      </a>
+    <a href="index.html">
+      <span>🏠</span>
+      <span>ホーム</span>
+    </a>
 
-      <a class="nav-link" href="index.html">
-        <span class="icon">🏠</span>
-        <span>ホーム</span>
-      </a>
+    <a href="belongings.html">
+      <span>🎒</span>
+      <span>持ち物</span>
+    </a>
 
-      <a class="nav-link" href="belongings.html">
-        <span class="icon">🎒</span>
-        <span>持ち物</span>
-      </a>
-
-      <a class="nav-link" href="settings.html">
-        <span class="icon">⚙️</span>
-        <span>設定</span>
-      </a>
-
-    </div>
+    <a href="settings.html">
+      <span>⚙️</span>
+      <span>設定</span>
+    </a>
 
   </nav>
 
 
   <script src="js/database.js"></script>
-<script src="js/common.js"></script>
+
+  <script src="js/common.js"></script>
+
+  <script src="js/belongings.js"></script>
 
 </body>
+
 </html>
