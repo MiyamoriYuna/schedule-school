@@ -410,6 +410,82 @@ button:disabled {
 
 }
 
+/* ==============================
+   持ち物設定
+   ============================== */
+
+.belongings-subject-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.belongings-subject-item h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.subject-belongings-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+
+/* 毎日の持ち物 */
+
+.daily-belonging-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.daily-belonging-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.small-delete-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #e2e8f0;
+  cursor: pointer;
+}
+
+
+/* 今日の持ち物 */
+
+.today-belongings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.belonging-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.belonging-checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.belonging-checkbox input:checked + span {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
 
 /* ========================================
    下部ナビゲーション
