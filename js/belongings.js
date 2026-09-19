@@ -22,6 +22,8 @@ document.addEventListener(
 
     createDailyBelongings();
 
+    await loadDailyBelongings();
+
     await loadTodayBelongings();
 
     document
