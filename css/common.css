@@ -206,5 +206,68 @@ button {
 button:hover {
   opacity: 0.85;
 }
+/* ========================================
+   教科・科目設定
+======================================== */
 
+.subject-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+.subject-card h2 {
+  margin-bottom: 15px;
+}
+
+
+.subject-option {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px;
+
+  margin: 6px 0;
+
+  border-radius: 8px;
+
+  background: #f8fafc;
+
+  cursor: pointer;
+
+}
+
+
+.subject-option:hover {
+
+  background: #f1f5f9;
+
+}
+
+
+.subject-option input {
+
+  width: 18px;
+
+  height: 18px;
+
+}
+
+
+.save-message {
+
+  min-height: 24px;
+
+  margin: 15px 0;
+
+  color: #16a34a;
+
+  font-weight: bold;
+
+}
 }
