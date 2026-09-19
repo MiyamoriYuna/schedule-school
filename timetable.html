@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>時間割設定</title>
+
+  <link rel="stylesheet" href="css/common.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <!-- ヘッダー -->
+    <header class="page-header">
+
+      <div>
+        <h1>時間割設定</h1>
+        <p class="today"></p>
+      </div>
+
+    </header>
+
+
+    <!-- 説明 -->
+    <section class="card">
+
+      <h2>時間割を設定</h2>
+
+      <p>
+        曜日ごとの授業を設定してください。
+      </p>
+
+      <p id="gradeInfo"></p>
+
+    </section>
+
+
+    <!-- 時間割 -->
+    <section class="card">
+
+      <div id="timetableContainer"></div>
+
+    </section>
+
+
+    <!-- 保存 -->
+    <section class="card">
+
+      <button
+        id="saveTimetableButton"
+        class="button">
+        時間割を保存
+      </button>
+
+      <p
+        id="saveMessage"
+        class="save-message">
+      </p>
+
+    </section>
+
+
+    <!-- 教科設定へのリンク -->
+    <section class="card">
+
+      <h2>教科・科目を変更する</h2>
+
+      <p>
+        時間割で使用する教科・科目を変更できます。
+      </p>
+
+      <a
+        href="subjects.html"
+        class="button-link">
+        教科・科目設定へ
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <!-- 下部ナビ -->
+  <nav class="bottom-nav">
+
+    <a href="calendar.html">
+      <span>🗓️</span>
+      <span>月予定</span>
+    </a>
+
+    <a href="todo.html">
+      <span>✅</span>
+      <span>やること</span>
+    </a>
+
+    <a href="index.html">
+      <span>🏠</span>
+      <span>ホーム</span>
+    </a>
+
+    <a href="belongings.html">
+      <span>🎒</span>
+      <span>持ち物</span>
+    </a>
+
+    <a href="settings.html">
+      <span>⚙️</span>
+      <span>設定</span>
+    </a>
+
+  </nav>
+
+
+  <!-- JavaScript -->
+  <script src="js/database.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/timetable.js"></script>
+
+</body>
+
+</html>
