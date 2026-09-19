@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>教科・科目設定 | 学校生活管理アプリ</title>
+
+  <link
+    rel="stylesheet"
+    href="css/common.css"
+  >
+
+</head>
+
+
+<body>
+
+  <main class="page">
+
+
+    <!-- ヘッダー -->
+
+    <header class="page-header">
+
+      <h1>教科・科目設定</h1>
+
+      <p class="today"></p>
+
+    </header>
+
+
+    <!-- 説明 -->
+
+    <section class="card">
+
+      <h2 id="gradeTitle">
+        教科・科目を選択
+      </h2>
+
+      <p>
+        実際に学校で使用している
+        教科・科目を選択してください。
+      </p>
+
+    </section>
+
+
+    <!-- 教科一覧 -->
+
+    <section
+      id="subjectContainer"
+      class="subject-container"
+    >
+    </section>
+
+
+    <!-- メッセージ -->
+
+    <p
+      id="saveMessage"
+      class="save-message"
+    ></p>
+
+
+    <!-- 保存 -->
+
+    <button id="saveSubjectsButton">
+
+      保存する
+
+    </button>
+
+
+  </main>
+
+
+  <!-- 下部ナビ -->
+
+  <nav class="bottom-nav">
+
+    <div class="nav-inner">
+
+
+      <a
+        class="nav-link"
+        href="calendar.html"
+      >
+
+        <span class="icon">🗓️</span>
+
+        <span>月予定</span>
+
+      </a>
+
+
+      <a
+        class="nav-link"
+        href="todo.html"
+      >
+
+        <span class="icon">✅</span>
+
+        <span>やること</span>
+
+      </a>
+
+
+      <a
+        class="nav-link"
+        href="index.html"
+      >
+
+        <span class="icon">🏠</span>
+
+        <span>ホーム</span>
+
+      </a>
+
+
+      <a
+        class="nav-link"
+        href="belongings.html"
+      >
+
+        <span class="icon">🎒</span>
+
+        <span>持ち物</span>
+
+      </a>
+
+
+      <a
+        class="nav-link"
+        href="settings.html"
+      >
+
+        <span class="icon">⚙️</span>
+
+        <span>設定</span>
+
+      </a>
+
+
+    </div>
+
+  </nav>
+
+
+  <!-- JavaScript -->
+
+  <script src="js/database.js"></script>
+
+  <script src="js/subjectData.js"></script>
+
+  <script src="js/common.js"></script>
+
+  <script src="js/subjects.js"></script>
+
+
+</body>
+
+</html>
