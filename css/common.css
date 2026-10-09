@@ -780,3 +780,45 @@ button:disabled {
   }
 
 }
+
+
+/* ==============================
+   ホーム画面：今日の時間割
+============================== */
+
+.today-timetable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.today-timetable-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  background: #eff6ff;
+  border-radius: 10px;
+  border-left: 4px solid #60a5fa;
+}
+
+.today-period {
+  min-width: 48px;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.today-subject {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.today-timetable-row.is-unset {
+  background: #f8fafc;
+  border-left-color: #cbd5e1;
+}
+
+.today-timetable-row.is-unset .today-subject {
+  color: #94a3b8;
+  font-weight: 400;
+}
