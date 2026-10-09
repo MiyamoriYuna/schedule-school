@@ -48,10 +48,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  currentGrade = user.grade;
+ 
+currentGrade = user.grade;
 
-  document.getElementById("gradeInfo").textContent =
-    `現在の学年：${currentGrade}`;
+document.getElementById("gradeInfo").textContent =
+  `現在の学年：${currentGrade}`;
+
+const modeInfo = document.getElementById("timetableModeInfo");
+
+if (currentGrade.startsWith("中学")) {
+  modeInfo.textContent =
+    "管理方式：基本時間割（通常は同じ時間割を使用します）";
+} else if (currentGrade.startsWith("高校")) {
+  modeInfo.textContent =
+    "管理方式：週別時間割（週ごとに時間割を設定します）";
+} else {
+  modeInfo.textContent =
+    "管理方式を確認できません。設定で学年を確認してください。";
+}
 
 
   // 登録されている教科を取得
