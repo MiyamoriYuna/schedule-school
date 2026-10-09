@@ -339,30 +339,39 @@ function createTimetable() {
 // 保存されている時間割を読み込む
 // ==============================
 
+
 async function loadTimetable() {
+  // まず入力欄をすべて空にする
+  document.querySelectorAll(".timetable-select").forEach(select => {
+    select.value = "";
+  });
 
-  const timetable =
-    await getTimetable();
+  let timetable = [];
 
+  if (currentGrade.startsWith("高校")) {
+    // 選択中の週の時間割を読み込む
+    timetable = await getWeeklyTimetable(currentWeekStart);
+
+    // 週別データがまだ一度も保存されていない場合は、
+    // 以前の時間割を初回入力の参考として表示する
+    if (timetable.length === 0 && !(await hasWeeklyTimetable())) {
+      timetable = await getTimetable();
+    }
+  } else {
+    // 中学校は従来の基本時間割を使用する
+    timetable = await getTimetable();
+  }
 
   timetable.forEach(item => {
-
     const selector =
       `.timetable-select[data-day="${item.day}"][data-period="${item.period}"]`;
 
-
-    const select =
-      document.querySelector(selector);
-
+    const select = document.querySelector(selector);
 
     if (select) {
-
       select.value = item.subjectId;
-
     }
-
   });
-
 }
 
 
