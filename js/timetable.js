@@ -4,6 +4,7 @@
 
 let currentGrade = "";
 let availableSubjects = [];
+let currentWeekStart = "";
 
 
 // 曜日
@@ -40,51 +41,115 @@ const days = [
 // 初期化
 // ==============================
 
+
 document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const user = await getUser();
 
-  const user = await getUser();
+    if (!user) {
+      return;
+    }
 
-  if (!user) {
-    return;
+    currentGrade = user.grade;
+
+    document.getElementById("gradeInfo").textContent =
+      `現在の学年：${currentGrade}`;
+
+    const modeInfo = document.getElementById("timetableModeInfo");
+    const weekSelector = document.getElementById("weekSelectorContainer");
+
+    if (currentGrade.startsWith("中学")) {
+      modeInfo.textContent =
+        "管理方式：基本時間割（通常は同じ時間割を使用します）";
+
+      weekSelector.style.display = "none";
+
+    } else if (currentGrade.startsWith("高校")) {
+      modeInfo.textContent =
+        "管理方式：週別時間割（週ごとに時間割を設定します）";
+
+      weekSelector.style.display = "block";
+
+      currentWeekStart = getMondayDateString(new Date());
+
+      document.getElementById("weekStartDate").value =
+        currentWeekStart;
+
+      updateWeekInfo();
+
+      document
+        .getElementById("weekStartDate")
+        .addEventListener("change", async (event) => {
+          if (!event.target.value) {
+            return;
+          }
+
+          const selectedDate =
+            new Date(`${event.target.value}T00:00:00`);
+
+          currentWeekStart =
+            getMondayDateString(selectedDate);
+
+          event.target.value = currentWeekStart;
+
+          updateWeekInfo();
+
+          await loadTimetable();
+        });
+
+    } else {
+      modeInfo.textContent =
+        "学年を確認してください。";
+      return;
+    }
+
+    availableSubjects = await getSubjects();
+
+    createTimetable();
+
+    await loadTimetable();
+
+    document
+      .getElementById("saveTimetableButton")
+      .addEventListener("click", saveCurrentTimetable);
+
+  } catch (error) {
+    console.error("時間割設定の初期化に失敗しました:", error);
+    alert("時間割設定を読み込めませんでした。ページを再読み込みしてください。");
   }
+});
 
- 
-currentGrade = user.grade;
 
-document.getElementById("gradeInfo").textContent =
-  `現在の学年：${currentGrade}`;
+// 指定した日付を含む週の月曜日を取得する
+function getMondayDateString(date) {
+  const monday = new Date(date);
 
-const modeInfo = document.getElementById("timetableModeInfo");
+  const day = monday.getDay();
 
-if (currentGrade.startsWith("中学")) {
-  modeInfo.textContent =
-    "管理方式：基本時間割（通常は同じ時間割を使用します）";
-} else if (currentGrade.startsWith("高校")) {
-  modeInfo.textContent =
-    "管理方式：週別時間割（週ごとに時間割を設定します）";
-} else {
-  modeInfo.textContent =
-    "管理方式を確認できません。設定で学年を確認してください。";
+  const difference = day === 0 ? -6 : 1 - day;
+
+  monday.setDate(monday.getDate() + difference);
+
+  const year = monday.getFullYear();
+  const month = String(monday.getMonth() + 1).padStart(2, "0");
+  const dayOfMonth = String(monday.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${dayOfMonth}`;
 }
 
 
-  // 登録されている教科を取得
-  availableSubjects = await getSubjects();
+// 対象の週を表示する
+function updateWeekInfo() {
+  const date = new Date(`${currentWeekStart}T00:00:00`);
+  const saturday = new Date(date);
 
+  saturday.setDate(date.getDate() + 5);
 
-  // 時間割を作成
-  createTimetable();
+  const formatDate = (value) =>
+    `${value.getMonth() + 1}/${value.getDate()}`;
 
-
-  // 保存されている時間割を読み込む
-  await loadTimetable();
-
-
-  // 保存ボタン
-  document
-    .getElementById("saveTimetableButton")
-    .addEventListener("click", saveCurrentTimetable);
-
+  document.getElementById("weekInfo").textContent =
+    `${formatDate(date)}〜${formatDate(saturday)} の時間割`;
 });
 
 
