@@ -1,11 +1,12 @@
 const DB_NAME = "SchoolLifeApp";
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 const USER_STORE = "user";
 const SUBJECT_STORE = "subjects";
 const TIMETABLE_STORE = "timetable";
 const BELONGINGS_STORE = "belongings";
 const DAILY_BELONGINGS_STORE = "dailyBelongings";
+const WEEKLY_TIMETABLE_STORE = "weeklyTimetable";
 
 
 // ==============================
@@ -72,6 +73,13 @@ function openDatabase() {
         });
 
       }
+
+      // 高校の週別時間割
+if (!db.objectStoreNames.contains(WEEKLY_TIMETABLE_STORE)) {
+  db.createObjectStore(WEEKLY_TIMETABLE_STORE, {
+    keyPath: "id"
+  });
+}
 
     };
 
@@ -515,4 +523,120 @@ async function getDailyBelongings() {
 
   });
 
+}
+
+
+/* ==============================
+   高校の週別時間割
+============================== */
+
+// 指定した週の時間割を保存
+async function saveWeeklyTimetable(weekStart, timetable) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      WEEKLY_TIMETABLE_STORE,
+      "readwrite"
+    );
+
+    const store = transaction.objectStore(
+      WEEKLY_TIMETABLE_STORE
+    );
+
+    // 同じ週のデータだけを削除する
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      request.result
+        .filter(item => item.weekStart === weekStart)
+        .forEach(item => store.delete(item.id));
+
+      // 新しい時間割を保存する
+      timetable.forEach(item => {
+        store.put({
+          ...item,
+          id: `${weekStart}-${item.day}-${item.period}`,
+          weekStart
+        });
+      });
+    };
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+
+    transaction.onabort = () => {
+      db.close();
+      reject(transaction.error || new Error("保存に失敗しました"));
+    };
+  });
+}
+
+
+// 指定した週の時間割を読み込む
+async function getWeeklyTimetable(weekStart) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      WEEKLY_TIMETABLE_STORE,
+      "readonly"
+    );
+
+    const store = transaction.objectStore(
+      WEEKLY_TIMETABLE_STORE
+    );
+
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      const timetable = request.result.filter(
+        item => item.weekStart === weekStart
+      );
+
+      db.close();
+      resolve(timetable);
+    };
+
+    request.onerror = () => {
+      db.close();
+      reject(request.error);
+    };
+  });
+}
+
+
+// 週別時間割が登録済みか確認する
+async function hasWeeklyTimetable() {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      WEEKLY_TIMETABLE_STORE,
+      "readonly"
+    );
+
+    const store = transaction.objectStore(
+      WEEKLY_TIMETABLE_STORE
+    );
+
+    const request = store.count();
+
+    request.onsuccess = () => {
+      db.close();
+      resolve(request.result > 0);
+    };
+
+    request.onerror = () => {
+      db.close();
+      reject(request.error);
+    };
+  });
 }
