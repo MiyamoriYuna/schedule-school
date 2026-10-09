@@ -7,6 +7,7 @@ let availableSubjects = [];
 
 
 // 曜日
+
 const days = [
   {
     id: "monday",
@@ -27,6 +28,10 @@ const days = [
   {
     id: "friday",
     name: "金"
+  },
+  {
+    id: "saturday",
+    name: "土"
   }
 ];
 
