@@ -27,12 +27,29 @@
     </header>
 
 
-<!-- 今日の時間割 -->
-<section class="card">
-  <h2>今日の時間割</h2>
 
-  <div id="todayTimetable">
-    <p>時間割を読み込んでいます...</p>
+<!-- 今日と明日の時間割 -->
+<section class="card">
+  <h2>時間割</h2>
+
+  <div class="timetable-comparison">
+
+    <!-- 今日 -->
+    <div class="timetable-panel today-panel">
+      <h3 id="todayTitle">今日</h3>
+      <div id="todayTimetable">
+        <p>読み込み中...</p>
+      </div>
+    </div>
+
+    <!-- 明日 -->
+    <div class="timetable-panel tomorrow-panel">
+      <h3 id="tomorrowTitle">明日</h3>
+      <div id="tomorrowTimetable">
+        <p>読み込み中...</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
