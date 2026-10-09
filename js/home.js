@@ -8,7 +8,8 @@ const weekdayIds = {
   2: "tuesday",
   3: "wednesday",
   4: "thursday",
-  5: "friday"
+  5: "friday",
+  6: "saturday"
 };
 
 const weekdayNames = [
