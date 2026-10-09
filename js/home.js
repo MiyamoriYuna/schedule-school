@@ -101,8 +101,9 @@ function renderTimetable(
 
   container.innerHTML = "";
 
-  // 土日
-  if (weekday === 0 || weekday === 6) {
+ 
+  // 日曜日だけ、学校の時間割を表示しない
+  if (weekday === 0) {
     container.textContent = "学校の時間割はありません。";
     return;
   }
