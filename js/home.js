@@ -28,6 +28,7 @@ const weekdayNames = [
 
 document.addEventListener("DOMContentLoaded", () => {
   showTimetables();
+  showHomeEvents();
 });
 
 // ==============================
@@ -246,4 +247,145 @@ function showMessage(message) {
       container.textContent = message;
     }
   });
+}
+
+// ==============================
+// 今日と明日の部活動・個人予定を表示
+// ==============================
+
+async function showHomeEvents() {
+  const todayContainer = document.getElementById("todayEvents");
+  const tomorrowContainer = document.getElementById("tomorrowEvents");
+
+  if (!todayContainer || !tomorrowContainer) return;
+
+  try {
+    const events = await getEvents();
+
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    renderHomeEvents(todayContainer, events, today);
+    renderHomeEvents(tomorrowContainer, events, tomorrow);
+
+  } catch (error) {
+    console.error("予定の読み込みに失敗しました:", error);
+    todayContainer.textContent = "予定を読み込めませんでした。";
+    tomorrowContainer.textContent = "予定を読み込めませんでした。";
+  }
+}
+
+// 日付を YYYY-MM-DD 形式に変換
+function getHomeDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+// 指定した日の予定を表示
+function renderHomeEvents(container, events, date) {
+  const dateKey = getHomeDateKey(date);
+
+  container.replaceChildren();
+
+  const matchingEvents = events
+    .filter(event => homeEventOccursOn(event, dateKey))
+    .sort((a, b) => {
+      return (a.startTime || "99:99")
+        .localeCompare(b.startTime || "99:99");
+    });
+
+  if (matchingEvents.length === 0) {
+    container.textContent = "予定はありません。";
+    return;
+  }
+
+  matchingEvents.forEach(event => {
+    const item = document.createElement("div");
+    item.className = "home-event-item";
+
+    const name = document.createElement("h4");
+    name.textContent = event.name || event.title || "名前のない予定";
+    item.appendChild(name);
+
+    const time = document.createElement("p");
+    time.className = "home-event-time";
+
+    if (event.startTime && event.endTime) {
+      time.textContent = `${event.startTime}〜${event.endTime}`;
+    } else if (event.startTime) {
+      time.textContent = `${event.startTime}〜`;
+    } else if (event.endTime) {
+      time.textContent = `〜${event.endTime}`;
+    } else {
+      time.textContent = "時刻未設定";
+    }
+
+    item.appendChild(time);
+
+    if (event.belongings && event.belongings.trim()) {
+      const belongings = document.createElement("p");
+      belongings.className = "home-event-belongings";
+      belongings.textContent = `持ち物：${event.belongings}`;
+      item.appendChild(belongings);
+    }
+
+    container.appendChild(item);
+  });
+}
+
+// 繰り返し予定が指定日に該当するか判定
+function homeEventOccursOn(event, dateKey) {
+  const recurrence = event.recurrence || "once";
+
+  if (recurrence === "once") {
+    return event.date === dateKey;
+  }
+
+  if (!event.date || dateKey < event.date) {
+    return false;
+  }
+
+  const skippedDates = Array.isArray(event.skippedDates)
+    ? event.skippedDates
+    : [];
+
+  if (skippedDates.includes(dateKey)) {
+    return false;
+  }
+
+  const [year, month, day] = event.date.split("-").map(Number);
+  const startDate = new Date(year, month - 1, day);
+
+  const [targetYear, targetMonth, targetDay] =
+    dateKey.split("-").map(Number);
+
+  const targetDate = new Date(
+    targetYear,
+    targetMonth - 1,
+    targetDay
+  );
+
+  if (recurrence === "weekly" || recurrence === "biweekly") {
+    if (startDate.getDay() !== targetDate.getDay()) {
+      return false;
+    }
+
+    const daysDifference = Math.round(
+      (targetDate - startDate) / 86400000
+    );
+
+    const weeksDifference = Math.floor(daysDifference / 7);
+
+    return weeksDifference % (recurrence === "biweekly" ? 2 : 1) === 0;
+  }
+
+  if (recurrence === "monthly") {
+    return startDate.getDate() === targetDate.getDate();
+  }
+
+  return event.date === dateKey;
 }
