@@ -983,3 +983,80 @@ button:disabled {
   font-size: 0.9rem;
 }
 
+
+/* ========================================
+   教科・科目の検索と絞り込み
+======================================== */
+
+.subject-filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subject-filter-card label {
+  font-weight: 600;
+}
+
+#subjectSearch {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #f3c5ce;
+  border-radius: 10px;
+  background: #ffffff;
+  font: inherit;
+}
+
+.filter-heading {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.subject-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.subject-filter {
+  width: auto;
+  padding: 9px 15px;
+  border: 1px solid #f3c5ce;
+  border-radius: 999px;
+  background: #fff5f7;
+  color: #a83e55;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.subject-filter:hover {
+  background: #ffe5eb;
+  border-color: #e8a1b0;
+}
+
+.subject-filter.active {
+  background: #e85d75;
+  border-color: #e85d75;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.subject-filter:focus-visible {
+  outline: 2px solid #e85d75;
+  outline-offset: 3px;
+}
+
+.subject-result-count {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.subject-card[hidden],
+.subject-option[hidden] {
+  display: none !important;
+}
