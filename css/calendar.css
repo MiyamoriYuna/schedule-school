@@ -435,27 +435,54 @@ badges.append(
   font-weight: 600;
 }
 
+
+/* 教科フィルターの配置 */
 .subject-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+  padding: 2px 0;
 }
 
+/* 未選択のボタン */
 .subject-filter {
-  padding: 8px 13px;
-  border: 1px solid #e2e8f0;
+  padding: 9px 15px;
+
+  border: 1px solid #f3c5ce;
   border-radius: 999px;
-  background: #f8fafc;
-  color: #334155;
-  font: inherit;
+
+  background: #fff5f7;
+  color: #a83e55;
+
   font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+
   cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
+/* マウスを乗せたとき */
+.subject-filter:hover {
+  background: #ffe5eb;
+  border-color: #e8a1b0;
+}
+
+/* 選択中のボタン */
 .subject-filter.active {
   background: #e85d75;
   border-color: #e85d75;
   color: #ffffff;
+  font-weight: 600;
+}
+
+/* キーボード操作時 */
+.subject-filter:focus-visible {
+  outline: 2px solid #e85d75;
+  outline-offset: 3px;
 }
 
 .subject-filter:focus-visible {
