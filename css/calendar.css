@@ -398,3 +398,79 @@ badges.append(
   makeElement("span", "event-badge", recurrenceLabel)
 );
   
+
+/* ========================================
+   教科・科目の検索と絞り込み
+======================================== */
+
+.subject-filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subject-filter-card label {
+  font-weight: 600;
+}
+
+#subjectSearch {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  font: inherit;
+}
+
+#subjectSearch:focus {
+  outline: 2px solid #e85d75;
+  outline-offset: 2px;
+}
+
+.filter-heading {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.subject-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subject-filter {
+  padding: 8px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.subject-filter.active {
+  background: #e85d75;
+  border-color: #e85d75;
+  color: #ffffff;
+}
+
+.subject-filter:focus-visible {
+  outline: 2px solid #e85d75;
+  outline-offset: 2px;
+}
+
+.subject-result-count {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* hidden属性で隠す要素を確実に非表示にする */
+.subject-card[hidden],
+.subject-option[hidden] {
+  display: none !important;
+}
