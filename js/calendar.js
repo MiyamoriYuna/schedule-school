@@ -57,24 +57,58 @@
     return event.name || event.title || "名前のない予定";
   }
 
-  function getRecurrence(event) {
-    // 古いデータや別名のプロパティがあっても、1回だけの予定として扱えるようにする
-    return event.recurrence || event.repeat || "once";
-  }
+ function isRepeating(event) {
+  return ["weekly", "biweekly", "monthly"]
+    .includes(getRecurrence(event));
+}
 
   function occursOn(event, dateKey, includeSkipped = false) {
-    if (getRecurrence(event) !== "weekly") {
-      return event.date === dateKey;
-    }
-    if (!event.date || dateKey < event.date) return false;
+  const recurrence = getRecurrence(event);
 
-    const skippedDates = Array.isArray(event.skippedDates) ? event.skippedDates : [];
-    if (!includeSkipped && skippedDates.includes(dateKey)) return false;
-
-    const startDate = dateFromKey(event.date);
-    const targetDate = dateFromKey(dateKey);
-    return startDate.getDay() === targetDate.getDay();
+  // 1回だけの予定
+  if (recurrence === "once") {
+    return event.date === dateKey;
   }
+
+  if (!event.date || dateKey < event.date) {
+    return false;
+  }
+
+  // 休みに設定された日は表示しない
+  const skippedDates = Array.isArray(event.skippedDates)
+    ? event.skippedDates
+    : [];
+
+  if (!includeSkipped && skippedDates.includes(dateKey)) {
+    return false;
+  }
+
+  const startDate = dateFromKey(event.date);
+  const targetDate = dateFromKey(dateKey);
+
+  // 毎週・2週間に1回
+  if (recurrence === "weekly" || recurrence === "biweekly") {
+    if (startDate.getDay() !== targetDate.getDay()) {
+      return false;
+    }
+
+    const daysDifference = Math.round(
+      (targetDate - startDate) / 86400000
+    );
+
+    const weeksDifference = Math.floor(daysDifference / 7);
+    const interval = recurrence === "biweekly" ? 2 : 1;
+
+    return weeksDifference % interval === 0;
+  }
+
+  // 毎月同じ日
+  if (recurrence === "monthly") {
+    return startDate.getDate() === targetDate.getDate();
+  }
+
+  return event.date === dateKey;
+}
 
   function getEventsForDate(dateKey, includeSkipped = false) {
     return events
@@ -170,11 +204,24 @@
       details.append(makeElement("p", "event-time", timeText));
 
       const badges = makeElement("div", "event-badges");
-      if (getRecurrence(event) === "weekly") {
-        badges.append(makeElement("span", "event-badge", `毎週${["日", "月", "火", "水", "木", "金", "土"][dateFromKey(event.date).getDay()]}曜日`));
-      } else {
-        badges.append(makeElement("span", "event-badge", "1回のみ"));
-      }
+      const recurrence = getRecurrence(event);
+const weekday = ["日", "月", "火", "水", "木", "金", "土"][
+  dateFromKey(event.date).getDay()
+];
+
+let recurrenceLabel = "1回のみ";
+
+if (recurrence === "weekly") {
+  recurrenceLabel = `毎週${weekday}曜日`;
+} else if (recurrence === "biweekly") {
+  recurrenceLabel = `2週間に1回（${weekday}曜日）`;
+} else if (recurrence === "monthly") {
+  recurrenceLabel = `毎月${dateFromKey(event.date).getDate()}日`;
+}
+
+badges.append(
+  makeElement("span", "event-badge", recurrenceLabel)
+);
       if (Array.isArray(event.skippedDates) && event.skippedDates.length) {
         badges.append(makeElement("span", "event-badge", `休み設定 ${event.skippedDates.length}日`));
       }
