@@ -5,6 +5,11 @@
 
 let currentGrade = "";
 
+let allSubjectCategories = [];
+let selectedCategory = "all";
+let searchKeyword = "";
+
+
 
 // ========================================
 // ページ読み込み
@@ -42,8 +47,10 @@ document.addEventListener(
 
 
     // 教科一覧を表示
+displaySubjects();
 
-    displaySubjects();
+// 検索・絞り込み機能を設定
+setupSubjectFilters();
 
 
     // 保存されている科目を
@@ -71,147 +78,49 @@ document.addEventListener(
 // 教科・科目を画面に表示
 // ========================================
 
+
 function displaySubjects() {
+  const container = document.getElementById("subjectContainer");
 
-
-  const container =
-    document.getElementById(
-      "subjectContainer"
-    );
-
-
-  // 学年に対応するデータ
-
-  const subjects =
-    getSubjectsForGrade(
-      currentGrade
-    );
-
-
-  // 一度空にする
+  const subjects = getSubjectsForGrade(currentGrade);
 
   container.innerHTML = "";
+  allSubjectCategories = Object.entries(subjects);
 
+  allSubjectCategories.forEach(([category, subjectList]) => {
+    const card = document.createElement("section");
+    card.className = "card subject-card";
+    card.dataset.category = category;
 
-  // 教科ごとに処理
+    const title = document.createElement("h2");
+    title.textContent = category;
+    card.appendChild(title);
 
-  Object.entries(subjects)
-    .forEach(
-      ([category, subjectList]) => {
+    subjectList.forEach((subjectName) => {
+      const label = document.createElement("label");
+      label.className = "subject-option";
 
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "subject-checkbox";
+      checkbox.dataset.category = category;
+      checkbox.dataset.subject = subjectName;
 
-        // 教科カードを作る
+      const text = document.createElement("span");
+      text.textContent = subjectName;
 
-        const card =
-          document.createElement(
-            "section"
-          );
+      label.appendChild(checkbox);
+      label.appendChild(text);
+      card.appendChild(label);
+    });
 
+    container.appendChild(card);
+  });
 
-        card.className =
-          "card subject-card";
-
-
-        // 教科名
-
-        const title =
-          document.createElement(
-            "h2"
-          );
-
-
-        title.textContent =
-          category;
-
-
-        card.appendChild(title);
-
-
-        // 科目一覧
-
-        subjectList.forEach(
-          (subjectName) => {
-
-
-            // label
-
-            const label =
-              document.createElement(
-                "label"
-              );
-
-
-            label.className =
-              "subject-option";
-
-
-            // checkbox
-
-            const checkbox =
-              document.createElement(
-                "input"
-              );
-
-
-            checkbox.type =
-              "checkbox";
-
-
-            checkbox.className =
-              "subject-checkbox";
-
-
-            checkbox.dataset.category =
-              category;
-
-
-            checkbox.dataset.subject =
-              subjectName;
-
-
-            // 科目名
-
-            const text =
-              document.createElement(
-                "span"
-              );
-
-
-            text.textContent =
-              subjectName;
-
-
-            // labelに追加
-
-            label.appendChild(
-              checkbox
-            );
-
-            label.appendChild(
-              text
-            );
-
-
-            // カードに追加
-
-            card.appendChild(
-              label
-            );
-
-          }
-        );
-
-
-        // 全体に追加
-
-        container.appendChild(
-          card
-        );
-
-      }
-    );
-
+  createSubjectFilterButtons();
+  filterSubjects();
 }
+
 
 
 // ========================================
@@ -330,3 +239,110 @@ async function saveSelectedSubjects() {
   }
 
 }
+
+
+/* ========================================
+   検索・教科フィルター
+======================================== */
+
+// 教科フィルターのボタンを作成
+function createSubjectFilterButtons() {
+  const container = document.getElementById("subjectFilters");
+
+  container.innerHTML = "";
+
+  const categories = [
+    ["all", "すべて"],
+    ...allSubjectCategories.map(([category]) => [
+      category,
+      category
+    ])
+  ];
+
+  categories.forEach(([category, labelText]) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "subject-filter";
+    button.dataset.category = category;
+    button.textContent = labelText;
+
+    if (category === selectedCategory) {
+      button.classList.add("active");
+    }
+
+    button.addEventListener("click", () => {
+      selectedCategory = category;
+
+      container.querySelectorAll(".subject-filter")
+        .forEach((filterButton) => {
+          filterButton.classList.toggle(
+            "active",
+            filterButton.dataset.category === selectedCategory
+          );
+        });
+
+      filterSubjects();
+    });
+
+    container.appendChild(button);
+  });
+}
+
+// 検索欄を設定
+function setupSubjectFilters() {
+  const searchInput = document.getElementById("subjectSearch");
+
+  searchInput.addEventListener("input", () => {
+    searchKeyword = searchInput.value.trim().toLowerCase();
+    filterSubjects();
+  });
+}
+
+// 検索語と教科に合わせて表示
+function filterSubjects() {
+  const cards = document.querySelectorAll(".subject-card");
+  let visibleCount = 0;
+  let visibleCategoryCount = 0;
+
+  cards.forEach((card) => {
+    const category = card.dataset.category;
+    const categoryMatches =
+      selectedCategory === "all" ||
+      category === selectedCategory;
+
+    let cardHasVisibleSubject = false;
+
+    const options = card.querySelectorAll(".subject-option");
+
+    options.forEach((option) => {
+      const checkbox = option.querySelector("input");
+      const subjectName = checkbox.dataset.subject.toLowerCase();
+
+      const keywordMatches =
+        subjectName.includes(searchKeyword);
+
+      const visible = categoryMatches && keywordMatches;
+
+      option.hidden = !visible;
+
+      if (visible) {
+        cardHasVisibleSubject = true;
+        visibleCount++;
+      }
+    });
+
+    // 該当する科目がない教科カードは隠す
+    card.hidden = !cardHasVisibleSubject;
+
+    if (cardHasVisibleSubject) {
+      visibleCategoryCount++;
+    }
+  });
+
+  const count = document.getElementById("subjectResultCount");
+
+  count.textContent =
+    `表示中：${visibleCount}科目（${visibleCategoryCount}教科）`;
+}
+
