@@ -1,1 +1,381 @@
+/* 月予定ページ専用のスタイル */
+.calendar-page {
+  padding-bottom: 100px;
+}
+
+.calendar-card,
+.event-card,
+.event-form-card {
+  margin-top: 18px;
+}
+
+.calendar-heading {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.calendar-heading h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.month-move {
+  border: 0;
+  border-radius: 12px;
+  min-height: 42px;
+  background: #ffe5eb;
+  color: #a72f4b;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.calendar-help,
+.muted {
+  color: #667085;
+  font-size: 0.88rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.calendar-weekdays {
+  margin: 14px 0 6px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #667085;
+}
+
+.calendar-weekdays span:first-child { color: #d9485f; }
+.calendar-weekdays span:last-child { color: #3478c7; }
+
+.calendar-day {
+  position: relative;
+  min-width: 0;
+  min-height: 58px;
+  padding: 7px 2px 5px;
+  border: 1px solid #e7e9ee;
+  border-radius: 10px;
+  background: #fff;
+  color: #263238;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.calendar-day:focus-visible,
+.month-move:focus-visible,
+button:focus-visible {
+  outline: 3px solid #8bbcff;
+  outline-offset: 2px;
+}
+
+.calendar-day.is-outside {
+  background: #f8fafc;
+  color: #a0a7b4;
+}
+
+.calendar-day.is-today {
+  border-color: #e85d75;
+}
+
+.calendar-day.is-selected {
+  background: #ffe5eb;
+  border: 2px solid #e85d75;
+  padding: 6px 1px 4px;
+  font-weight: 700;
+}
+
+.calendar-day .day-number {
+  line-height: 1.2;
+  font-size: 0.92rem;
+}
+
+.calendar-day .event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e85d75;
+}
+
+.calendar-day .event-count {
+  font-size: 0.65rem;
+  color: #a72f4b;
+  line-height: 1;
+}
+
+.calendar-day.is-sunday .day-number { color: #d9485f; }
+.calendar-day.is-saturday .day-number { color: #3478c7; }
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 14px;
+  color: #667085;
+  font-size: 0.78rem;
+}
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e85d75;
+}
+
+.legend-selected {
+  width: 11px;
+  height: 11px;
+  background: #ffe5eb;
+  border: 2px solid #e85d75;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-heading h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.section-heading p {
+  margin-top: 0;
+}
+
+.primary-button,
+.secondary-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.primary-button {
+  background: #e85d75;
+  color: #fff;
+}
+
+.secondary-button {
+  background: #f0f2f5;
+  color: #344054;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: #a72f4b;
+  padding: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-item {
+  border: 1px solid #e8eaf0;
+  border-left: 4px solid #e85d75;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 0;
+}
+
+.event-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.event-item h3 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.event-time {
+  margin: 0 0 7px;
+  font-size: 0.88rem;
+  color: #475467;
+}
+
+.event-belongings {
+  margin: 8px 0 0;
+  color: #475467;
+  font-size: 0.88rem;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.event-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.event-badge {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #fff0f3;
+  color: #a72f4b;
+  font-size: 0.72rem;
+}
+
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.small-button {
+  border: 1px solid #d8dce5;
+  background: #fff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 7px 9px;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.small-button.danger {
+  color: #b42318;
+  border-color: #f0c4c1;
+}
+
+.empty-message {
+  margin: 0;
+  padding: 16px 10px;
+  text-align: center;
+  color: #667085;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.event-form-card[hidden],
+[hidden] {
+  display: none !important;
+}
+
+.event-form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.event-form-card label {
+  margin-top: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.event-form-card input,
+.event-form-card select,
+.event-form-card textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d0d5dd;
+  border-radius: 9px;
+  padding: 11px;
+  background: #fff;
+  color: #1d2939;
+  font: inherit;
+}
+
+.event-form-card textarea {
+  resize: vertical;
+}
+
+.form-two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-two-columns > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.required {
+  color: #b42318;
+  font-size: 0.72rem;
+  margin-left: 4px;
+}
+
+.info-note {
+  background: #fff7e8;
+  border-radius: 9px;
+  padding: 10px;
+  color: #854d0e;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.form-error {
+  margin: 6px 0;
+  color: #b42318;
+  font-size: 0.88rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+@media (max-width: 420px) {
+  .calendar-grid { gap: 3px; }
+  .calendar-day { min-height: 51px; border-radius: 8px; }
+  .calendar-day .event-count { font-size: 0.58rem; }
+  .section-heading { flex-direction: column; }
+  .section-heading .primary-button { align-self: flex-start; }
+  .form-two-columns { gap: 8px; }
+  .primary-button, .secondary-button { padding: 10px 11px; }
+}
+
+.event-item.is-skipped {
+  border-left-color: #98a2b3;
+  background: #f8fafc;
+  opacity: 0.82;
+}
+
+.event-item.is-skipped h3 {
+  color: #667085;
+  text-decoration: line-through;
+}
 
