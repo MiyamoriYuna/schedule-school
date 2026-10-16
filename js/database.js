@@ -1,5 +1,5 @@
 const DB_NAME = "SchoolLifeApp";
-const DB_VERSION = 6;
+const DB_VERSION = 7;
 
 const USER_STORE = "user";
 const SUBJECT_STORE = "subjects";
@@ -8,6 +8,7 @@ const BELONGINGS_STORE = "belongings";
 const DAILY_BELONGINGS_STORE = "dailyBelongings";
 const WEEKLY_TIMETABLE_STORE = "weeklyTimetable";
 const DAILY_CHECK_STORE = "dailyBelongingChecks";
+const EVENTS_STORE = "events";
 
 // ==============================
 // データベースを開く
@@ -82,6 +83,13 @@ function openDatabase() {
       // 高校の週別時間割
 if (!db.objectStoreNames.contains(WEEKLY_TIMETABLE_STORE)) {
   db.createObjectStore(WEEKLY_TIMETABLE_STORE, {
+    keyPath: "id"
+  });
+}
+
+      // 予定
+if (!db.objectStoreNames.contains(EVENTS_STORE)) {
+  db.createObjectStore(EVENTS_STORE, {
     keyPath: "id"
   });
 }
@@ -708,6 +716,90 @@ async function getDailyBelongingChecks(date) {
     request.onerror = () => {
       db.close();
       reject(request.error);
+    };
+  });
+}
+
+/* ==============================
+   予定の保存・取得・削除
+============================== */
+
+// 予定を保存する
+async function saveEvent(eventData) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      EVENTS_STORE,
+      "readwrite"
+    );
+
+    transaction.objectStore(EVENTS_STORE).put(eventData);
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+
+    transaction.onabort = () => {
+      db.close();
+      reject(transaction.error || new Error("予定の保存に失敗しました"));
+    };
+  });
+}
+
+// すべての予定を取得する
+async function getEvents() {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      EVENTS_STORE,
+      "readonly"
+    );
+
+    const request = transaction
+      .objectStore(EVENTS_STORE)
+      .getAll();
+
+    request.onsuccess = () => {
+      const events = request.result;
+      db.close();
+      resolve(events);
+    };
+
+    request.onerror = () => {
+      db.close();
+      reject(request.error);
+    };
+  });
+}
+
+// 指定した予定を削除する
+async function deleteEvent(eventId) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      EVENTS_STORE,
+      "readwrite"
+    );
+
+    transaction.objectStore(EVENTS_STORE).delete(eventId);
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
     };
   });
 }
