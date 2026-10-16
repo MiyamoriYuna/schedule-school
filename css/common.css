@@ -882,3 +882,75 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==============================
+   持ち物チェックの見やすい表示
+============================== */
+
+.belongings-date-switch {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.belongings-date-switch .button {
+  flex: 1;
+  opacity: 0.7;
+}
+
+.belongings-date-switch .button.active {
+  opacity: 1;
+  font-weight: bold;
+}
+
+.today-belongings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.belongings-subject-group {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.belongings-subject-title {
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ffe5eb;
+  font-size: 1rem;
+}
+
+.belongings-items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.belonging-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f8fafc;
+  overflow-wrap: anywhere;
+}
+
+.belonging-checkbox input {
+  flex-shrink: 0;
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+}
+
+@media (min-width: 600px) {
+  .belongings-items-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
