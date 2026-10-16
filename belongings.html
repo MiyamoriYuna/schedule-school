@@ -35,15 +35,37 @@
     </header>
 
 
-    <!-- 今日の持ち物 -->
+   
+<!-- 今日・明日の持ち物 -->
 
-    <section class="card">
+<section class="card">
 
-      <h2>今日の持ち物</h2>
+  <h2>持ち物チェック</h2>
 
-      <div id="todayBelongings"></div>
+  <div class="belongings-date-switch">
 
-    </section>
+    <button
+      type="button"
+      id="todayButton"
+      class="button active"
+      aria-pressed="true">
+      今日
+    </button>
+
+    <button
+      type="button"
+      id="tomorrowButton"
+      class="button"
+      aria-pressed="false">
+      明日
+    </button>
+
+  </div>
+
+  <div id="todayBelongings"></div>
+
+</section>
+
 
 
     <!-- 教科ごとの設定 -->
