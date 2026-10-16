@@ -327,88 +327,79 @@ button:disabled {
 }
 
 
+
 /* ========================================
    教科・科目設定
 ======================================== */
 
+/* 教科一覧全体 */
 .subject-container {
-
   display: flex;
-
   flex-direction: column;
-
-  gap: 15px;
-
+  gap: 12px;
 }
 
-
+/* 教科ごとのカード */
 .subject-card {
-
   margin-bottom: 0;
-
+  padding: 16px;
 }
-
 
 .subject-card h2 {
-
-  margin-bottom: 15px;
-
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
 }
-
 
 /* 科目1つ分 */
-
 .subject-option {
-
   display: flex;
-
   align-items: center;
-
   gap: 10px;
 
-  margin: 6px 0;
-
-  padding: 12px;
+  margin: 4px 0;
+  padding: 9px 12px;
 
   background: #f8fafc;
-
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
 
   cursor: pointer;
-
   font-weight: 400;
+  line-height: 1.5;
 
   transition:
-    background 0.2s;
-
+    background 0.2s,
+    border-color 0.2s;
 }
 
-
+/* マウスを乗せたとき */
 .subject-option:hover {
-
-  background: #f1f5f9;
-
+  background: #fff0f3;
 }
 
+/* 選択中の科目 */
+.subject-option:has(input:checked) {
+  background: #fff0f3;
+  border-color: #e85d75;
+}
 
+/* チェックボックス */
 .subject-option input {
-
   flex-shrink: 0;
-
   width: 18px;
-
   height: 18px;
-
   margin: 0;
-
+  accent-color: #e85d75;
+  cursor: pointer;
 }
 
-
+/* 科目名 */
 .subject-option span {
-
   flex: 1;
-
+  min-width: 0;
 }
+
 
 /* ==============================
    持ち物設定
