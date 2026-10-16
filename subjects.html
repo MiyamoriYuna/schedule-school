@@ -52,13 +52,49 @@
     </section>
 
 
-    <!-- 教科一覧 -->
+    
+<!-- 科目の検索・絞り込み -->
+<section class="card subject-filter-card">
 
-    <section
-      id="subjectContainer"
-      class="subject-container"
+  <label for="subjectSearch">科目名で検索</label>
+
+  <input
+    type="search"
+    id="subjectSearch"
+    placeholder="例：数学Ⅰ、化学、英語"
+    autocomplete="off"
+  >
+
+  <p class="filter-heading">教科で絞り込む</p>
+
+  <div
+    id="subjectFilters"
+    class="subject-filters"
+  >
+    <button
+      type="button"
+      class="subject-filter active"
+      data-category="all"
     >
-    </section>
+      すべて
+    </button>
+  </div>
+
+  <p
+    id="subjectResultCount"
+    class="subject-result-count"
+    aria-live="polite"
+  ></p>
+
+</section>
+
+<!-- 教科一覧 -->
+<section
+  id="subjectContainer"
+  class="subject-container"
+>
+</section>
+
 
 
     <!-- メッセージ -->
