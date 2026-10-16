@@ -262,9 +262,14 @@ function updateDateButtons() {
   );
 }
 
+/* ==============================
+   今日・明日の持ち物を表示
+============================== */
+
 async function loadSelectedDateBelongings() {
   const date = new Date();
 
+  // 明日が選択されている場合は、日付を1日進める
   if (selectedDateType === "tomorrow") {
     date.setDate(date.getDate() + 1);
   }
@@ -274,6 +279,7 @@ async function loadSelectedDateBelongings() {
   const container = document.getElementById("todayBelongings");
   container.innerHTML = "";
 
+  // 日付を表示
   const heading = document.createElement("p");
   heading.className = "belongings-date-heading";
   heading.textContent =
@@ -281,74 +287,127 @@ async function loadSelectedDateBelongings() {
 
   container.appendChild(heading);
 
+  // 時間割と持ち物設定を読み込む
   const timetable = await getTimetableForDate(date);
   const subjectBelongings = await getBelongings();
   const dailyBelongings = await getDailyBelongings();
 
-  // 毎日の持ち物を先に追加
-  const items = [];
-  const itemKeys = new Set();
-
-  dailyBelongings.forEach(item => {
-    addUniqueItem(items, itemKeys, item.name);
-  });
-
-  // 授業ごとの持ち物を追加
-  timetable
-    .slice()
-    .sort((a, b) => (a.period || 0) - (b.period || 0))
-    .forEach(classItem => {
-      const belonging = subjectBelongings.find(
-        item => String(item.subjectId) === String(classItem.subjectId)
-      );
-
-      if (!belonging) return;
-
-      (belonging.items || []).forEach(item => {
-        addUniqueItem(items, itemKeys, item);
-      });
-    });
-
-  if (items.length === 0) {
-    const message = document.createElement("p");
-    message.textContent = timetable.length === 0
-      ? "この日の時間割は登録されていません。毎日の持ち物を登録すると、ここに表示されます。"
-      : "必要な持ち物はまだ登録されていません。";
-    container.appendChild(message);
-    return;
-  }
-
-  // 日付ごとのチェック状態を読み込む
+  // その日付のチェック状態を読み込む
   const dateKey = formatDate(date);
   const savedChecks = await getDailyBelongingChecks(dateKey);
 
+  // 持ち物を表示する場所
   const list = document.createElement("div");
   list.className = "today-belongings-list";
 
-  items.forEach(item => {
-    const label = document.createElement("label");
-    label.className = "belonging-checkbox";
+  // 同じ持ち物を重複して表示しないための集合
+  const displayedItems = new Set();
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = savedChecks[item] === true;
+  // 毎日の持ち物を先に表示する
+  const dailyItems = [];
 
-    const text = document.createElement("span");
-    text.textContent = item;
+  dailyBelongings.forEach(item => {
+    const name = String(item.name || "").trim();
+    const key = name.toLowerCase();
 
-    checkbox.addEventListener("change", async () => {
-      try {
-        const currentChecks = await getDailyBelongingChecks(dateKey);
-        currentChecks[item] = checkbox.checked;
-        await saveDailyBelongingChecks(dateKey, currentChecks);
-      } catch (error) {
-        console.error("チェック状態の保存に失敗しました:", error);
-      }
-    });
-
-    label.append(checkbox, text);
-    list.appendChild(label);
+    if (name && !displayedItems.has(key)) {
+      displayedItems.add(key);
+      dailyItems.push(name);
+    }
   });
+
+  if (dailyItems.length > 0) {
+    renderBelongingGroup(
+      list,
+      "毎日持っていくもの",
+      dailyItems,
+      dateKey,
+      savedChecks
+    );
+  }
+
+  // 教科ごとに持ち物をまとめる
+  const subjectGroups = new Map();
+
+  // 時間割を授業の順番に並べる
+  const sortedTimetable = timetable.slice().sort(
+    (a, b) => (a.period || 0) - (b.period || 0)
+  );
+
+  sortedTimetable.forEach(classItem => {
+    // 授業の教科・科目を調べる
+    const subject = availableSubjects.find(
+      item => String(item.id) === String(classItem.subjectId)
+    );
+
+    const subjectName = subject ? subject.name : "その他";
+
+    // その教科に登録された持ち物を探す
+    const belonging = subjectBelongings.find(
+      item => String(item.subjectId) === String(classItem.subjectId)
+    );
+
+    if (!belonging || !belonging.items) {
+      return;
+    }
+
+    // 持ち物が登録されていない教科は表示しない
+    if (belonging.items.length === 0) {
+      return;
+    }
+
+    const groupKey = String(classItem.subjectId);
+
+    // まだグループがなければ作る
+    if (!subjectGroups.has(groupKey)) {
+      subjectGroups.set(groupKey, {
+        name: subjectName,
+        items: []
+      });
+    }
+
+    const group = subjectGroups.get(groupKey);
+
+    belonging.items.forEach(item => {
+      const name = String(item || "").trim();
+      const key = name.toLowerCase();
+
+      // 空欄と重複する持ち物は追加しない
+      if (!name || displayedItems.has(key)) {
+        return;
+      }
+
+      displayedItems.add(key);
+      group.items.push(name);
+    });
+  });
+
+  // 教科ごとにグループを表示する
+  subjectGroups.forEach(group => {
+    if (group.items.length === 0) {
+      return;
+    }
+
+    renderBelongingGroup(
+      list,
+      group.name,
+      group.items,
+      dateKey,
+      savedChecks
+    );
+  });
+
+  // 表示できる持ち物がない場合
+  if (displayedItems.size === 0) {
+    const message = document.createElement("p");
+
+    message.textContent = timetable.length === 0
+      ? "この日の時間割は登録されていません。毎日の持ち物を登録すると、ここに表示されます。"
+      : "必要な持ち物はまだ登録されていません。";
+
+    container.appendChild(message);
+    return;
+  }
 
   container.appendChild(list);
 }
@@ -365,4 +424,65 @@ function addUniqueItem(items, itemKeys, item) {
 
   itemKeys.add(key);
   items.push(name);
+}
+
+/* ==============================
+   持ち物グループとチェックボックスを作成
+============================== */
+
+function renderBelongingGroup(
+  container,
+  title,
+  items,
+  dateKey,
+  savedChecks
+) {
+  const group = document.createElement("section");
+  group.className = "belongings-subject-group";
+
+  const heading = document.createElement("h3");
+  heading.className = "belongings-subject-title";
+  heading.textContent = title;
+
+  const grid = document.createElement("div");
+  grid.className = "belongings-items-grid";
+
+  items.forEach(item => {
+    const label = document.createElement("label");
+    label.className = "belonging-checkbox";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = savedChecks[item] === true;
+
+    const text = document.createElement("span");
+    text.textContent = item;
+
+    checkbox.addEventListener("change", async () => {
+      try {
+        const currentChecks =
+          await getDailyBelongingChecks(dateKey);
+
+        currentChecks[item] = checkbox.checked;
+
+        await saveDailyBelongingChecks(
+          dateKey,
+          currentChecks
+        );
+
+        savedChecks[item] = checkbox.checked;
+      } catch (error) {
+        console.error(
+          "チェック状態の保存に失敗しました:",
+          error
+        );
+      }
+    });
+
+    label.append(checkbox, text);
+    grid.appendChild(label);
+  });
+
+  group.append(heading, grid);
+  container.appendChild(group);
 }
