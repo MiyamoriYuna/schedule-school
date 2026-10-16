@@ -1,71 +1,112 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>月予定 | 学校生活管理アプリ</title>
-
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/calendar.css">
 </head>
-
 <body>
-
-  <main class="page">
-
+  <main class="page calendar-page">
     <header class="page-header">
       <h1>月予定</h1>
       <p class="today"></p>
     </header>
 
-    <section class="card">
-      <h2>カレンダー</h2>
-
-      <p>
-        ここに月間カレンダーを表示します。
-      </p>
+    <section class="card calendar-card">
+      <div class="calendar-heading">
+        <button type="button" class="month-move" id="prev-month" aria-label="前の月">‹</button>
+        <h2 id="calendar-month" aria-live="polite">年月</h2>
+        <button type="button" class="month-move" id="next-month" aria-label="次の月">›</button>
+      </div>
+      <p class="calendar-help">日付を選ぶと、その日の予定を確認・登録できます。</p>
+      <div class="calendar-grid calendar-weekdays" aria-hidden="true">
+        <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+      </div>
+      <div class="calendar-grid" id="calendar-days" aria-label="月間カレンダー"></div>
+      <div class="calendar-legend">
+        <span><i class="legend-dot"></i>予定あり</span>
+        <span><i class="legend-dot legend-selected"></i>選択中の日付</span>
+      </div>
     </section>
 
+    <section class="card event-card">
+      <div class="section-heading">
+        <div>
+          <h2 id="selected-date-heading">選択した日の予定</h2>
+          <p class="muted">繰り返し予定は、休みの日だけスキップできます。</p>
+        </div>
+        <button type="button" class="primary-button" id="new-event-button">＋ 予定を追加</button>
+      </div>
+      <div id="event-list" class="event-list">
+        <p class="empty-message">予定を読み込んでいます…</p>
+      </div>
+    </section>
+
+    <section class="card event-form-card" id="event-form-card" hidden>
+      <div class="section-heading">
+        <h2 id="event-form-title">予定を登録</h2>
+        <button type="button" class="text-button" id="cancel-form-button">閉じる</button>
+      </div>
+      <form id="event-form">
+        <input type="hidden" id="event-id">
+        <label for="event-name">予定名 <span class="required">必須</span></label>
+        <input id="event-name" name="eventName" type="text" maxlength="80" placeholder="例：部活動、塾、土曜ゼミ" required>
+
+        <div class="form-two-columns">
+          <div>
+            <label for="event-date">日付 <span class="required">必須</span></label>
+            <input id="event-date" name="eventDate" type="date" required>
+          </div>
+          <div>
+            <label for="event-repeat">繰り返し</label>
+            <select id="event-repeat" name="repeat">
+              <option value="once">この日だけ</option>
+              <option value="weekly">毎週同じ曜日</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="weekly-note" class="info-note" hidden>
+          登録した日付以降、同じ曜日に毎週表示します。休みの日は、予定一覧から「この日だけ休みにする」を選んでください。
+        </div>
+
+        <div class="form-two-columns">
+          <div>
+            <label for="event-start">開始時刻</label>
+            <input id="event-start" name="eventStart" type="time">
+          </div>
+          <div>
+            <label for="event-end">終了時刻</label>
+            <input id="event-end" name="eventEnd" type="time">
+          </div>
+        </div>
+
+        <label for="event-belongings">必要な持ち物</label>
+        <textarea id="event-belongings" name="eventBelongings" rows="3" placeholder="例：テキスト、筆記用具、体操服&#10;複数ある場合は、改行して入力できます。"></textarea>
+
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <div class="form-actions">
+          <button type="button" class="secondary-button" id="cancel-form-button-bottom">キャンセル</button>
+          <button type="submit" class="primary-button">保存する</button>
+        </div>
+      </form>
+    </section>
   </main>
 
-
   <nav class="bottom-nav">
-
     <div class="nav-inner">
-
-      <a class="nav-link" href="calendar.html">
-        <span class="icon">🗓️</span>
-        <span>月予定</span>
-      </a>
-
-      <a class="nav-link" href="todo.html">
-        <span class="icon">✅</span>
-        <span>やること</span>
-      </a>
-
-      <a class="nav-link" href="index.html">
-        <span class="icon">🏠</span>
-        <span>ホーム</span>
-      </a>
-
-      <a class="nav-link" href="belongings.html">
-        <span class="icon">🎒</span>
-        <span>持ち物</span>
-      </a>
-
-      <a class="nav-link" href="settings.html">
-        <span class="icon">⚙️</span>
-        <span>設定</span>
-      </a>
-
+      <a class="nav-link" href="calendar.html"><span class="icon">🗓️</span><span>月予定</span></a>
+      <a class="nav-link" href="todo.html"><span class="icon">✅</span><span>やること</span></a>
+      <a class="nav-link" href="index.html"><span class="icon">🏠</span><span>ホーム</span></a>
+      <a class="nav-link" href="belongings.html"><span class="icon">🎒</span><span>持ち物</span></a>
+      <a class="nav-link" href="settings.html"><span class="icon">⚙️</span><span>設定</span></a>
     </div>
-
   </nav>
 
-
-<script src="js/database.js"></script>
-<script src="js/common.js"></script>
-
+  <script src="js/database.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/calendar.js"></script>
 </body>
 </html>
