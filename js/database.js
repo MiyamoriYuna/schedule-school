@@ -1,5 +1,5 @@
 const DB_NAME = "SchoolLifeApp";
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 const USER_STORE = "user";
 const SUBJECT_STORE = "subjects";
@@ -7,7 +7,7 @@ const TIMETABLE_STORE = "timetable";
 const BELONGINGS_STORE = "belongings";
 const DAILY_BELONGINGS_STORE = "dailyBelongings";
 const WEEKLY_TIMETABLE_STORE = "weeklyTimetable";
-
+const DAILY_CHECK_STORE = "dailyBelongingChecks";
 
 // ==============================
 // データベースを開く
@@ -53,7 +53,12 @@ function openDatabase() {
         });
 
       }
-
+      // 日付ごとの持ち物チェック状態
+      if (!db.objectStoreNames.contains(DAILY_CHECK_STORE)) {
+  　　　db.createObjectStore(DAILY_CHECK_STORE, {
+    　　　keyPath: "date"
+  　　　});
+　　　}
 
       // 教科ごとの持ち物
       if (!db.objectStoreNames.contains(BELONGINGS_STORE)) {
@@ -632,6 +637,72 @@ async function hasWeeklyTimetable() {
     request.onsuccess = () => {
       db.close();
       resolve(request.result > 0);
+    };
+
+    request.onerror = () => {
+      db.close();
+      reject(request.error);
+    };
+  });
+}
+
+
+// ==============================
+// 日付ごとの持ち物チェック状態
+// ==============================
+
+// チェック状態を保存する
+async function saveDailyBelongingChecks(date, checkedItems) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      DAILY_CHECK_STORE,
+      "readwrite"
+    );
+
+    transaction.objectStore(DAILY_CHECK_STORE).put({
+      date: date,
+      checkedItems: checkedItems
+    });
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+
+    transaction.onabort = () => {
+      db.close();
+      reject(transaction.error || new Error("保存に失敗しました"));
+    };
+  });
+}
+
+// 指定した日のチェック状態を読み込む
+async function getDailyBelongingChecks(date) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      DAILY_CHECK_STORE,
+      "readonly"
+    );
+
+    const request = transaction
+      .objectStore(DAILY_CHECK_STORE)
+      .get(date);
+
+    request.onsuccess = () => {
+      db.close();
+
+      resolve(
+        request.result?.checkedItems || {}
+      );
     };
 
     request.onerror = () => {
