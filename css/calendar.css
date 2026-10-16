@@ -379,3 +379,22 @@ button:focus-visible {
   text-decoration: line-through;
 }
 
+const recurrence = getRecurrence(event);
+const weekday = ["日", "月", "火", "水", "木", "金", "土"][
+  dateFromKey(event.date).getDay()
+];
+
+let recurrenceLabel = "1回のみ";
+
+if (recurrence === "weekly") {
+  recurrenceLabel = `毎週${weekday}曜日`;
+} else if (recurrence === "biweekly") {
+  recurrenceLabel = `2週間に1回（${weekday}曜日）`;
+} else if (recurrence === "monthly") {
+  recurrenceLabel = `毎月${dateFromKey(event.date).getDate()}日`;
+}
+
+badges.append(
+  makeElement("span", "event-badge", recurrenceLabel)
+);
+  
