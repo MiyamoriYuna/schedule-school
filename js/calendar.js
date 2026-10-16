@@ -62,6 +62,10 @@
     .includes(getRecurrence(event));
 }
 
+   function getRecurrence(event) {
+  return event.recurrence || "once";
+}
+
   function occursOn(event, dateKey, includeSkipped = false) {
   const recurrence = getRecurrence(event);
 
