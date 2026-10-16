@@ -954,3 +954,41 @@ button:disabled {
   }
 }
 
+/* ホーム画面の部活動・個人予定 */
+
+.home-events-panel {
+  margin-top: 16px;
+}
+
+.home-events-panel h3 {
+  margin-bottom: 10px;
+}
+
+.home-event-item {
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.home-event-item h4 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.home-event-item p {
+  margin: 4px 0 0;
+}
+
+.home-event-time {
+  color: #e85d75;
+  font-weight: bold;
+}
+
+.home-event-belongings {
+  white-space: pre-wrap;
+  color: #555;
+  font-size: 0.9rem;
+}
+
