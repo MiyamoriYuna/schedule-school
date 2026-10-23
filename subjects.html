@@ -96,6 +96,79 @@
 </section>
 
 
+<!-- 自分で教科・科目を追加 -->
+<section class="card">
+
+  <h2>教科・科目を追加</h2>
+
+  <p>
+    学校で使用している教科・科目を登録できます。
+  </p>
+
+  <!-- 教科分類 -->
+  <label for="customCategory">
+    教科分類
+  </label>
+
+  <input
+    type="text"
+    id="customCategory"
+    placeholder="例：外国語、数学、その他"
+  >
+
+  <!-- 表示名 -->
+  <label for="customSubjectName">
+    表示名（時間割に表示する名前）
+  </label>
+
+  <input
+    type="text"
+    id="customSubjectName"
+    placeholder="例：英コミ"
+  >
+
+  <!-- 正式名称 -->
+  <label for="customOfficialName">
+    正式名称（任意）
+  </label>
+
+  <input
+    type="text"
+    id="customOfficialName"
+    placeholder="例：英語コミュニケーションⅠ"
+  >
+
+  <!-- 画像認識用の別名 -->
+  <label for="customAliases">
+    画像認識用の別名（任意）
+  </label>
+
+  <input
+    type="text"
+    id="customAliases"
+    placeholder="例：英語コミュ、英コミュ"
+  >
+
+  <p class="form-note">
+    別名は「、」で区切って入力してください。
+  </p>
+
+  <button
+    type="button"
+    id="addCustomSubjectButton"
+    class="button"
+  >
+    科目を追加
+  </button>
+
+  <p
+    id="customSubjectMessage"
+    class="save-message"
+    aria-live="polite"
+  ></p>
+
+</section>
+
 
     <!-- メッセージ -->
 
