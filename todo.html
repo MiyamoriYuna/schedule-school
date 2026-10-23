@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -8,6 +9,7 @@
   <title>やること | 学校生活管理アプリ</title>
 
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/todo.css">
 </head>
 
 <body>
@@ -19,19 +21,83 @@
       <p class="today"></p>
     </header>
 
+    <!-- やることの追加 -->
     <section class="card">
-      <h2>やることリスト</h2>
+      <h2>やることを追加</h2>
 
-      <p>
-        ここにやることを表示します。
-      </p>
+      <form id="todoForm">
+
+        <div class="todo-form-group">
+          <label for="todoTitle">やること</label>
+          <input
+            type="text"
+            id="todoTitle"
+            placeholder="例：数学の問題集を解く"
+            required
+          >
+        </div>
+
+        <div class="todo-form-group">
+          <label for="todoCategory">種類</label>
+          <select id="todoCategory" required>
+            <option value="勉強">勉強</option>
+            <option value="提出物">提出物</option>
+            <option value="学校行事">学校行事</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="todo-form-group">
+          <label for="todoSubject">教科（任意）</label>
+          <select id="todoSubject">
+            <option value="">教科を選択</option>
+          </select>
+        </div>
+
+        <div class="todo-form-group">
+          <label for="todoDueDate">期限（任意）</label>
+          <input type="date" id="todoDueDate">
+        </div>
+
+        <div class="todo-form-group">
+          <label for="todoMemo">メモ（任意）</label>
+          <textarea
+            id="todoMemo"
+            rows="3"
+            placeholder="範囲や提出先など"
+          ></textarea>
+        </div>
+
+        <button type="submit" id="addTodoButton">
+          やることを追加
+        </button>
+
+      </form>
     </section>
+
+    <!-- 未完了のやること -->
+    <section class="card">
+      <h2>未完了</h2>
+
+      <div id="todoList">
+        <p class="todo-empty">読み込み中...</p>
+      </div>
+    </section>
+
+    <!-- 完了したやること -->
+    <section class="card">
+      <h2>完了</h2>
+
+      <div id="completedTodoList">
+        <p class="todo-empty">読み込み中...</p>
+      </div>
+    </section>
+
+    <p id="todoMessage" role="status"></p>
 
   </main>
 
-
   <nav class="bottom-nav">
-
     <div class="nav-inner">
 
       <a class="nav-link" href="calendar.html">
@@ -60,11 +126,11 @@
       </a>
 
     </div>
-
   </nav>
 
-
+  <script src="js/database.js"></script>
   <script src="js/common.js"></script>
+  <script src="js/todo.js"></script>
 
 </body>
 </html>
