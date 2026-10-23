@@ -22,58 +22,38 @@
     </header>
 
     <!-- やることの追加 -->
-    <section class="card">
-      <h2>やることを追加</h2>
 
-      <form id="todoForm">
+<section class="card">
+  <h2>やることを追加</h2>
 
-        <div class="todo-form-group">
-          <label for="todoTitle">やること</label>
-          <input
-            type="text"
-            id="todoTitle"
-            placeholder="例：数学の問題集を解く"
-            required
-          >
-        </div>
+  <form id="todoForm" class="todo-form">
 
-        <div class="todo-form-group">
-          <label for="todoCategory">種類</label>
-          <select id="todoCategory" required>
-            <option value="勉強">勉強</option>
-            <option value="提出物">提出物</option>
-            <option value="学校行事">学校行事</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
+    <div class="todo-form-group">
+      <label for="todoTitle">やること</label>
+      <input
+        type="text"
+        id="todoTitle"
+        placeholder="例：数学の問題集を解く"
+        required
+      >
+    </div>
 
-        <div class="todo-form-group">
-          <label for="todoSubject">教科（任意）</label>
-          <select id="todoSubject">
-            <option value="">教科を選択</option>
-          </select>
-        </div>
+    <div class="todo-form-group">
+      <label for="todoMemo">メモ</label>
+      <textarea
+        id="todoMemo"
+        rows="2"
+        placeholder="範囲や注意点など（任意）"
+      ></textarea>
+    </div>
 
-        <div class="todo-form-group">
-          <label for="todoDueDate">期限（任意）</label>
-          <input type="date" id="todoDueDate">
-        </div>
+    <button type="submit" id="addTodoButton">
+      追加
+    </button>
 
-        <div class="todo-form-group">
-          <label for="todoMemo">メモ（任意）</label>
-          <textarea
-            id="todoMemo"
-            rows="3"
-            placeholder="範囲や提出先など"
-          ></textarea>
-        </div>
+  </form>
+</section>
 
-        <button type="submit" id="addTodoButton">
-          やることを追加
-        </button>
-
-      </form>
-    </section>
 
     <!-- 未完了のやること -->
     <section class="card">
