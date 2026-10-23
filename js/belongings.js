@@ -368,17 +368,19 @@ async function loadSelectedDateBelongings() {
 
     const group = subjectGroups.get(groupKey);
 
+    
     belonging.items.forEach(item => {
       const name = String(item || "").trim();
-      const key = name.toLowerCase();
+      const key = `${groupKey}:${name.toLowerCase()}`;
 
-      // 空欄と重複する持ち物は追加しない
+      // 空欄と、同じ教科内で重複する持ち物は追加しない
       if (!name || displayedItems.has(key)) {
         return;
       }
 
       displayedItems.add(key);
       group.items.push(name);
+
     });
   });
 
@@ -451,9 +453,14 @@ function renderBelongingGroup(
     const label = document.createElement("label");
     label.className = "belonging-checkbox";
 
-    const checkbox = document.createElement("input");
+        const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = savedChecks[item] === true;
+
+    const checkKey = title === "毎日持っていくもの"
+      ? item
+      : `${title}:${item}`;
+
+    checkbox.checked = savedChecks[checkKey] === true;
 
     const text = document.createElement("span");
     text.textContent = item;
@@ -463,14 +470,14 @@ function renderBelongingGroup(
         const currentChecks =
           await getDailyBelongingChecks(dateKey);
 
-        currentChecks[item] = checkbox.checked;
+        currentChecks[checkKey] = checkbox.checked;
 
         await saveDailyBelongingChecks(
           dateKey,
           currentChecks
         );
 
-        savedChecks[item] = checkbox.checked;
+        savedChecks[checkKey] = checkbox.checked;
       } catch (error) {
         console.error(
           "チェック状態の保存に失敗しました:",
