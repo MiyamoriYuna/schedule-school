@@ -540,3 +540,9 @@ function validateSubjectMaster() {
     count: allSubjectMaster.length
   };
 }
+
+console.log("科目マスターの読み込み確認");
+console.log(validateSubjectMaster());
+console.log("中学校の科目数:", juniorHighSubjectMaster.length);
+console.log("高校共通教科の科目数:", highSchoolCommonSubjectMaster.length);
+console.log("高校専門教科の科目数:", highSchoolSpecializedSubjectMaster.length);
