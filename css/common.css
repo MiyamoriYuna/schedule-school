@@ -429,7 +429,7 @@ button:disabled {
 
 .daily-belonging-item {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 10px;
 }
 
@@ -455,13 +455,13 @@ button:disabled {
 .today-belongings-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .belonging-checkbox {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   padding: 12px;
   background: #f8fafc;
   border-radius: 10px;
@@ -626,7 +626,7 @@ button:disabled {
 
   align-items: center;
 
-  gap: 10px;
+  gap: 5px;
 
   padding: 12px 0;
 
@@ -652,7 +652,7 @@ button:disabled {
 
   align-items: center;
 
-  gap: 10px;
+  gap: 5px;
 
   padding: 12px 0;
 
@@ -780,13 +780,13 @@ button:disabled {
 .today-timetable-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .today-timetable-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 6px;
   padding: 12px 14px;
   background: #eff6ff;
   border-radius: 10px;
@@ -821,7 +821,7 @@ button:disabled {
 .timetable-comparison {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 8px;
 }
 
 .timetable-panel {
@@ -882,7 +882,7 @@ button:disabled {
 
 .belongings-date-switch {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-bottom: 18px;
 }
 
@@ -900,7 +900,7 @@ button:disabled {
 .today-belongings-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 /* 教科ごとのグループ：箱をなくす */
