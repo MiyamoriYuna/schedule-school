@@ -336,13 +336,13 @@ button:disabled {
 .subject-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 /* 教科ごとのカード */
 .subject-card {
   margin-bottom: 0;
-  padding: 16px;
+  padding: 8px;
 }
 
 .subject-card h2 {
@@ -355,10 +355,10 @@ button:disabled {
 .subject-option {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 
   margin: 4px 0;
-  padding: 9px 12px;
+  padding: 5px 6px;
 
   background: #f8fafc;
   border: 1px solid transparent;
@@ -406,7 +406,7 @@ button:disabled {
    ============================== */
 
 .belongings-subject-item {
-  padding: 14px 0;
+  padding: 7px 0;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -418,7 +418,7 @@ button:disabled {
 .subject-belongings-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 5px 6px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 0.95rem;
@@ -435,14 +435,14 @@ button:disabled {
 
 .daily-belonging-input {
   flex: 1;
-  padding: 10px 12px;
+  padding: 5px 6px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 0.95rem;
 }
 
 .small-delete-button {
-  padding: 8px 12px;
+  padding: 4px 6px;
   border: none;
   border-radius: 8px;
   background: #e2e8f0;
@@ -462,7 +462,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 12px;
+  padding: 6px;
   background: #f8fafc;
   border-radius: 10px;
   cursor: pointer;
@@ -787,7 +787,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 14px;
+  padding: 6px 7px;
   background: #eff6ff;
   border-radius: 10px;
   border-left: 4px solid #60a5fa;
@@ -826,7 +826,7 @@ button:disabled {
 
 .timetable-panel {
   min-width: 0;
-  padding: 12px;
+  padding: 6px;
   border-radius: 12px;
 }
 
@@ -853,7 +853,7 @@ button:disabled {
 
 .timetable-panel .today-timetable-row {
   gap: 6px;
-  padding: 10px 6px;
+  padding: 5px 3px;
   flex-wrap: wrap;
 }
 
@@ -900,7 +900,7 @@ button:disabled {
 .today-belongings-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 /* 教科ごとのグループ：箱をなくす */
@@ -924,7 +924,7 @@ button:disabled {
 .belongings-items-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 0 16px;
+  gap: 0 8px;
 }
 
 /* 持ち物ごとの箱をなくす */
@@ -978,7 +978,7 @@ button:disabled {
 }
 
 .home-event-item {
-  padding: 12px;
+  padding: 6px;
   margin-bottom: 10px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -1013,7 +1013,7 @@ button:disabled {
 .subject-filter-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .subject-filter-card label {
@@ -1023,7 +1023,7 @@ button:disabled {
 #subjectSearch {
   width: 100%;
   min-height: 44px;
-  padding: 10px 12px;
+  padding: 5px 6px;
   border: 1px solid #f3c5ce;
   border-radius: 10px;
   background: #ffffff;
