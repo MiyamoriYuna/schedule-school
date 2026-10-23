@@ -1,0 +1,158 @@
+
+/* やること入力フォーム */
+#todoForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.todo-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.todo-form-group label {
+  font-weight: 600;
+}
+
+.todo-form-group input,
+.todo-form-group select,
+.todo-form-group textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+}
+
+.todo-form-group textarea {
+  resize: vertical;
+}
+
+#addTodoButton,
+.todo-cancel-button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #e85d75;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#addTodoButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.todo-cancel-button {
+  background: #64748b;
+}
+
+/* やること1件分 */
+.todo-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.todo-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.todo-check input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: #e85d75;
+}
+
+.todo-item-title {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.todo-item-title.is-completed {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.todo-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0 28px;
+}
+
+.todo-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #ffe5eb;
+  color: #9f354b;
+  font-size: 0.8rem;
+}
+
+.todo-due-date {
+  align-self: center;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.todo-memo {
+  margin: 8px 0 0 28px;
+  color: #475569;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.todo-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.todo-actions button {
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+  cursor: pointer;
+}
+
+.todo-actions .todo-delete-button {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.todo-empty {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+#todoMessage {
+  color: #475569;
+  font-size: 0.9rem;
+}
