@@ -278,3 +278,244 @@ const highSchoolSpecializedSubjectMaster = [
     aliases: []
   }))
 ];
+
+// ========================================
+// 専門教科：家庭・看護・情報・福祉
+// 出典：文部科学省
+// 高等学校学習指導要領（平成30年告示）
+// ========================================
+
+const additionalSpecializedSubjects = [
+  // 家庭（21科目）
+  ...[
+    "生活産業基礎",
+    "課題研究",
+    "生活産業情報",
+    "消費生活",
+    "保育基礎",
+    "保育実践",
+    "生活と福祉",
+    "住生活デザイン",
+    "服飾文化",
+    "ファッション造形基礎",
+    "ファッション造形",
+    "ファッションデザイン",
+    "服飾手芸",
+    "フードデザイン",
+    "食文化",
+    "調理",
+    "栄養",
+    "食品",
+    "食品衛生",
+    "公衆衛生",
+    "総合調理実習"
+  ].map((name, i) => ({
+    id: `hs-special-home-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "家庭",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 看護（13科目）
+  ...[
+    "基礎看護",
+    "人体の構造と機能",
+    "疾病の成り立ちと回復の促進",
+    "健康支援と社会保障制度",
+    "成人看護",
+    "老年看護",
+    "小児看護",
+    "母性看護",
+    "精神看護",
+    "在宅看護",
+    "看護の統合と実践",
+    "看護臨地実習",
+    "看護情報"
+  ].map((name, i) => ({
+    id: `hs-special-nursing-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "看護",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 情報（12科目）
+  ...[
+    "情報産業と社会",
+    "課題研究",
+    "情報の表現と管理",
+    "情報テクノロジー",
+    "情報セキュリティ",
+    "情報システムのプログラミング",
+    "ネットワークシステム",
+    "データベース",
+    "情報デザイン",
+    "コンテンツの制作と発信",
+    "メディアとサービス",
+    "情報実習"
+  ].map((name, i) => ({
+    id: `hs-special-information-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "情報",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 福祉（9科目）
+  ...[
+    "社会福祉基礎",
+    "介護福祉基礎",
+    "コミュニケーション技術",
+    "生活支援技術",
+    "介護過程",
+    "介護総合演習",
+    "介護実習",
+    "こころとからだの理解",
+    "福祉情報"
+  ].map((name, i) => ({
+    id: `hs-special-welfare-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "福祉",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  }))
+];
+
+const allSubjectMaster = [
+  ...juniorHighSubjectMaster,
+  ...highSchoolCommonSubjectMaster,
+  ...highSchoolSpecializedSubjectMaster,
+  ...additionalSpecializedSubjects
+];
+
+// ========================================
+// 専門教科：理数・体育・音楽・美術・英語
+// 出典：文部科学省
+// 高等学校学習指導要領（平成30年告示）
+// ========================================
+
+const finalSpecializedSubjects = [
+  // 理数
+  ...[
+    "理数数学Ⅰ",
+    "理数数学Ⅱ",
+    "理数数学特論",
+    "理数物理",
+    "理数化学",
+    "理数生物",
+    "理数地学"
+  ].map((name, i) => ({
+    id: `hs-special-science-math-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "理数",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 体育
+  ...[
+    "スポーツ概論",
+    "スポーツⅠ",
+    "スポーツⅡ",
+    "スポーツⅢ",
+    "スポーツⅣ",
+    "スポーツⅤ",
+    "スポーツⅥ",
+    "スポーツ総合演習"
+  ].map((name, i) => ({
+    id: `hs-special-physical-education-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "体育（専門）",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 音楽
+  ...[
+    "音楽理論",
+    "音楽史",
+    "演奏研究",
+    "ソルフェージュ",
+    "声楽",
+    "器楽",
+    "作曲",
+    "鑑賞研究"
+  ].map((name, i) => ({
+    id: `hs-special-music-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "音楽（専門）",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 美術
+  ...[
+    "美術概論",
+    "美術史",
+    "鑑賞研究",
+    "素描",
+    "構成",
+    "絵画",
+    "版画",
+    "彫刻",
+    "ビジュアルデザイン",
+    "クラフトデザイン",
+    "情報メディアデザイン",
+    "映像表現",
+    "環境造形"
+  ].map((name, i) => ({
+    id: `hs-special-art-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "美術（専門）",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  })),
+
+  // 英語
+  ...[
+    "総合英語Ⅰ",
+    "総合英語Ⅱ",
+    "総合英語Ⅲ",
+    "ディベート・ディスカッションⅠ",
+    "ディベート・ディスカッションⅡ",
+    "エッセイライティングⅠ",
+    "エッセイライティングⅡ"
+  ].map((name, i) => ({
+    id: `hs-special-english-${String(i + 1).padStart(2, "0")}`,
+    officialName: name,
+    category: "英語（専門）",
+    subjectType: "specialized",
+    standardCredits: null,
+    requiredType: "unverified",
+    aliases: []
+  }))
+];
+
+// ========================================
+// 科目マスター統合
+// ========================================
+
+const allSubjectMaster = [
+  ...juniorHighSubjectMaster,
+  ...highSchoolCommonSubjectMaster,
+  ...highSchoolSpecializedSubjectMaster,
+  ...additionalSpecializedSubjects,
+  ...finalSpecializedSubjects
+];
