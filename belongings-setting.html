@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>持ち物設定</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+
+<body>
+  <main class="page">
+    <header class="page-header">
+      <h1>持ち物設定</h1>
+      <p>教科ごとの持ち物と、毎日持っていくものを登録します。</p>
+    </header>
+
+    <section class="card">
+      <h2>教科ごとの持ち物</h2>
+      <p>
+        教科ごとの持ち物を登録すると、
+        その日の時間割に合わせて持ち物が表示されます。
+      </p>
+      <div id="subjectBelongingsContainer"></div>
+    </section>
+
+    <section class="card">
+      <h2>毎日持っていくもの</h2>
+      <p>時間割に関係なく毎日持っていくものを登録します。</p>
+      <div id="dailyBelongingsContainer"></div>
+      <button type="button" id="addDailyItemButton" class="button">
+        ＋ 持ち物を追加
+      </button>
+    </section>
+
+    <section class="card">
+      <button type="button" id="saveBelongingsButton" class="button">
+        持ち物設定を保存
+      </button>
+      <p id="saveMessage" class="save-message"></p>
+    </section>
+
+    <p>
+      <a href="belongings.html" class="button-link">← 持ち物確認に戻る</a>
+    </p>
+  </main>
+
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <a href="calendar.html" class="nav-link">
+        <span class="icon">🗓️</span>
+        <span>月予定</span>
+      </a>
+      <a href="todo.html" class="nav-link">
+        <span class="icon">✅</span>
+        <span>やること</span>
+      </a>
+      <a href="index.html" class="nav-link">
+        <span class="icon">🏠</span>
+        <span>ホーム</span>
+      </a>
+      <a href="belongings.html" class="nav-link active">
+        <span class="icon">🎒</span>
+        <span>持ち物</span>
+      </a>
+      <a href="settings.html" class="nav-link">
+        <span class="icon">⚙️</span>
+        <span>設定</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/database.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/belongings-setting.js"></script>
+</body>
+</html>
