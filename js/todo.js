@@ -108,11 +108,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       details.className = "todo-details";
 
       if (todo.memo) {
-        const memo = document.createElement("p");
-        memo.className = "todo-memo";
-        memo.textContent = todo.memo;
-        item.appendChild(memo);
-      }
+  const memo = document.createElement("p");
+  memo.className = "todo-memo";
+  memo.textContent = todo.memo;
+  details.appendChild(memo);
+}
+
+item.appendChild(details);
 
       const actions = document.createElement("div");
       actions.className = "todo-actions";
@@ -212,11 +214,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const selectedSubject = subjectInput.selectedOptions[0];
-
     const existing = editingId
-      ? todos.find(todo => todo.id === editingId)
-      : null;
+  ? todos.find(todo => todo.id === editingId)
+  : null;
 
     const todo = {
   id: editingId || `todo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
