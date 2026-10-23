@@ -923,7 +923,7 @@ button:disabled {
 /* 持ち物一覧：2列表示 */
 .belongings-items-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0 16px;
 }
 
@@ -931,7 +931,7 @@ button:disabled {
 .belonging-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   min-width: 0;
   margin: 0;
   padding: 10px 2px;
@@ -959,10 +959,10 @@ button:disabled {
   opacity: 0.55;
 }
 
-/* 画面が広い場合は3列表示 */
+/* 画面が広い場合は2列表示 */
 @media (min-width: 600px) {
   .belongings-items-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
