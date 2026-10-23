@@ -1,176 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-  <title>持ち物設定</title>
-
-  <link
-    rel="stylesheet"
-    href="css/common.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>持ち物確認</title>
+  <link rel="stylesheet" href="css/common.css">
 </head>
 
-
 <body>
-
-  <main class="container">
-
+  <main class="page">
     <header class="page-header">
-
-      <div>
-
-        <h1>持ち物</h1>
-
-        <p class="today"></p>
-
-      </div>
-
+      <h1>持ち物確認</h1>
+      <p class="today"></p>
     </header>
 
-
-   
-<!-- 今日・明日の持ち物 -->
-
-<section class="card">
-
-  <h2>持ち物チェック</h2>
-
-  <div class="belongings-date-switch">
-
-    <button
-      type="button"
-      id="todayButton"
-      class="button active"
-      aria-pressed="true">
-      今日
-    </button>
-
-    <button
-      type="button"
-      id="tomorrowButton"
-      class="button"
-      aria-pressed="false">
-      明日
-    </button>
-
-  </div>
-
-  <div id="todayBelongings"></div>
-
-</section>
-
-
-
-    <!-- 教科ごとの設定 -->
-
     <section class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;">
+        <h2 style="margin:0;">持ち物チェック</h2>
+        <a href="belongings-setting.html" class="button-link">持ち物設定 ⚙️</a>
+      </div>
 
-      <h2>教科ごとの持ち物</h2>
+      <div class="belongings-date-switch">
+        <button type="button" id="todayButton" class="button active" aria-pressed="true">
+          今日
+        </button>
+        <button type="button" id="tomorrowButton" class="button" aria-pressed="false">
+          明日
+        </button>
+      </div>
 
-      <p>
-        教科ごとの通常の持ち物を登録すると、
-        今日の時間割から自動的に持ち物を作成できます。
-      </p>
-
-      <div id="subjectBelongingsContainer"></div>
-
+      <div id="todayBelongings"></div>
     </section>
-
-
-    <!-- 毎日の持ち物 -->
-
-    <section class="card">
-
-      <h2>毎日持っていくもの</h2>
-
-      <p>
-        時間割に関係なく毎日持っていくものを登録します。
-      </p>
-
-      <div id="dailyBelongingsContainer"></div>
-
-      <button
-        id="addDailyItemButton"
-        class="button">
-
-        ＋ 持ち物を追加
-
-      </button>
-
-    </section>
-
-
-    <!-- 保存 -->
-
-    <section class="card">
-
-      <button
-        id="saveBelongingsButton"
-        class="button">
-
-        持ち物設定を保存
-
-      </button>
-
-      <p
-        id="saveMessage"
-        class="save-message">
-      </p>
-
-    </section>
-
   </main>
 
-
-  <!-- ナビ -->
-
-<nav class="bottom-nav">
-
-  <div class="nav-inner">
-
-    <a href="calendar.html" class="nav-link">
-      <span class="icon">🗓️</span>
-      <span>月予定</span>
-    </a>
-
-    <a href="todo.html" class="nav-link">
-      <span class="icon">✅</span>
-      <span>やること</span>
-    </a>
-
-    <a href="index.html" class="nav-link">
-      <span class="icon">🏠</span>
-      <span>ホーム</span>
-    </a>
-
-    <a href="belongings.html" class="nav-link">
-      <span class="icon">🎒</span>
-      <span>持ち物</span>
-    </a>
-
-    <a href="settings.html" class="nav-link">
-      <span class="icon">⚙️</span>
-      <span>設定</span>
-    </a>
-
-  </div>
-
-</nav>
-
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <a href="calendar.html" class="nav-link">
+        <span class="icon">🗓️</span>
+        <span>月予定</span>
+      </a>
+      <a href="todo.html" class="nav-link">
+        <span class="icon">✅</span>
+        <span>やること</span>
+      </a>
+      <a href="index.html" class="nav-link">
+        <span class="icon">🏠</span>
+        <span>ホーム</span>
+      </a>
+      <a href="belongings.html" class="nav-link active">
+        <span class="icon">🎒</span>
+        <span>持ち物</span>
+      </a>
+      <a href="settings.html" class="nav-link">
+        <span class="icon">⚙️</span>
+        <span>設定</span>
+      </a>
+    </div>
+  </nav>
 
   <script src="js/database.js"></script>
-
   <script src="js/common.js"></script>
-
   <script src="js/belongings.js"></script>
-
 </body>
-
 </html>
