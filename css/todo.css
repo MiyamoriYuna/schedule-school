@@ -156,3 +156,61 @@
   color: #475569;
   font-size: 0.9rem;
 }
+
+
+/* コンパクトな入力フォーム */
+.todo-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.todo-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.todo-form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.todo-form-group input,
+.todo-form-group textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.todo-form-group textarea {
+  resize: vertical;
+}
+
+#addTodoButton {
+  justify-self: start;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #e85d75;
+  color: white;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* メモの余白を小さくする */
+.todo-memo {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.todo-details {
+  margin-left: 28px;
+}
