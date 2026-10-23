@@ -70,6 +70,11 @@ setupSubjectFilters();
         saveSelectedSubjects
       );
 
+    // 自分で追加した科目を登録するボタン
+document
+  .getElementById("addCustomSubjectButton")
+  .addEventListener("click", addCustomSubject);
+
   }
 );
 
@@ -79,10 +84,30 @@ setupSubjectFilters();
 // ========================================
 
 
-function displaySubjects() {
+async function displaySubjects() {
   const container = document.getElementById("subjectContainer");
 
   const subjects = getSubjectsForGrade(currentGrade);
+
+  // 保存されている科目を取得
+  const savedSubjects = await getSubjects();
+
+  // 自分で追加した科目だけを取り出す
+  const customSubjects = savedSubjects.filter(subject =>
+    subject.grade === currentGrade &&
+    subject.custom === true
+  );
+
+  // 追加科目を分類ごとにまとめる
+  customSubjects.forEach(subject => {
+    if (!subjects[subject.category]) {
+      subjects[subject.category] = [];
+    }
+
+    if (!subjects[subject.category].includes(subject.name)) {
+      subjects[subject.category].push(subject.name);
+    }
+  });
 
   container.innerHTML = "";
   allSubjectCategories = Object.entries(subjects);
@@ -344,5 +369,97 @@ function filterSubjects() {
 
   count.textContent =
     `表示中：${visibleCount}科目（${visibleCategoryCount}教科）`;
+}
+
+// ========================================
+// 自分で教科・科目を追加
+// ========================================
+
+async function addCustomSubject() {
+  const categoryInput =
+    document.getElementById("customCategory");
+
+  const nameInput =
+    document.getElementById("customSubjectName");
+
+  const officialNameInput =
+    document.getElementById("customOfficialName");
+
+  const aliasesInput =
+    document.getElementById("customAliases");
+
+  const message =
+    document.getElementById("customSubjectMessage");
+
+  // 入力内容を取得
+  const category = categoryInput.value.trim();
+  const name = nameInput.value.trim();
+  const officialName = officialNameInput.value.trim();
+
+  const aliases = aliasesInput.value
+    .split(/[、,]/)
+    .map(alias => alias.trim())
+    .filter(alias => alias !== "");
+
+  // 必須項目を確認
+  if (!category || !name) {
+    message.textContent =
+      "教科分類と表示名を入力してください。";
+    return;
+  }
+
+  try {
+    // すでに保存されている科目を取得
+    const savedSubjects = await getSubjects();
+
+    // 同じ表示名の科目があるか確認
+    const alreadyExists = savedSubjects.some(subject =>
+      subject.grade === currentGrade &&
+      subject.category === category &&
+      subject.name === name
+    );
+
+    if (alreadyExists) {
+      message.textContent =
+        "同じ教科分類に同じ表示名の科目が登録されています。";
+      return;
+    }
+
+    // 新しい科目データを作成
+    const newSubject = {
+      id: `${currentGrade}-${category}-${name}`,
+      grade: currentGrade,
+      category: category,
+      name: name,
+      officialName: officialName,
+      aliases: aliases,
+      custom: true
+    };
+
+    // 既存の科目を残して、新しい科目を保存
+    await saveSubjects([
+      ...savedSubjects,
+      newSubject
+    ]);
+
+    // 教科一覧を更新
+    await displaySubjects();
+    await loadSavedSubjects();
+
+    // 入力欄を空にする
+    categoryInput.value = "";
+    nameInput.value = "";
+    officialNameInput.value = "";
+    aliasesInput.value = "";
+
+    message.textContent =
+      `「${name}」を登録しました！`;
+
+  } catch (error) {
+    console.error("科目の追加に失敗しました:", error);
+
+    message.textContent =
+      "科目の追加に失敗しました。もう一度お試しください。";
+  }
 }
 
