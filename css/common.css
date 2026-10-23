@@ -875,6 +875,7 @@ button:disabled {
 }
 
 
+
 /* ==============================
    持ち物チェックの見やすい表示
 ============================== */
@@ -895,55 +896,76 @@ button:disabled {
   font-weight: bold;
 }
 
+/* 持ち物一覧 */
 .today-belongings-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
+/* 教科ごとのグループ：箱をなくす */
 .belongings-subject-group {
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: #fff;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
+/* 教科名 */
 .belongings-subject-title {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #ffe5eb;
+  border-bottom: 1px solid #e2e8f0;
   font-size: 1rem;
 }
 
+/* 持ち物一覧：2列表示 */
 .belongings-items-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 0 16px;
 }
 
+/* 持ち物ごとの箱をなくす */
 .belonging-checkbox {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 8px;
-  border-radius: 8px;
-  background: #f8fafc;
+  margin: 0;
+  padding: 10px 2px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  font-weight: 400;
   overflow-wrap: anywhere;
 }
 
+/* チェックボックス */
 .belonging-checkbox input {
   flex-shrink: 0;
-  margin-top: 3px;
+  margin: 0;
   width: 18px;
   height: 18px;
+  accent-color: #e85d75;
 }
 
+/* チェック済みの持ち物 */
+.belonging-checkbox input:checked + span {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+/* 画面が広い場合は3列表示 */
 @media (min-width: 600px) {
   .belongings-items-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
 
 /* ホーム画面の部活動・個人予定 */
 
