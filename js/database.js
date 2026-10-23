@@ -1,5 +1,5 @@
 const DB_NAME = "SchoolLifeApp";
-const DB_VERSION = 7;
+const DB_VERSION = 8;
 
 const USER_STORE = "user";
 const SUBJECT_STORE = "subjects";
@@ -9,6 +9,7 @@ const DAILY_BELONGINGS_STORE = "dailyBelongings";
 const WEEKLY_TIMETABLE_STORE = "weeklyTimetable";
 const DAILY_CHECK_STORE = "dailyBelongingChecks";
 const EVENTS_STORE = "events";
+const TODO_STORE = "todos";
 
 // ==============================
 // データベースを開く
@@ -90,6 +91,13 @@ if (!db.objectStoreNames.contains(WEEKLY_TIMETABLE_STORE)) {
       // 予定
 if (!db.objectStoreNames.contains(EVENTS_STORE)) {
   db.createObjectStore(EVENTS_STORE, {
+    keyPath: "id"
+  });
+}
+
+      // やることリスト
+if (!db.objectStoreNames.contains(TODO_STORE)) {
+  db.createObjectStore(TODO_STORE, {
     keyPath: "id"
   });
 }
@@ -791,6 +799,76 @@ async function deleteEvent(eventId) {
     );
 
     transaction.objectStore(EVENTS_STORE).delete(eventId);
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+  });
+}
+
+// ==============================
+// やることリスト
+// ==============================
+
+// やることを1件保存・更新する
+async function saveTodo(todo) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(TODO_STORE, "readwrite");
+    transaction.objectStore(TODO_STORE).put(todo);
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+
+    transaction.onabort = () => {
+      db.close();
+      reject(transaction.error || new Error("保存に失敗しました"));
+    };
+  });
+}
+
+// すべてのやることを取得する
+async function getTodos() {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(TODO_STORE, "readonly");
+    const request = transaction.objectStore(TODO_STORE).getAll();
+
+    request.onsuccess = () => {
+      const todos = request.result;
+      db.close();
+      resolve(todos);
+    };
+
+    request.onerror = () => {
+      db.close();
+      reject(request.error);
+    };
+  });
+}
+
+// やることを削除する
+async function deleteTodo(todoId) {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(TODO_STORE, "readwrite");
+    transaction.objectStore(TODO_STORE).delete(todoId);
 
     transaction.oncomplete = () => {
       db.close();
