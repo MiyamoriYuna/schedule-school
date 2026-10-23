@@ -2,9 +2,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("todoForm");
   const titleInput = document.getElementById("todoTitle");
-  const categoryInput = document.getElementById("todoCategory");
-  const subjectInput = document.getElementById("todoSubject");
-  const dueDateInput = document.getElementById("todoDueDate");
   const memoInput = document.getElementById("todoMemo");
 
   const todoList = document.getElementById("todoList");
@@ -15,21 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let editingId = null;
   let todos = [];
 
-  // 登録済みの教科を選択肢に追加
-  try {
-    const subjects = await getSubjects();
 
-    subjects.forEach(subject => {
-      const option = document.createElement("option");
-      option.value = subject.id;
-      option.textContent =
-        subject.name || subject.subject || subject.title || "名称未設定";
-
-      subjectInput.appendChild(option);
-    });
-  } catch (error) {
-    console.error("教科の読み込みに失敗しました", error);
-  }
 
   // やることを読み込む
   async function loadTodos() {
@@ -124,27 +107,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const details = document.createElement("div");
       details.className = "todo-details";
 
-      const category = document.createElement("span");
-      category.className = "todo-tag";
-      category.textContent = todo.category || "その他";
-      details.appendChild(category);
-
-      if (todo.subjectName) {
-        const subject = document.createElement("span");
-        subject.className = "todo-tag";
-        subject.textContent = todo.subjectName;
-        details.appendChild(subject);
-      }
-
-      if (todo.dueDate) {
-        const dueDate = document.createElement("span");
-        dueDate.className = "todo-due-date";
-        dueDate.textContent = `期限：${todo.dueDate}`;
-        details.appendChild(dueDate);
-      }
-
-      item.appendChild(details);
-
       if (todo.memo) {
         const memo = document.createElement("p");
         memo.className = "todo-memo";
@@ -163,9 +125,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       editButton.addEventListener("click", () => {
         editingId = todo.id;
         titleInput.value = todo.title;
-        categoryInput.value = todo.category || "その他";
-        subjectInput.value = todo.subjectId || "";
-        dueDateInput.value = todo.dueDate || "";
         memoInput.value = todo.memo || "";
 
         addButton.textContent = "変更を保存";
@@ -260,18 +219,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       : null;
 
     const todo = {
-      id: editingId || `todo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      title,
-      category: categoryInput.value,
-      subjectId: subjectInput.value,
-      subjectName: subjectInput.value
-        ? selectedSubject.textContent
-        : "",
-      dueDate: dueDateInput.value,
-      memo: memoInput.value.trim(),
-      completed: existing ? Boolean(existing.completed) : false,
-      createdAt: existing ? existing.createdAt : Date.now()
-    };
+  id: editingId || `todo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  title,
+  memo: memoInput.value.trim(),
+  completed: existing ? Boolean(existing.completed) : false,
+  createdAt: existing ? existing.createdAt : Date.now()
+};
 
     addButton.disabled = true;
 
