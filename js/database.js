@@ -320,7 +320,7 @@ async function saveSubject(subject) {
 
 
 // ========================================
-// 教科が使用中か確認して削除
+// 教科を削除（使用中でも削除する）
 // ========================================
 
 async function deleteSubjectIfUnused(subjectId) {
@@ -328,126 +328,27 @@ async function deleteSubjectIfUnused(subjectId) {
 
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(
-      [
-        SUBJECT_STORE,
-        TIMETABLE_STORE,
-        WEEKLY_TIMETABLE_STORE,
-        BELONGINGS_STORE
-      ],
+      [SUBJECT_STORE],
       "readwrite"
     );
 
-    const subjectStore =
-      transaction.objectStore(SUBJECT_STORE);
+    const store = transaction.objectStore(SUBJECT_STORE);
 
-    const timetableStore =
-      transaction.objectStore(TIMETABLE_STORE);
-
-    const weeklyStore =
-      transaction.objectStore(WEEKLY_TIMETABLE_STORE);
-
-    const belongingsStore =
-      transaction.objectStore(BELONGINGS_STORE);
-
-    let failed = false;
-
-    const fail = (message) => {
-      if (failed) return;
-
-      failed = true;
-      transaction.abort();
-      reject(new Error(message));
-    };
-
-    const timetableRequest = timetableStore.getAll();
-    const weeklyRequest = weeklyStore.getAll();
-    const belongingsRequest = belongingsStore.getAll();
-
-    let timetableLoaded = false;
-    let weeklyLoaded = false;
-    let belongingsLoaded = false;
-
-    const checkAndDelete = () => {
-      if (
-        failed ||
-        !timetableLoaded ||
-        !weeklyLoaded ||
-        !belongingsLoaded
-      ) {
-        return;
-      }
-
-      const targetId = String(subjectId);
-
-      const isUsed = item =>
-        String(item.subjectId) === targetId;
-
-      const inTimetable =
-        timetableRequest.result.some(isUsed);
-
-      const inWeeklyTimetable =
-        weeklyRequest.result.some(isUsed);
-
-      const inBelongings =
-        belongingsRequest.result.some(item =>
-          String(item.subjectId) === targetId
-        );
-
-      if (inTimetable || inWeeklyTimetable || inBelongings) {
-        fail(
-          "この教科は時間割または持ち物設定で使用中のため削除できません。先に関連する設定を変更してください。"
-        );
-        return;
-      }
-
-      subjectStore.delete(subjectId);
-    };
-
-    timetableRequest.onsuccess = () => {
-      timetableLoaded = true;
-      checkAndDelete();
-    };
-
-    weeklyRequest.onsuccess = () => {
-      weeklyLoaded = true;
-      checkAndDelete();
-    };
-
-    belongingsRequest.onsuccess = () => {
-      belongingsLoaded = true;
-      checkAndDelete();
-    };
-
-    timetableRequest.onerror = () => {
-      fail("時間割の確認に失敗しました。");
-    };
-
-    weeklyRequest.onerror = () => {
-      fail("週別時間割の確認に失敗しました。");
-    };
-
-    belongingsRequest.onerror = () => {
-      fail("持ち物設定の確認に失敗しました。");
-    };
+    store.delete(subjectId);
 
     transaction.oncomplete = () => {
       db.close();
-
-      if (!failed) {
-        resolve();
-      }
+      resolve();
     };
 
     transaction.onerror = () => {
       db.close();
-
-      if (!failed) {
-        reject(transaction.error);
-      }
+      reject(transaction.error);
     };
 
     transaction.onabort = () => {
       db.close();
+      reject(transaction.error);
     };
   });
 }
