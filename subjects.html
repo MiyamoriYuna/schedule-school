@@ -1,292 +1,143 @@
+
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>教科・科目設定 | 学校生活管理アプリ</title>
-
-  <link
-  rel="stylesheet"
-  href="css/common.css?v=2"
->
-
+  <link rel="stylesheet" href="css/common.css?v=2">
 </head>
 
-
 <body>
-
   <main class="page">
 
-
-    <!-- ヘッダー -->
-
     <header class="page-header">
-
       <h1>教科・科目設定</h1>
-
       <p class="today"></p>
-
     </header>
 
-
-    <!-- 説明 -->
-
     <section class="card">
-
-      <h2 id="gradeTitle">
-        教科・科目を選択
-      </h2>
-
-      <p>
-        実際に学校で使用している
-        教科・科目を選択してください。
-      </p>
-
+      <h2 id="gradeTitle">教科・科目設定</h2>
+      <p>学校で使用している教科・科目を登録してください。</p>
     </section>
 
+    <!-- 検索・絞り込み -->
+    <section class="card subject-filter-card">
+      <label for="subjectSearch">教科・科目名で検索</label>
+      <input
+        type="search"
+        id="subjectSearch"
+        placeholder="例：数学Ⅰ、化学、英語"
+        autocomplete="off"
+      >
 
-    
-<!-- 科目の検索・絞り込み -->
-<section class="card subject-filter-card">
+      <label for="categoryFilter">教科分類で絞り込む</label>
+      <select id="categoryFilter">
+        <option value="all">すべて</option>
+      </select>
 
-  <label for="subjectSearch">科目名で検索</label>
+      <p id="subjectResultCount" aria-live="polite"></p>
+    </section>
 
-  <input
-    type="search"
-    id="subjectSearch"
-    placeholder="例：数学Ⅰ、化学、英語"
-    autocomplete="off"
-  >
+    <!-- 登録済みの教科 -->
+    <section id="subjectContainer" class="subject-container"></section>
 
-  <p class="filter-heading">教科で絞り込む</p>
+    <!-- 教科の追加・編集 -->
+    <section class="card" id="subjectForm">
+      <h2 id="formTitle">教科・科目を追加</h2>
 
-  <div
-    id="subjectFilters"
-    class="subject-filters"
-  >
-    <button
-      type="button"
-      class="subject-filter active"
-      data-category="all"
-    >
-      すべて
-    </button>
-  </div>
+      <label for="customCategory">教科分類</label>
+      <input
+        type="text"
+        id="customCategory"
+        placeholder="例：数学、国語、理科"
+        maxlength="40"
+      >
 
-  <p
-    id="subjectResultCount"
-    class="subject-result-count"
-    aria-live="polite"
-  ></p>
+      <label for="customSubjectName">
+        表示名（時間割に表示する名前）
+      </label>
+      <input
+        type="text"
+        id="customSubjectName"
+        placeholder="例：英コミ"
+        maxlength="60"
+      >
 
-</section>
+      <label for="customOfficialName">正式名称（任意）</label>
+      <input
+        type="text"
+        id="customOfficialName"
+        placeholder="例：英語コミュニケーションⅠ"
+        maxlength="100"
+      >
 
-<!-- 教科一覧 -->
-<section
-  id="subjectContainer"
-  class="subject-container"
->
-</section>
+      <label for="customAliases">別名（任意）</label>
+      <input
+        type="text"
+        id="customAliases"
+        placeholder="例：英語コミュ、英コミュ"
+        maxlength="200"
+      >
 
+      <p class="form-note">
+        別名は「、」または「,」で区切って入力してください。
+      </p>
 
-<!-- 自分で教科・科目を追加 -->
-<section class="card">
+      <button type="button" id="addCustomSubjectButton" class="button">
+        登録する
+      </button>
 
-  <h2>教科・科目を追加</h2>
+      <button
+        type="button"
+        id="cancelEditButton"
+        class="button"
+        hidden
+      >
+        編集をキャンセル
+      </button>
 
-  <p>
-    学校で使用している教科・科目を登録できます。
-  </p>
-
-  <!-- 教科分類 -->
-  <label for="customCategory">
-  教科分類
-</label>
-
-<select id="customCategory">
-  <option value="">教科分類を選択してください</option>
-  <option value="国語">国語</option>
-  <option value="地理歴史">地理歴史</option>
-  <option value="公民">公民</option>
-  <option value="数学">数学</option>
-  <option value="理科">理科</option>
-  <option value="保健体育">保健体育</option>
-  <option value="芸術">芸術</option>
-  <option value="英語">英語</option>
-  <option value="家庭">家庭</option>
-  <option value="技術">技術</option>
-  <option value="音楽">音楽</option>
-  <option value="美術">美術</option>
-  <option value="総合">総合</option>
-  <option value="学活">学活</option>
-  <option value="道徳">道徳</option>
-  <option value="その他">その他</option>
-</select>
-
-  <!-- 表示名 -->
-  <label for="customSubjectName">
-    表示名（時間割に表示する名前）
-  </label>
-
-  <input
-    type="text"
-    id="customSubjectName"
-    placeholder="例：英コミ"
-  >
-
-  <!-- 正式名称 -->
-  <label for="customOfficialName">
-    正式名称（任意）
-  </label>
-
-  <input
-    type="text"
-    id="customOfficialName"
-    placeholder="例：英語コミュニケーションⅠ"
-  >
-
-  <!-- 画像認識用の別名 -->
-  <label for="customAliases">
-    画像認識用の別名（任意）
-  </label>
-
-  <input
-    type="text"
-    id="customAliases"
-    placeholder="例：英語コミュ、英コミュ"
-  >
-
-  <p class="form-note">
-    別名は「、」で区切って入力してください。
-  </p>
-
-  <button
-    type="button"
-    id="addCustomSubjectButton"
-    class="button"
-  >
-    科目を追加
-  </button>
-
-  <p
-    id="customSubjectMessage"
-    class="save-message"
-    aria-live="polite"
-  ></p>
-
-</section>
-
-
-    <!-- メッセージ -->
-
-    <p
-      id="saveMessage"
-      class="save-message"
-    ></p>
-
-
-    <!-- 保存 -->
-
-    <button id="saveSubjectsButton">
-
-      保存する
-
-    </button>
-
+      <p
+        id="customSubjectMessage"
+        class="save-message"
+        aria-live="polite"
+      ></p>
+    </section>
 
   </main>
 
-
   <!-- 下部ナビ -->
-
   <nav class="bottom-nav">
-
     <div class="nav-inner">
-
-
-      <a
-        class="nav-link"
-        href="calendar.html"
-      >
-
+      <a class="nav-link" href="calendar.html">
         <span class="icon">🗓️</span>
-
         <span>月予定</span>
-
       </a>
 
-
-      <a
-        class="nav-link"
-        href="todo.html"
-      >
-
+      <a class="nav-link" href="todo.html">
         <span class="icon">✅</span>
-
         <span>やること</span>
-
       </a>
 
-
-      <a
-        class="nav-link"
-        href="index.html"
-      >
-
+      <a class="nav-link" href="index.html">
         <span class="icon">🏠</span>
-
         <span>ホーム</span>
-
       </a>
 
-
-      <a
-        class="nav-link"
-        href="belongings.html"
-      >
-
+      <a class="nav-link" href="belongings.html">
         <span class="icon">🎒</span>
-
         <span>持ち物</span>
-
       </a>
 
-
-      <a
-        class="nav-link"
-        href="settings.html"
-      >
-
+      <a class="nav-link" href="settings.html">
         <span class="icon">⚙️</span>
-
         <span>設定</span>
-
       </a>
-
-
     </div>
-
   </nav>
 
-
-  <!-- JavaScript -->
-
   <script src="js/database.js"></script>
-
-  <script src="js/subjectData.js"></script>
-
   <script src="js/common.js"></script>
-
   <script src="js/subjects.js"></script>
-
-
 </body>
-
 </html>
