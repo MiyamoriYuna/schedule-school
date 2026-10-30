@@ -169,6 +169,7 @@ function displaySubjects() {
       const editButton = document.createElement("button");
       editButton.type = "button";
       editButton.textContent = "編集";
+      editButton.className = "subject-edit-button";
       editButton.addEventListener("click", () => {
         startSubjectEdit(subject);
       });
@@ -176,6 +177,7 @@ function displaySubjects() {
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.textContent = "削除";
+      deleteButton.className = "subject-delete-button";
       deleteButton.addEventListener("click", () => {
         removeSubject(subject);
       });
