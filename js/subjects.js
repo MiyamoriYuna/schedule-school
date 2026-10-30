@@ -154,11 +154,7 @@ function displaySubjects() {
       name.textContent = subject.name;
       information.appendChild(name);
 
-      if (subject.officialName) {
-        const official = document.createElement("p");
-        official.textContent = `正式名称：${subject.officialName}`;
-        information.appendChild(official);
-      }
+
 
       if (subject.aliases && subject.aliases.length > 0) {
         const aliases = document.createElement("p");
@@ -278,7 +274,6 @@ async function saveSubjectFromForm() {
         ...oldSubject,
         category: data.category,
         name: data.name,
-        officialName: data.officialName,
         aliases: data.aliases
       };
 
@@ -339,9 +334,6 @@ function startSubjectEdit(subject) {
   document.getElementById("customSubjectName").value =
     subject.name;
 
-  document.getElementById("customOfficialName").value =
-    subject.officialName || "";
-
   document.getElementById("customAliases").value =
     (subject.aliases || []).join("、");
 
@@ -375,7 +367,6 @@ function resetSubjectForm() {
 
   document.getElementById("customCategory").value = "";
   document.getElementById("customSubjectName").value = "";
-  document.getElementById("customOfficialName").value = "";
   document.getElementById("customAliases").value = "";
 
   document.getElementById("formTitle").textContent =
