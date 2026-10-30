@@ -216,8 +216,6 @@ function getSubjectFormData() {
   const name =
     document.getElementById("customSubjectName").value.trim();
 
-  const officialName =
-    document.getElementById("customOfficialName").value.trim();
 
   const aliases =
     document.getElementById("customAliases").value
