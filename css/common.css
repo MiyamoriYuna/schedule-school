@@ -355,22 +355,35 @@ button:disabled {
 .subject-option {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  gap: 10px;
 
   margin: 4px 0;
-  padding: 5px 6px;
+  padding: 8px 6px;
 
   background: #f8fafc;
   border: 1px solid transparent;
   border-radius: 9px;
 
-  cursor: pointer;
   font-weight: 400;
   line-height: 1.5;
 
   transition:
     background 0.2s,
     border-color 0.2s;
+}
+
+/* 科目名・別名 */
+.subject-information {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.subject-information p {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 /* マウスを乗せたとき */
@@ -1090,12 +1103,16 @@ button:disabled {
 .subject-action-buttons {
   display: flex;
   flex-shrink: 0;
+  justify-content: flex-end;
   gap: 6px;
+  margin-left: auto;
 }
 
 .subject-action-buttons button {
-  width: auto;
-  padding: 6px 12px;
+  width: 56px;
+  min-width: 56px;
+  padding: 6px 0;
+  text-align: center;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -1124,3 +1141,15 @@ button:disabled {
   color: #a8324b;
   background: #ffdae2;
 }
+
+.subject-action-buttons button:focus-visible {
+  outline: 2px solid #e85d75;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .subject-action-buttons button {
+    width: 56px;
+  }
+}
+
