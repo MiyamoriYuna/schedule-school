@@ -1,5 +1,4 @@
-
- // ==============================
+// ==============================
 // 時間割設定
 // ==============================
 
@@ -77,7 +76,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         currentWeekStart =
           getMondayDateString(selectedDate);
 
-        // 入力欄も月曜日の日付にそろえる
         event.target.value = currentWeekStart;
 
         updateWeekInfo();
@@ -106,8 +104,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       .getElementById("saveTimetableButton")
       .addEventListener("click", saveCurrentTimetable);
 
-   // 写真プレビュー機能
-setupTimetablePhotoPreview();
+    // 写真プレビュー機能
+    setupTimetablePhotoPreview();
 
   } catch (error) {
     console.error("時間割設定の初期化に失敗しました:", error);
@@ -217,10 +215,7 @@ function createTimetable() {
   const table = document.createElement("table");
   table.className = "timetable-setting";
 
-  // ------------------------------
   // ヘッダー
-  // ------------------------------
-
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
 
@@ -239,10 +234,7 @@ function createTimetable() {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // ------------------------------
   // 時間割の入力欄
-  // ------------------------------
-
   const tbody = document.createElement("tbody");
   const periodCount = getPeriodCount();
 
@@ -306,8 +298,7 @@ async function loadTimetable() {
     // 高校生：選択中の週の時間割
     timetable = await getWeeklyTimetable(currentWeekStart);
 
-    // 週別時間割がまだ一度も保存されていない場合は、
-    // 従来の基本時間割を参考として表示する
+    // 週別時間割がまだ一度も保存されていない場合
     if (
       timetable.length === 0 &&
       !(await hasWeeklyTimetable())
@@ -392,7 +383,6 @@ async function saveCurrentTimetable() {
   }, 3000);
 }
 
-
 // ==============================
 // 時間割写真のプレビュー
 // ==============================
@@ -413,14 +403,15 @@ function setupTimetablePhotoPreview() {
   const removeButton =
     document.getElementById("removeTimetablePhotoButton");
 
- const readButton =
-  document.getElementById("readTimetablePhotoButton");
+  const readButton =
+    document.getElementById("readTimetablePhotoButton");
 
   if (
     !photoInput ||
     !preview ||
     !previewImage ||
-    !removeButton
+    !removeButton ||
+    !readButton
   ) {
     return;
   }
@@ -431,15 +422,25 @@ function setupTimetablePhotoPreview() {
 
     if (!file) {
       return;
-
-     readButton.disabled = false;
     }
+
+    // 写真を選択したら読み取りボタンを有効にする
+    readButton.disabled = false;
+
+    // 前回の読み取り結果を消す
+    const status = document.getElementById("timetableOcrStatus");
+    const resultArea = document.getElementById("timetableOcrResult");
+    const resultText = document.getElementById("timetableOcrText");
+
+    if (status) status.textContent = "";
+    if (resultArea) resultArea.hidden = true;
+    if (resultText) resultText.value = "";
 
     // 画像ファイルか確認
     if (!file.type.startsWith("image/")) {
       alert("画像ファイルを選択してください。");
-      photoInput.value = ;
-     readButton.disabled = true;
+      photoInput.value = "";
+      readButton.disabled = true;
       return;
     }
 
@@ -458,6 +459,8 @@ function setupTimetablePhotoPreview() {
   // 写真を取り消したとき
   removeButton.addEventListener("click", () => {
     photoInput.value = "";
+    readButton.disabled = true;
+
     previewImage.removeAttribute("src");
     preview.hidden = true;
 
@@ -466,8 +469,19 @@ function setupTimetablePhotoPreview() {
       URL.revokeObjectURL(timetablePhotoUrl);
       timetablePhotoUrl = null;
     }
+
+    // OCR結果も消す
+    const status = document.getElementById("timetableOcrStatus");
+    const resultArea = document.getElementById("timetableOcrResult");
+    const resultText = document.getElementById("timetableOcrText");
+
+    if (status) status.textContent = "";
+    if (resultArea) resultArea.hidden = true;
+    if (resultText) resultText.value = "";
   });
-   readButton.addEventListener("click", readTimetablePhoto);
+
+  // 読み取りボタンを押したとき
+  readButton.addEventListener("click", readTimetablePhoto);
 }
 
 // ==============================
@@ -479,7 +493,9 @@ let timetableOcrWorkerPromise = null;
 
 // OCRエンジンを必要なときだけ読み込む
 async function loadTesseract() {
-  if (window.Tesseract) return;
+  if (window.Tesseract) {
+    return;
+  }
 
   await new Promise((resolve, reject) => {
     const script = document.createElement("script");
@@ -488,6 +504,7 @@ async function loadTesseract() {
       "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
 
     script.onload = resolve;
+
     script.onerror = () => reject(
       new Error("OCRエンジンを読み込めませんでした。")
     );
@@ -508,16 +525,23 @@ async function getTesseractWorker(statusElement) {
 
       return await Tesseract.createWorker("jpn", 1, {
         logger: (message) => {
-          if (!statusElement) return;
+          if (!statusElement) {
+            return;
+          }
 
           if (message.status === "loading language traineddata") {
-            statusElement.textContent = "日本語データを読み込んでいます...";
+            statusElement.textContent =
+              "日本語データを読み込んでいます...";
+
           } else if (message.status === "recognizing text") {
             const percent = Math.round(message.progress * 100);
+
             statusElement.textContent =
               `文字を読み取っています... ${percent}%`;
+
           } else if (message.status === "initializing tesseract") {
-            statusElement.textContent = "OCRエンジンを準備しています...";
+            statusElement.textContent =
+              "OCRエンジンを準備しています...";
           }
         }
       });
@@ -528,16 +552,40 @@ async function getTesseractWorker(statusElement) {
   }
 
   timetableOcrWorker = await timetableOcrWorkerPromise;
+
   return timetableOcrWorker;
 }
 
+// ==============================
 // 写真から文字を読み取る
+// ==============================
+
 async function readTimetablePhoto() {
-  const photoInput = document.getElementById("timetablePhoto");
-  const status = document.getElementById("timetableOcrStatus");
-  const resultArea = document.getElementById("timetableOcrResult");
-  const resultText = document.getElementById("timetableOcrText");
-  const readButton = document.getElementById("readTimetablePhotoButton");
+  const photoInput =
+    document.getElementById("timetablePhoto");
+
+  const status =
+    document.getElementById("timetableOcrStatus");
+
+  const resultArea =
+    document.getElementById("timetableOcrResult");
+
+  const resultText =
+    document.getElementById("timetableOcrText");
+
+  const readButton =
+    document.getElementById("readTimetablePhotoButton");
+
+  if (
+    !photoInput ||
+    !status ||
+    !resultArea ||
+    !resultText ||
+    !readButton
+  ) {
+    console.error("OCR表示用のHTML要素が見つかりません。");
+    return;
+  }
 
   const file = photoInput.files[0];
 
@@ -548,22 +596,28 @@ async function readTimetablePhoto() {
 
   readButton.disabled = true;
   resultArea.hidden = true;
+
   status.textContent = "読み取りを準備しています...";
 
   try {
+    // OCRエンジンを取得
     const worker = await getTesseractWorker(status);
 
     status.textContent = "写真を読み取っています...";
 
+    // 写真の文字を読み取る
     const result = await worker.recognize(file);
+
     const recognizedText = result.data.text.trim();
 
+    // 読み取り結果を表示
     resultText.value = recognizedText;
     resultArea.hidden = false;
 
     if (recognizedText) {
       status.textContent =
         "読み取りが完了しました。内容を確認してください。";
+
     } else {
       status.textContent =
         "文字を読み取れませんでした。写真を確認してください。";
