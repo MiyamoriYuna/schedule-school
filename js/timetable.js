@@ -106,6 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       .getElementById("saveTimetableButton")
       .addEventListener("click", saveCurrentTimetable);
 
+   // 写真プレビュー機能
+setupTimetablePhotoPreview();
+
   } catch (error) {
     console.error("時間割設定の初期化に失敗しました:", error);
 
