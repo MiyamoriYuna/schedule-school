@@ -1,143 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>時間割設定</title>
-
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/timetable-photo.css">
 </head>
-
 <body>
-
   <main class="container">
-
-    <!-- ヘッダー -->
     <header class="page-header">
-
       <div>
         <h1>時間割設定</h1>
         <p class="today"></p>
       </div>
-
     </header>
 
-
-    <!-- 説明 -->
     <section class="card">
-
       <h2>時間割を設定</h2>
-
-      <p>
-        曜日ごとの授業を設定してください。
-      </p>
-
+      <p>曜日ごとの授業を設定してください。</p>
       <p id="gradeInfo"></p>
-
       <p id="timetableModeInfo"></p>
 
-      <!-- 高校用：対象の週を選択 -->
-<div id="weekSelectorContainer" style="display: none; margin-top: 12px;">
-  <label for="weekStartDate">対象の週</label>
-
-  <input
-    type="date"
-    id="weekStartDate"
-  >
-
-  <p id="weekInfo"></p>
-</div>
-
+      <div id="weekSelectorContainer" style="display: none; margin-top: 12px;">
+        <label for="weekStartDate">対象の週</label>
+        <input type="date" id="weekStartDate">
+        <p id="weekInfo"></p>
+      </div>
     </section>
 
+    <!-- 写真から時間割を読み取る -->
+    <section class="card timetable-photo-card">
+      <h2>写真から時間割を読み取る</h2>
+      <p>時間割の写真を選択すると、写真から授業内容を読み取れるようになります。</p>
 
-    <!-- 時間割 -->
-    <section class="card">
+      <div class="photo-select-area">
+        <label for="timetablePhoto" class="photo-select-label">
+          <span class="photo-select-icon" aria-hidden="true">📷</span>
+          <span class="photo-select-title">時間割の写真を選択</span>
+          <span class="photo-select-note">JPG・PNG・WebP形式に対応</span>
+        </label>
+        <input type="file" id="timetablePhoto" accept="image/jpeg,image/png,image/webp">
+      </div>
 
-      <div id="timetableContainer"></div>
+      <div id="timetablePhotoPreview" class="photo-preview" hidden>
+        <p class="photo-preview-heading">選択した写真</p>
+        <img id="timetablePhotoImage" alt="選択した時間割の写真">
+        <button type="button" id="removeTimetablePhotoButton" class="photo-remove-button">
+          写真を取り消す
+        </button>
+      </div>
 
-    </section>
+      <p class="photo-reading-notice">
+        ※ 写真の読み取り機能は、次の開発段階で追加します。
+        通常の時間割設定・保存機能はこれまでどおり利用できます。
+      </p>
 
-
-    <!-- 保存 -->
-    <section class="card">
-
-      <button
-        id="saveTimetableButton"
-        class="button">
-        時間割を保存
+      <button type="button" id="readTimetablePhotoButton" class="button photo-read-button" disabled>
+        写真を読み取る（準備中）
       </button>
-
-      <p
-        id="saveMessage"
-        class="save-message">
-      </p>
-
     </section>
 
-
-    <!-- 教科設定へのリンク -->
     <section class="card">
-
-      <h2>教科・科目を変更する</h2>
-
-      <p>
-        時間割で使用する教科・科目を変更できます。
-      </p>
-
-      <a
-        href="subjects.html"
-        class="button-link">
-        教科・科目設定へ
-      </a>
-
+      <h2>時間割を確認・編集</h2>
+      <p>写真から読み取った内容も、ここで確認・修正できるようにします。</p>
+      <div id="timetableContainer"></div>
     </section>
 
+    <section class="card">
+      <button id="saveTimetableButton" class="button">時間割を保存</button>
+      <p id="saveMessage" class="save-message"></p>
+    </section>
+
+    <section class="card">
+      <h2>教科・科目を変更する</h2>
+      <p>時間割で使用する教科・科目を変更できます。</p>
+      <a href="subjects.html" class="button-link">教科・科目設定へ</a>
+    </section>
   </main>
 
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <a href="calendar.html" class="nav-link"><span class="icon">🗓️</span><span>月予定</span></a>
+      <a href="todo.html" class="nav-link"><span class="icon">✅</span><span>やること</span></a>
+      <a href="index.html" class="nav-link"><span class="icon">🏠</span><span>ホーム</span></a>
+      <a href="belongings.html" class="nav-link"><span class="icon">🎒</span><span>持ち物</span></a>
+      <a href="settings.html" class="nav-link"><span class="icon">⚙️</span><span>設定</span></a>
+    </div>
+  </nav>
 
-  <!-- 下部ナビ -->
-<nav class="bottom-nav">
-
-  <div class="nav-inner">
-
-    <a href="calendar.html" class="nav-link">
-      <span class="icon">🗓️</span>
-      <span>月予定</span>
-    </a>
-
-    <a href="todo.html" class="nav-link">
-      <span class="icon">✅</span>
-      <span>やること</span>
-    </a>
-
-    <a href="index.html" class="nav-link">
-      <span class="icon">🏠</span>
-      <span>ホーム</span>
-    </a>
-
-    <a href="belongings.html" class="nav-link">
-      <span class="icon">🎒</span>
-      <span>持ち物</span>
-    </a>
-
-    <a href="settings.html" class="nav-link">
-      <span class="icon">⚙️</span>
-      <span>設定</span>
-    </a>
-
-  </div>
-
-</nav>
-
-
-  <!-- JavaScript -->
   <script src="js/database.js"></script>
   <script src="js/common.js"></script>
   <script src="js/timetable.js"></script>
-
 </body>
-
 </html>
