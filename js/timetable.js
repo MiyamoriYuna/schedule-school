@@ -388,3 +388,74 @@ async function saveCurrentTimetable() {
     message.textContent = "";
   }, 3000);
 }
+
+
+// ==============================
+// 時間割写真のプレビュー
+// ==============================
+
+let timetablePhotoUrl = null;
+
+// 写真選択・取り消し機能を設定
+function setupTimetablePhotoPreview() {
+  const photoInput =
+    document.getElementById("timetablePhoto");
+
+  const preview =
+    document.getElementById("timetablePhotoPreview");
+
+  const previewImage =
+    document.getElementById("timetablePhotoImage");
+
+  const removeButton =
+    document.getElementById("removeTimetablePhotoButton");
+
+  if (
+    !photoInput ||
+    !preview ||
+    !previewImage ||
+    !removeButton
+  ) {
+    return;
+  }
+
+  // 写真を選択したとき
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    // 画像ファイルか確認
+    if (!file.type.startsWith("image/")) {
+      alert("画像ファイルを選択してください。");
+      photoInput.value = "";
+      return;
+    }
+
+    // 前の写真のURLを解放
+    if (timetablePhotoUrl) {
+      URL.revokeObjectURL(timetablePhotoUrl);
+    }
+
+    // 選択した写真を表示
+    timetablePhotoUrl = URL.createObjectURL(file);
+
+    previewImage.src = timetablePhotoUrl;
+    preview.hidden = false;
+  });
+
+  // 写真を取り消したとき
+  removeButton.addEventListener("click", () => {
+    photoInput.value = "";
+    previewImage.removeAttribute("src");
+    preview.hidden = true;
+
+    // 使用済みURLを解放
+    if (timetablePhotoUrl) {
+      URL.revokeObjectURL(timetablePhotoUrl);
+      timetablePhotoUrl = null;
+    }
+  });
+}
