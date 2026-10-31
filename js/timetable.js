@@ -462,3 +462,113 @@ function setupTimetablePhotoPreview() {
     }
   });
 }
+
+// ==============================
+// 時間割写真の文字読み取り（OCR）
+// ==============================
+
+let timetableOcrWorker = null;
+let timetableOcrWorkerPromise = null;
+
+// OCRエンジンを必要なときだけ読み込む
+async function loadTesseract() {
+  if (window.Tesseract) return;
+
+  await new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+
+    script.src =
+      "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+
+    script.onload = resolve;
+    script.onerror = () => reject(
+      new Error("OCRエンジンを読み込めませんでした。")
+    );
+
+    document.head.appendChild(script);
+  });
+}
+
+// 日本語OCRワーカーを作成（2回目以降は再利用）
+async function getTesseractWorker(statusElement) {
+  if (timetableOcrWorker) {
+    return timetableOcrWorker;
+  }
+
+  if (!timetableOcrWorkerPromise) {
+    timetableOcrWorkerPromise = (async () => {
+      await loadTesseract();
+
+      return await Tesseract.createWorker("jpn", 1, {
+        logger: (message) => {
+          if (!statusElement) return;
+
+          if (message.status === "loading language traineddata") {
+            statusElement.textContent = "日本語データを読み込んでいます...";
+          } else if (message.status === "recognizing text") {
+            const percent = Math.round(message.progress * 100);
+            statusElement.textContent =
+              `文字を読み取っています... ${percent}%`;
+          } else if (message.status === "initializing tesseract") {
+            statusElement.textContent = "OCRエンジンを準備しています...";
+          }
+        }
+      });
+    })().catch((error) => {
+      timetableOcrWorkerPromise = null;
+      throw error;
+    });
+  }
+
+  timetableOcrWorker = await timetableOcrWorkerPromise;
+  return timetableOcrWorker;
+}
+
+// 写真から文字を読み取る
+async function readTimetablePhoto() {
+  const photoInput = document.getElementById("timetablePhoto");
+  const status = document.getElementById("timetableOcrStatus");
+  const resultArea = document.getElementById("timetableOcrResult");
+  const resultText = document.getElementById("timetableOcrText");
+  const readButton = document.getElementById("readTimetablePhotoButton");
+
+  const file = photoInput.files[0];
+
+  if (!file) {
+    alert("先に時間割の写真を選択してください。");
+    return;
+  }
+
+  readButton.disabled = true;
+  resultArea.hidden = true;
+  status.textContent = "読み取りを準備しています...";
+
+  try {
+    const worker = await getTesseractWorker(status);
+
+    status.textContent = "写真を読み取っています...";
+
+    const result = await worker.recognize(file);
+    const recognizedText = result.data.text.trim();
+
+    resultText.value = recognizedText;
+    resultArea.hidden = false;
+
+    if (recognizedText) {
+      status.textContent =
+        "読み取りが完了しました。内容を確認してください。";
+    } else {
+      status.textContent =
+        "文字を読み取れませんでした。写真を確認してください。";
+    }
+
+  } catch (error) {
+    console.error("時間割のOCRに失敗しました:", error);
+
+    status.textContent =
+      "読み取りに失敗しました。通信環境を確認して再度お試しください。";
+
+  } finally {
+    readButton.disabled = false;
+  }
+}
