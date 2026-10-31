@@ -413,6 +413,9 @@ function setupTimetablePhotoPreview() {
   const removeButton =
     document.getElementById("removeTimetablePhotoButton");
 
+ const readButton =
+  document.getElementById("readTimetablePhotoButton");
+
   if (
     !photoInput ||
     !preview ||
@@ -428,12 +431,15 @@ function setupTimetablePhotoPreview() {
 
     if (!file) {
       return;
+
+     readButton.disabled = false;
     }
 
     // 画像ファイルか確認
     if (!file.type.startsWith("image/")) {
       alert("画像ファイルを選択してください。");
-      photoInput.value = "";
+      photoInput.value = ;
+     readButton.disabled = true;
       return;
     }
 
@@ -461,6 +467,7 @@ function setupTimetablePhotoPreview() {
       timetablePhotoUrl = null;
     }
   });
+   readButton.addEventListener("click", readTimetablePhoto);
 }
 
 // ==============================
