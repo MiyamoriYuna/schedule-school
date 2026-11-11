@@ -486,6 +486,7 @@ function setupTimetablePhotoPreview() {
 
 // ==============================
 // 時間割写真の文字読み取り（OCR）
+// 第1段階：現在の高校の時間割形式（月〜金・1〜7限）に対応
 // ==============================
 
 let timetableOcrWorker = null;
@@ -527,9 +528,8 @@ async function getTesseractWorker(statusElement) {
           if (message.status === "loading language traineddata") {
             statusElement.textContent = "日本語データを読み込んでいます...";
           } else if (message.status === "recognizing text") {
-            const percent = Math.round(message.progress * 100);
             statusElement.textContent =
-              `文字を読み取っています... ${percent}%`;
+              `文字を読み取っています... ${Math.round(message.progress * 100)}%`;
           } else if (message.status === "initializing tesseract") {
             statusElement.textContent = "OCRエンジンを準備しています...";
           }
@@ -545,90 +545,53 @@ async function getTesseractWorker(statusElement) {
   return timetableOcrWorker;
 }
 
-// 画像の罫線位置を調べ、マスごとにOCRする
-function findGridLines(canvas, direction) {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  const w = canvas.width;
-  const h = canvas.height;
-  const data = ctx.getImageData(0, 0, w, h).data;
-  const isHorizontal = direction === "horizontal";
-  const length = isHorizontal ? h : w;
-  const cross = isHorizontal ? w : h;
-  const threshold = Math.max(12, Math.floor(cross * 0.48));
-  const candidates = [];
-
-  for (let pos = 0; pos < length; pos++) {
-    let dark = 0;
-
-    for (let i = 0; i < cross; i++) {
-      const x = isHorizontal ? i : pos;
-      const y = isHorizontal ? pos : i;
-      const k = (y * w + x) * 4;
-
-      const gray =
-        (data[k] * 299 + data[k + 1] * 587 + data[k + 2] * 114) / 1000;
-
-      if (gray < 105) dark++;
-    }
-
-    if (dark >= threshold) candidates.push(pos);
-  }
-
-  // 太い罫線は中央付近の1本にまとめる
-  const groups = [];
-
-  for (const value of candidates) {
-    const last = groups[groups.length - 1];
-
-    if (!last || value - last.end > 3) {
-      groups.push({
-        start: value,
-        end: value,
-        sum: value,
-        count: 1
-      });
-    } else {
-      last.end = value;
-      last.sum += value;
-      last.count++;
-    }
-  }
-
-  return groups.map(g => Math.round(g.sum / g.count));
-}
+// 写真内の表から、曜日・時限ごとのマスを切り出す
+// 座標は今回の高校の時間割写真に合わせた割合
+const SCHOOL_TIMETABLE_TEMPLATE = {
+  x: [0.137, 0.306, 0.473, 0.641, 0.809, 0.988],
+  y: [0.222, 0.328, 0.434, 0.544, 0.651, 0.758, 0.865, 0.975],
+  dayIds: ["monday", "tuesday", "wednesday", "thursday", "friday"],
+  dayNames: ["月", "火", "水", "木", "金"]
+};
 
 // マスの画像を切り出して拡大する
-function makeCellCanvas(source, x1, y1, x2, y2) {
-  const padX = Math.max(2, Math.round((x2 - x1) * 0.06));
-  const padY = Math.max(2, Math.round((y2 - y1) * 0.10));
+function makeTimetableCellCanvas(source, x1, y1, x2, y2) {
+  const width = x2 - x1;
+  const height = y2 - y1;
+
+  const padX = Math.round(width * 0.045);
+  const padY = Math.round(height * 0.09);
 
   const left = Math.max(0, x1 + padX);
   const top = Math.max(0, y1 + padY);
 
-  const width = Math.max(1, x2 - x1 - padX * 2);
-  const height = Math.max(1, y2 - y1 - padY * 2);
+  const cropWidth = Math.max(1, width - padX * 2);
+  const cropHeight = Math.max(1, height - padY * 2);
 
   const scale = Math.min(
-    3,
-    Math.max(1.5, 900 / Math.max(width, height))
+    4,
+    Math.max(2, 1000 / Math.max(cropWidth, cropHeight))
   );
 
   const canvas = document.createElement("canvas");
 
-  canvas.width = Math.round(width * scale);
-  canvas.height = Math.round(height * scale);
+  canvas.width = Math.round(cropWidth * scale);
+  canvas.height = Math.round(cropHeight * scale);
 
-  const ctx = canvas.getContext("2d");
+  const context = canvas.getContext("2d");
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "white";
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.drawImage(
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+
+  context.drawImage(
     source,
     left,
     top,
-    width,
-    height,
+    cropWidth,
+    cropHeight,
     0,
     0,
     canvas.width,
@@ -638,16 +601,105 @@ function makeCellCanvas(source, x1, y1, x2, y2) {
   return canvas;
 }
 
+// OCR結果を科目名と照合するための表記ゆれ整理
+function normalizeOcrSubjectName(value) {
+  return String(value || "")
+    .replace(/[\s　]/g, "")
+    .replace(/[‐‑‒–—ー]/g, "")
+    .replace(/[ⅠＩ]/g, "I")
+    .replace(/[Ⅱ]/g, "II")
+    .replace(/[Ⅲ]/g, "III")
+    .replace(/[αΑ]/g, "α")
+    .replace(/[βΒ]/g, "β")
+    .replace(/[()（）「」『』【】]/g, "");
+}
+
+// 読み取った内容のうち、登録済み科目と完全一致するものだけ時間割に反映
+function applyTimetableOcrResult() {
+  const resultText =
+    document.getElementById("timetableOcrText");
+
+  const message =
+    document.getElementById("timetableOcrApplyMessage");
+
+  if (!resultText) return;
+
+  const subjectMap = new Map(
+    availableSubjects.map(subject => [
+      normalizeOcrSubjectName(subject.name),
+      subject.id
+    ])
+  );
+
+  const dayMap = {
+    月: "monday",
+    火: "tuesday",
+    水: "wednesday",
+    木: "thursday",
+    金: "friday"
+  };
+
+  let applied = 0;
+  let unmatched = 0;
+
+  resultText.value.split("\n").forEach(line => {
+    const match = line.match(/^【([月火水木金])・([1-7])限】\s*(.*)$/);
+
+    if (!match) return;
+
+    const [, dayName, periodText, rawSubject] = match;
+
+    const subjectId =
+      subjectMap.get(normalizeOcrSubjectName(rawSubject));
+
+    if (!subjectId) {
+      if (
+        rawSubject.trim() &&
+        rawSubject.trim() !== "（空欄）"
+      ) {
+        unmatched++;
+      }
+
+      return;
+    }
+
+    const selector =
+      `.timetable-select[data-day="${dayMap[dayName]}"][data-period="${Number(periodText)}"]`;
+
+    const select = document.querySelector(selector);
+
+    if (select) {
+      select.value = subjectId;
+      applied++;
+    }
+  });
+
+  if (message) {
+    message.textContent =
+      `科目名が一致した ${applied} マスを入力しました。` +
+      `${unmatched ? ` 予定・未登録科目など ${unmatched} マスは手動で確認してください。` : ""}`;
+  }
+}
+
 // ==============================
 // 時間割写真を読み取る
 // ==============================
 
 async function readTimetablePhoto() {
-  const photoInput = document.getElementById("timetablePhoto");
-  const status = document.getElementById("timetableOcrStatus");
-  const resultArea = document.getElementById("timetableOcrResult");
-  const resultText = document.getElementById("timetableOcrText");
-  const readButton = document.getElementById("readTimetablePhotoButton");
+  const photoInput =
+    document.getElementById("timetablePhoto");
+
+  const status =
+    document.getElementById("timetableOcrStatus");
+
+  const resultArea =
+    document.getElementById("timetableOcrResult");
+
+  const resultText =
+    document.getElementById("timetableOcrText");
+
+  const readButton =
+    document.getElementById("readTimetablePhotoButton");
 
   const file = photoInput?.files?.[0];
 
@@ -664,101 +716,98 @@ async function readTimetablePhoto() {
   resultArea.hidden = true;
   status.textContent = "写真を準備しています...";
 
+  let imageUrl = null;
+
   try {
     const worker = await getTesseractWorker(status);
 
     const image = new Image();
-    const imageUrl = URL.createObjectURL(file);
+    imageUrl = URL.createObjectURL(file);
 
-    try {
-      await new Promise((resolve, reject) => {
-        image.onload = resolve;
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
 
-        image.onerror = () => reject(
-          new Error("写真を開けませんでした。")
-        );
+      image.onerror = () => reject(
+        new Error("写真を開けませんでした。")
+      );
 
-        image.src = imageUrl;
-      });
+      image.src = imageUrl;
+    });
 
-      const source = document.createElement("canvas");
+    const source = document.createElement("canvas");
 
-      source.width = image.naturalWidth;
-      source.height = image.naturalHeight;
+    source.width = image.naturalWidth;
+    source.height = image.naturalHeight;
 
-      source.getContext("2d").drawImage(image, 0, 0);
+    source.getContext("2d").drawImage(image, 0, 0);
 
-      status.textContent = "表の罫線を検出しています...";
+    // 今回のテンプレートは横長写真を想定
+    // 大きく異なる場合は誤認識を防ぐため停止
+    const ratio = source.width / source.height;
 
-      const horizontal = findGridLines(source, "horizontal");
-      const vertical = findGridLines(source, "vertical");
-
-      if (horizontal.length < 3 || vertical.length < 3) {
-        throw new Error(
-          "表の罫線を十分に検出できませんでした。表が大きく写る写真をお試しください。"
-        );
-      }
-
-      const cells = [];
-
-      const rowCount = horizontal.length - 1;
-      const colCount = vertical.length - 1;
-      const total = rowCount * colCount;
-
-      let done = 0;
-
-      for (let row = 0; row < rowCount; row++) {
-        for (let col = 0; col < colCount; col++) {
-          const x1 = vertical[col];
-          const x2 = vertical[col + 1];
-
-          const y1 = horizontal[row];
-          const y2 = horizontal[row + 1];
-
-          if (x2 - x1 < 24 || y2 - y1 < 18) {
-            continue;
-          }
-
-          const crop = makeCellCanvas(
-            source,
-            x1,
-            y1,
-            x2,
-            y2
-          );
-
-          status.textContent =
-            `マスを読み取っています... ${++done}/${total}`;
-
-          const result = await worker.recognize(crop);
-
-          const text = result.data.text
-            .replace(/\s+/g, " ")
-            .trim();
-
-          cells.push({
-            row: row + 1,
-            col: col + 1,
-            text
-          });
-        }
-      }
-
-      // OCR結果を位置情報付きで表示
-      resultText.value = cells
-        .map(cell =>
-          `【${cell.row}行・${cell.col}列】${cell.text || "（空欄）"}`
-        )
-        .join("\n");
-
-      resultArea.hidden = false;
-
-      status.textContent =
-        `読み取り完了：${cells.length}マス。曜日・時限の対応と科目名を確認してから入力してください。`;
-
-    } finally {
-      URL.revokeObjectURL(imageUrl);
+    if (ratio < 1.55 || ratio > 2.25) {
+      throw new Error(
+        "写真の縦横比が想定と異なります。時間割の表全体が入るように、横向きで撮影してください。"
+      );
     }
+
+    const template = SCHOOL_TIMETABLE_TEMPLATE;
+
+    const cells = [];
+    const total = 35;
+
+    let done = 0;
+
+    for (let row = 0; row < 7; row++) {
+      for (let col = 0; col < 5; col++) {
+        const x1 =
+          Math.round(template.x[col] * source.width);
+
+        const x2 =
+          Math.round(template.x[col + 1] * source.width);
+
+        const y1 =
+          Math.round(template.y[row] * source.height);
+
+        const y2 =
+          Math.round(template.y[row + 1] * source.height);
+
+        const crop = makeTimetableCellCanvas(
+          source,
+          x1,
+          y1,
+          x2,
+          y2
+        );
+
+        status.textContent =
+          `授業欄を読み取っています... ${++done}/${total}`;
+
+        const result = await worker.recognize(crop);
+
+        const text = result.data.text
+          .replace(/[\r\n]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        cells.push({
+          day: template.dayNames[col],
+          period: row + 1,
+          text: text || "（空欄）"
+        });
+      }
+    }
+
+    resultText.value = cells
+      .map(cell =>
+        `【${cell.day}・${cell.period}限】${cell.text}`
+      )
+      .join("\n");
+
+    resultArea.hidden = false;
+
+    status.textContent =
+      "読み取りが完了しました。文字を確認・修正し、「時間割に反映」を押してください。行事や特別時間割は通常の科目として自動登録しません。";
 
   } catch (error) {
     console.error("時間割のOCRに失敗しました:", error);
@@ -768,6 +817,26 @@ async function readTimetablePhoto() {
       "読み取りに失敗しました。通信環境を確認してください。";
 
   } finally {
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+    }
+
     readButton.disabled = false;
   }
 }
+
+// ==============================
+// OCR結果を時間割に反映するボタン
+// ==============================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const applyButton =
+    document.getElementById("applyTimetableOcrButton");
+
+  if (applyButton) {
+    applyButton.addEventListener(
+      "click",
+      applyTimetableOcrResult
+    );
+  }
+});
